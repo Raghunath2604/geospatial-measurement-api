@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GeoMeasure GIS Studio — Autonomous Survey-Grade Geodetic Intelligence</title>
+  <title>GeoMeasure Tactical GIS — Mission Control & Geodetic Intelligence Deck</title>
   
   <!-- Premium Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Leaflet GIS Engine -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -16,25 +16,29 @@
   
   <style>
     :root {
-      --bg-dark: #07090e;
-      --bg-surface: rgba(13, 18, 30, 0.75);
-      --bg-card: rgba(18, 25, 42, 0.65);
-      --bg-card-hover: rgba(24, 34, 58, 0.85);
-      --border-subtle: rgba(255, 255, 255, 0.07);
-      --border-focus: rgba(99, 102, 241, 0.45);
-      --border-accent: rgba(59, 130, 246, 0.35);
+      --bg-void: #05070c;
+      --bg-panel: rgba(10, 14, 23, 0.88);
+      --bg-panel-solid: #0b0f19;
+      --bg-card: rgba(15, 22, 36, 0.75);
+      --bg-card-hover: rgba(22, 32, 52, 0.9);
       
-      --accent-primary: #3b82f6;
-      --accent-indigo: #6366f1;
-      --accent-cyan: #06b6d4;
+      --border-panel: rgba(255, 255, 255, 0.09);
+      --border-accent: rgba(250, 204, 21, 0.45);
+      --border-cyan: rgba(56, 189, 248, 0.4);
+      
+      --accent-yellow: #facc15;
+      --accent-yellow-glow: rgba(250, 204, 21, 0.35);
+      --accent-cyan: #38bdf8;
+      --accent-cyan-glow: rgba(56, 189, 248, 0.3);
       --accent-emerald: #10b981;
-      --accent-amber: #f59e0b;
-      --accent-rose: #f43f5e;
+      --accent-emerald-glow: rgba(16, 185, 129, 0.3);
       --accent-purple: #a855f7;
-
+      --accent-rose: #f43f5e;
+      --accent-amber: #f59e0b;
+      
       --text-main: #f8fafc;
       --text-sub: #cbd5e1;
-      --text-muted: #8492a6;
+      --text-muted: #7e8c9f;
       --text-dim: #4b5563;
 
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -45,824 +49,641 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
     html, body {
-      background-color: var(--bg-dark);
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
-        radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 45%),
-        radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.07) 0px, transparent 55%);
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--bg-void);
       color: var(--text-main);
       font-family: var(--font-sans);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Custom Luxury Scrollbars */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+    /* Custom Tactical Scrollbars */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); }
     ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-yellow); }
 
-    /* Frosted Top Navigation Bar */
+    /* Tactical Application Wrapper */
+    #app-container {
+      display: flex;
+      flex-direction: column;
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+
+    /* Top Command Header */
     header {
-      padding: 0.9rem 2.25rem;
-      border-bottom: 1px solid var(--border-subtle);
+      height: 58px;
+      padding: 0 1.5rem;
+      border-bottom: 1px solid var(--border-panel);
+      background: rgba(8, 11, 18, 0.94);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: sticky;
-      top: 0;
       z-index: 1000;
-      background: rgba(7, 9, 14, 0.88);
+      flex-shrink: 0;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.95rem;
-      text-decoration: none;
-    }
-
-    .logo-container {
-      position: relative;
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #06b6d4 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 25px rgba(59, 130, 246, 0.45);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .brand-title {
-      font-size: 1.25rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      background: linear-gradient(135deg, #ffffff 30%, #93c5fd 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .brand-tag {
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 0.15rem 0.45rem;
-      border-radius: 6px;
-      background: rgba(59, 130, 246, 0.15);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      color: #93c5fd;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      font-family: var(--font-mono);
-      -webkit-text-fill-color: #93c5fd;
-    }
-
-    .brand-subtitle {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      font-family: var(--font-mono);
-      letter-spacing: -0.01em;
-      margin-top: 1px;
-    }
-
-    .header-actions {
+    .brand-section {
       display: flex;
       align-items: center;
       gap: 0.85rem;
     }
 
-    .status-pill {
+    .brand-logo-hex {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid var(--border-accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-yellow);
+      box-shadow: 0 0 15px var(--accent-yellow-glow);
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      font-size: 0.72rem;
-      font-family: var(--font-mono);
-      color: #34d399;
-      padding: 0.35rem 0.85rem;
-      border-radius: 20px;
-      background: rgba(16, 185, 129, 0.08);
-      border: 1px solid rgba(16, 185, 129, 0.22);
-      font-weight: 600;
-      box-shadow: 0 0 15px rgba(16, 185, 129, 0.08);
     }
 
-    .pulse-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #10b981;
-      box-shadow: 0 0 10px #10b981;
-      animation: pulse 2.2s infinite;
-    }
-
-    @keyframes pulse {
-      0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.35; transform: scale(1.3); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    .unit-selector {
-      display: flex;
-      background: rgba(255, 255, 255, 0.035);
-      border: 1px solid var(--border-subtle);
-      border-radius: 9px;
-      padding: 3px;
-    }
-
-    .unit-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-family: var(--font-sans);
-      font-size: 0.74rem;
-      font-weight: 700;
-      padding: 0.35rem 0.75rem;
-      border-radius: 7px;
-      cursor: pointer;
-      transition: all 0.2s var(--ease-spring);
-    }
-
-    .unit-btn.active {
-      background: linear-gradient(135deg, var(--accent-primary), var(--accent-indigo));
-      color: #fff;
-      box-shadow: 0 2px 10px rgba(59, 130, 246, 0.35);
-    }
-
-    .nav-btn {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--text-sub);
-      text-decoration: none;
-      padding: 0.45rem 0.85rem;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.035);
-      border: 1px solid var(--border-subtle);
-      transition: all 0.2s var(--ease-spring);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      cursor: pointer;
-    }
-
-    .nav-btn:hover {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.22);
-      transform: translateY(-1px);
-    }
-
-    /* Main Grid Layout */
-    main {
-      flex: 1;
-      max-width: 1820px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 1.5rem 2.25rem 3rem;
-      display: grid;
-      grid-template-columns: 380px 1fr;
-      gap: 1.5rem;
-      position: relative;
-    }
-
-    @media (max-width: 1240px) {
-      main { grid-template-columns: 1fr; }
-    }
-
-    /* Luxury Glass Panel System */
-    .glass-panel {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: 18px;
-      padding: 1.4rem;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      position: relative;
-      transition: border-color 0.25s ease;
-    }
-
-    .panel-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.15rem;
-    }
-
-    .panel-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      letter-spacing: -0.01em;
-      color: #f1f5f9;
-    }
-
-    /* Modern Dropzone */
-    .dropzone {
-      border: 2px dashed rgba(255, 255, 255, 0.12);
-      border-radius: 14px;
-      padding: 2.2rem 1.25rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s var(--ease-spring);
-      background: rgba(255, 255, 255, 0.015);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .dropzone:hover, .dropzone.dragover {
-      border-color: var(--accent-primary);
-      background: rgba(59, 130, 246, 0.08);
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(59, 130, 246, 0.15);
-    }
-
-    .dropzone-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      background: rgba(59, 130, 246, 0.1);
-      border: 1px solid rgba(59, 130, 246, 0.25);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: #60a5fa;
-      margin-bottom: 0.9rem;
-      transition: all 0.3s var(--ease-spring);
-    }
-
-    .dropzone:hover .dropzone-icon {
-      transform: scale(1.08);
-      background: rgba(59, 130, 246, 0.2);
-    }
-
-    .dropzone-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #f8fafc;
-      margin-bottom: 0.3rem;
-    }
-
-    .dropzone-subtitle {
-      font-size: 0.76rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
-    .badge-pill-row {
-      display: flex;
-      gap: 0.45rem;
-      justify-content: center;
-      margin-top: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .badge-pill {
-      font-size: 0.68rem;
-      padding: 0.25rem 0.6rem;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border-subtle);
-      color: #cbd5e1;
-      font-weight: 600;
-      font-family: var(--font-mono);
-    }
-
-    /* Interactive Measurement Studio */
-    .tool-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.65rem;
-      margin-bottom: 0.85rem;
-    }
-
-    .btn-tool {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-sub);
-      padding: 0.85rem 0.75rem;
-      border-radius: 12px;
-      font-family: inherit;
-      font-size: 0.78rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: all 0.2s var(--ease-spring);
-    }
-
-    .btn-tool-inner {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-
-    .kbd-chip {
+    .brand-badge {
       font-family: var(--font-mono);
       font-size: 0.65rem;
-      padding: 0.15rem 0.4rem;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 4px;
-      color: var(--text-muted);
-    }
-
-    .btn-tool:hover {
-      background: rgba(59, 130, 246, 0.1);
-      border-color: rgba(59, 130, 246, 0.35);
-      color: #fff;
-      transform: translateY(-1px);
-    }
-
-    .btn-tool.active {
-      background: rgba(59, 130, 246, 0.22);
-      border-color: var(--accent-primary);
-      color: #60a5fa;
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-    }
-
-    .btn-tool.active .kbd-chip {
-      background: rgba(59, 130, 246, 0.4);
-      color: #fff;
-    }
-
-    .tool-instruction-banner {
-      background: rgba(37, 99, 235, 0.08);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      border-radius: 12px;
-      padding: 0.8rem 1rem;
-      font-size: 0.76rem;
-      line-height: 1.45;
-      color: #bfdbfe;
-      margin-bottom: 0.85rem;
-      display: none;
-      animation: fadeIn 0.25s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Engine Specification Telemetry */
-    .specs-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-      font-size: 0.78rem;
-    }
-
-    .spec-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 0.55rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .spec-label {
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .spec-value {
-      font-family: var(--font-mono);
-      font-weight: 600;
-      color: #e2e8f0;
-      font-size: 0.76rem;
-    }
-
-    /* Right Column: Hero Metrics */
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.15rem;
-    }
-
-    @media (max-width: 960px) {
-      .metric-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    .metric-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 1.25rem 1.2rem;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s var(--ease-spring);
-      backdrop-filter: blur(16px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    }
-
-    .metric-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.4), transparent);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .metric-card:hover {
-      border-color: rgba(99, 102, 241, 0.35);
-      background: var(--bg-card-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.45);
-    }
-
-    .metric-card:hover::before { opacity: 1; }
-
-    .metric-label-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: var(--text-muted);
-      font-size: 0.72rem;
-      font-weight: 700;
+      font-weight: 800;
+      color: var(--accent-yellow);
+      background: rgba(250, 204, 21, 0.12);
+      border: 1px solid rgba(250, 204, 21, 0.3);
+      padding: 0.12rem 0.45rem;
+      border-radius: 6px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
 
-    .metric-val {
-      font-size: 1.65rem;
-      font-weight: 800;
-      margin-top: 0.5rem;
-      font-family: var(--font-mono);
-      letter-spacing: -0.03em;
-      color: #fff;
-    }
-
-    .metric-sub {
-      font-size: 0.74rem;
-      color: var(--text-muted);
-      margin-top: 0.25rem;
-      font-family: var(--font-sans);
-    }
-
-    /* Map Viewport Container */
-    #map-wrapper {
-      position: relative;
-      border-radius: 16px;
-      overflow: hidden;
-      border: 1px solid var(--border-subtle);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    }
-
-    #map {
-      height: 540px;
-      width: 100%;
-      background: #080c14;
-    }
-
-    /* Floating Map Toolbars */
-    .map-controls-top {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      z-index: 500;
-      display: flex;
-      gap: 0.35rem;
-      background: rgba(8, 11, 18, 0.88);
-      backdrop-filter: blur(16px);
-      padding: 0.35rem;
-      border-radius: 12px;
-      border: 1px solid var(--border-subtle);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-    }
-
-    .map-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-family: inherit;
-      font-size: 0.74rem;
-      font-weight: 600;
-      padding: 0.4rem 0.75rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .map-btn.active, .map-btn:hover {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.12);
-    }
-
-    .map-btn.active {
-      background: linear-gradient(135deg, var(--accent-primary), var(--accent-indigo));
-      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-    }
-
-    .map-hud-bottom {
-      position: absolute;
-      bottom: 14px;
-      right: 14px;
-      z-index: 500;
-      background: rgba(8, 11, 18, 0.88);
-      backdrop-filter: blur(16px);
-      padding: 0.45rem 1rem;
-      border-radius: 10px;
-      border: 1px solid var(--border-subtle);
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: #cbd5e1;
-      display: flex;
-      gap: 1rem;
-      pointer-events: none;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
-    }
-
-    .map-layer-slider-box {
-      position: absolute;
-      bottom: 14px;
-      left: 14px;
-      z-index: 500;
-      background: rgba(8, 11, 18, 0.88);
-      backdrop-filter: blur(16px);
-      padding: 0.45rem 1rem;
-      border-radius: 10px;
-      border: 1px solid var(--border-subtle);
+    .header-center-pills {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      font-size: 0.74rem;
+      gap: 0.5rem;
+    }
+
+    .header-pill {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid var(--border-panel);
       color: var(--text-sub);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
-    }
-
-    .map-layer-slider-box input[type="range"] {
-      width: 85px;
-      accent-color: var(--accent-primary);
-      cursor: pointer;
-    }
-
-    .drawing-live-banner {
-      position: absolute;
-      top: 14px;
-      left: 14px;
-      z-index: 500;
-      background: linear-gradient(135deg, #2563eb, #4f46e5);
-      color: #fff;
-      padding: 0.55rem 1.25rem;
-      border-radius: 10px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      font-family: var(--font-mono);
-      display: none;
-      box-shadow: 0 6px 25px rgba(37, 99, 235, 0.55);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .crosshairs-overlay {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 450;
-      display: none;
-    }
-
-    .crosshairs-overlay::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: rgba(255, 255, 255, 0.25);
-    }
-
-    .crosshairs-overlay::after {
-      content: '';
-      position: absolute;
-      left: 50%;
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background: rgba(255, 255, 255, 0.25);
-    }
-
-    /* Registry Table */
-    .filter-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 1.1rem;
-      flex-wrap: wrap;
-    }
-
-    .filter-pills {
-      display: flex;
-      gap: 0.4rem;
-    }
-
-    .filter-pill {
-      background: rgba(255, 255, 255, 0.035);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-muted);
-      font-family: inherit;
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 600;
-      padding: 0.38rem 0.85rem;
-      border-radius: 9px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .filter-pill.active {
-      background: rgba(59, 130, 246, 0.18);
-      border-color: var(--accent-primary);
-      color: #fff;
-    }
-
-    .search-input {
-      background: rgba(255, 255, 255, 0.035);
-      border: 1px solid var(--border-subtle);
-      border-radius: 9px;
-      padding: 0.42rem 0.95rem;
-      color: #fff;
-      font-family: inherit;
-      font-size: 0.78rem;
-      width: 210px;
-      transition: all 0.2s;
-    }
-
-    .search-input:focus {
-      outline: none;
-      border-color: var(--accent-primary);
-      background: rgba(255, 255, 255, 0.06);
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
-    }
-
-    .btn-action {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-main);
-      padding: 0.45rem 0.9rem;
-      border-radius: 9px;
-      font-size: 0.76rem;
-      font-weight: 600;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 0.45rem;
       transition: all 0.2s var(--ease-spring);
+      text-decoration: none;
     }
 
-    .btn-action:hover {
-      background: rgba(255, 255, 255, 0.09);
+    .header-pill:hover, .header-pill.active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
       border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .header-pill.active {
+      background: rgba(250, 204, 21, 0.15);
+      border-color: var(--accent-yellow);
+      color: var(--accent-yellow);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #34d399;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+    }
+
+    .pulsing-radar-dot {
+      width: 7px;
+      height: 7px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulseRadar 2s infinite;
+    }
+
+    @keyframes pulseRadar {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.4; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .unit-switch {
+      display: flex;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-panel);
+      border-radius: 8px;
+      padding: 2px;
+    }
+
+    .unit-switch-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .unit-switch-btn.active {
+      background: var(--accent-yellow);
+      color: #000;
+      font-weight: 800;
+    }
+
+    /* Map Workspace - Full Viewport */
+    #map-viewport {
+      flex: 1;
+      width: 100%;
+      position: relative;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+      background: #090c14;
+    }
+
+    /* Floating Sub-Header Action Toolbar (Modeled on Screenshot) */
+    .floating-action-toolbar {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 500;
+      background: rgba(11, 15, 25, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-panel);
+      border-radius: 14px;
+      padding: 0.35rem 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+    }
+
+    .toolbar-tool-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-sub);
+      padding: 0.5rem 0.85rem;
+      border-radius: 10px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s var(--ease-spring);
+    }
+
+    .toolbar-tool-btn .kbd {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      color: var(--text-muted);
+    }
+
+    .toolbar-tool-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    .toolbar-tool-btn.active {
+      background: var(--accent-yellow);
+      color: #000;
+      box-shadow: 0 0 20px var(--accent-yellow-glow);
+    }
+
+    .toolbar-tool-btn.active .kbd {
+      background: rgba(0, 0, 0, 0.2);
+      color: #000;
+    }
+
+    .toolbar-sep {
+      width: 1px;
+      height: 22px;
+      background: var(--border-panel);
+      margin: 0 0.2rem;
+    }
+
+    /* Floating Left HUD: Elevation & Geodetic Telemetry (Modeled on Screenshot) */
+    .floating-left-hud {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      width: 320px;
+      z-index: 500;
+      background: rgba(10, 14, 23, 0.94);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border-panel);
+      border-radius: 16px;
+      padding: 1.25rem;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .hud-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 0.75rem;
+    }
+
+    .hud-title {
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: var(--accent-yellow);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .hud-metrics-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .hud-metric-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .hud-metric-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .hud-metric-big-val {
+      font-family: var(--font-mono);
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .hud-metric-sub {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent-cyan);
+    }
+
+    .hud-details-box {
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 0.75rem 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      font-size: 0.74rem;
+      font-family: var(--font-mono);
+      color: #94a3b8;
+    }
+
+    .hud-btn-primary {
+      width: 100%;
+      background: var(--accent-yellow);
+      color: #000;
+      border: none;
+      padding: 0.7rem;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s var(--ease-spring);
+      box-shadow: 0 4px 15px var(--accent-yellow-glow);
+    }
+
+    .hud-btn-primary:hover {
+      background: #fde047;
       transform: translateY(-1px);
     }
 
-    .table-container {
-      overflow-x: auto;
+    /* Bottom-Left Floating Vector Drawing Palette (Modeled on Screenshot) */
+    .floating-bottom-palette {
+      position: absolute;
+      bottom: 20px;
+      left: 14px;
+      z-index: 500;
+      background: rgba(10, 14, 23, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-panel);
       border-radius: 14px;
-      border: 1px solid var(--border-subtle);
-      max-height: 480px;
+      padding: 0.65rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+    }
+
+    .color-swatches {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .color-swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+
+    .color-swatch.active {
+      transform: scale(1.25);
+      border-color: #fff;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .opacity-control {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .opacity-control input[type="range"] {
+      width: 75px;
+      accent-color: var(--accent-yellow);
+      cursor: pointer;
+    }
+
+    /* Floating Bottom-Right Tactical Coordinates HUD */
+    .floating-bottom-hud {
+      position: absolute;
+      bottom: 20px;
+      right: 14px;
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .coords-readout-pill {
+      background: rgba(10, 14, 23, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-panel);
+      border-radius: 12px;
+      padding: 0.55rem 1.1rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: #cbd5e1;
+      display: flex;
+      gap: 0.95rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Basemaps Switcher */
+    .basemap-selector-pill {
+      background: rgba(10, 14, 23, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-panel);
+      border-radius: 12px;
+      padding: 0.35rem;
+      display: flex;
+      gap: 0.3rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .basemap-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.35rem 0.65rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .basemap-btn.active, .basemap-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .basemap-btn.active {
+      background: var(--accent-yellow);
+      color: #000;
+      font-weight: 800;
+    }
+
+    /* Live Rubberband Measuring Banner */
+    .live-rubberband-banner {
+      position: absolute;
+      top: 75px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 500;
+      background: rgba(250, 204, 21, 0.95);
+      color: #000;
+      padding: 0.55rem 1.35rem;
+      border-radius: 20px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+      box-shadow: 0 0 25px var(--accent-yellow-glow);
+      display: none;
+      border: 1px solid #fff;
+    }
+
+    /* Right-Side Feature Registry & Slide-out Inspector Drawer */
+    #registry-drawer {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 440px;
+      max-width: 95vw;
+      background: rgba(9, 13, 22, 0.96);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      border-left: 1px solid var(--border-panel);
+      box-shadow: -20px 0 60px rgba(0, 0, 0, 0.8);
+      z-index: 1200;
+      transform: translateX(100%);
+      transition: transform 0.35s var(--ease-spring);
+      display: flex;
+      flex-direction: column;
+    }
+
+    #registry-drawer.open {
+      transform: translateX(0);
+    }
+
+    .registry-header {
+      padding: 1.15rem 1.4rem;
+      border-bottom: 1px solid var(--border-panel);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .registry-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.25rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.15rem;
+    }
+
+    .registry-search-bar {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .search-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-panel);
+      border-radius: 9px;
+      padding: 0.45rem 0.85rem;
+      color: #fff;
+      font-size: 0.78rem;
+      font-family: inherit;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent-yellow);
+    }
+
+    .filter-pills-row {
+      display: flex;
+      gap: 0.35rem;
+    }
+
+    .filter-pill {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-panel);
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.3rem 0.65rem;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .filter-pill.active {
+      background: rgba(250, 204, 21, 0.15);
+      border-color: var(--accent-yellow);
+      color: var(--accent-yellow);
+    }
+
+    /* Tactical Table */
+    .table-box {
+      border: 1px solid var(--border-panel);
+      border-radius: 12px;
+      overflow: hidden;
+      max-height: 280px;
+      overflow-y: auto;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
     }
 
     th {
-      background: rgba(11, 15, 25, 0.96);
+      background: rgba(14, 19, 32, 0.98);
       position: sticky;
       top: 0;
-      padding: 0.9rem 1.1rem;
+      padding: 0.7rem 0.85rem;
       font-weight: 700;
       color: var(--text-muted);
-      border-bottom: 1px solid var(--border-subtle);
-      z-index: 10;
-      cursor: pointer;
-      user-select: none;
-      font-size: 0.75rem;
+      border-bottom: 1px solid var(--border-panel);
+      font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
 
-    th:hover { color: #fff; }
-
     td {
-      padding: 0.85rem 1.1rem;
+      padding: 0.65rem 0.85rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.04);
       font-family: var(--font-mono);
-      font-size: 0.78rem;
+      font-size: 0.74rem;
     }
 
-    tr {
-      cursor: pointer;
-      transition: background 0.15s ease;
-    }
+    tr { cursor: pointer; transition: background 0.15s ease; }
+    tr:hover td { background: rgba(250, 204, 21, 0.08); }
+    tr.selected td { background: rgba(250, 204, 21, 0.2); }
 
-    tr:hover td {
-      background: rgba(59, 130, 246, 0.06);
-    }
-
-    tr.selected td {
-      background: rgba(59, 130, 246, 0.18);
-      border-bottom-color: rgba(59, 130, 246, 0.35);
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.2rem 0.6rem;
-      border-radius: 6px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      font-family: var(--font-sans);
-    }
-
-    .badge-measured { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25); }
-    .badge-na { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.25); }
-    .badge-unsupported { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.25); }
-    .badge-error { background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.25); }
-
-    /* Slide-out Feature Inspector Drawer */
-    #inspector-drawer {
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: 460px;
-      max-width: 95vw;
-      background: rgba(9, 13, 22, 0.96);
-      backdrop-filter: blur(32px);
-      -webkit-backdrop-filter: blur(32px);
-      border-left: 1px solid var(--border-subtle);
-      box-shadow: -20px 0 60px rgba(0, 0, 0, 0.75);
-      z-index: 2500;
-      transform: translateX(100%);
-      transition: transform 0.35s var(--ease-spring);
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-    }
-
-    #inspector-drawer.open {
-      transform: translateX(0);
-    }
-
-    .drawer-header {
-      padding: 1.35rem 1.65rem;
-      border-bottom: 1px solid var(--border-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      background: rgba(9, 13, 22, 0.95);
-      z-index: 10;
-    }
-
-    .drawer-body {
-      padding: 1.65rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-    }
-
-    .drawer-card {
+    .telemetry-card {
       background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border-subtle);
-      border-radius: 14px;
-      padding: 1.2rem;
-      position: relative;
+      border: 1px solid var(--border-panel);
+      border-radius: 12px;
+      padding: 1rem;
     }
 
-    .drawer-card-title {
-      font-size: 0.72rem;
+    .telemetry-card-title {
+      font-size: 0.7rem;
+      font-weight: 800;
       color: var(--text-muted);
-      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
+      margin-bottom: 0.65rem;
     }
 
     /* Modal System */
@@ -870,22 +691,21 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(5, 7, 12, 0.85);
-      backdrop-filter: blur(16px);
+      background: rgba(4, 6, 12, 0.88);
+      backdrop-filter: blur(20px);
       z-index: 3500;
       align-items: center;
       justify-content: center;
-      animation: fadeIn 0.2s ease;
     }
 
     .modal-card {
-      background: #0c111c;
-      border: 1px solid var(--border-subtle);
+      background: #0b0f19;
+      border: 1px solid var(--border-panel);
       border-radius: 20px;
-      width: 92%;
-      max-width: 660px;
+      width: 90%;
+      max-width: 600px;
       padding: 2rem;
-      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85);
       position: relative;
     }
 
@@ -896,15 +716,6 @@
       margin-bottom: 1.35rem;
     }
 
-    .modal-title {
-      font-size: 1.2rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      color: #fff;
-    }
-
     .btn-close {
       background: transparent;
       border: none;
@@ -912,26 +723,56 @@
       cursor: pointer;
       font-size: 1.4rem;
       line-height: 1;
-      padding: 0.2rem;
     }
 
     .btn-close:hover { color: #fff; }
 
+    /* Ingestion Dropzone */
+    .dropzone {
+      border: 2px dashed rgba(250, 204, 21, 0.35);
+      border-radius: 14px;
+      padding: 2.2rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: rgba(250, 204, 21, 0.02);
+    }
+
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--accent-yellow);
+      background: rgba(250, 204, 21, 0.08);
+      transform: scale(1.01);
+    }
+
+    /* Crosshairs */
+    .crosshairs-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 450;
+      display: none;
+    }
+    .crosshairs-overlay::before {
+      content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: rgba(250, 204, 21, 0.4);
+    }
+    .crosshairs-overlay::after {
+      content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(250, 204, 21, 0.4);
+    }
+
     /* Toast Notification */
     #toast {
       position: fixed;
-      bottom: 28px;
-      right: 28px;
-      background: rgba(15, 23, 42, 0.96);
-      border: 1px solid var(--border-focus);
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0f172a;
+      border: 1px solid var(--accent-yellow);
       color: #fff;
-      padding: 0.95rem 1.5rem;
-      border-radius: 12px;
+      padding: 0.85rem 1.5rem;
+      border-radius: 30px;
       font-size: 0.82rem;
-      font-weight: 600;
-      backdrop-filter: blur(16px);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-      transform: translateY(100px);
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
       opacity: 0;
       transition: all 0.3s var(--ease-spring);
       z-index: 4000;
@@ -941,7 +782,7 @@
     }
 
     #toast.show {
-      transform: translateY(0);
+      transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
 
@@ -950,7 +791,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(5, 7, 12, 0.88);
+      background: rgba(4, 6, 12, 0.88);
       backdrop-filter: blur(16px);
       z-index: 3800;
       align-items: center;
@@ -960,10 +801,10 @@
     }
 
     .radar-spinner {
-      width: 56px;
-      height: 56px;
-      border: 3px solid rgba(59, 130, 246, 0.2);
-      border-top-color: var(--accent-primary);
+      width: 54px;
+      height: 54px;
+      border: 3px solid rgba(250, 204, 21, 0.2);
+      border-top-color: var(--accent-yellow);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
@@ -973,482 +814,370 @@
 </head>
 <body>
 
-  <!-- Loading Animation -->
-  <div id="loading-overlay">
-    <div class="radar-spinner"></div>
-    <div style="font-weight: 800; font-size: 1.15rem; color: #fff;" id="loading-msg">Processing Ingestion Stream...</div>
-    <div style="font-size: 0.8rem; color: var(--text-muted);" id="loading-submsg">Evaluating metric projections via Shapely 2.0 & pyproj</div>
-  </div>
+  <div id="app-container">
 
-  <!-- Toast Notification -->
-  <div id="toast">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-    <span id="toast-text">Notification</span>
-  </div>
+    <!-- Loading Screen -->
+    <div id="loading-overlay">
+      <div class="radar-spinner"></div>
+      <div style="font-weight: 800; font-size: 1.15rem; color: #fff;" id="loading-msg">Evaluating Geodetic Stream...</div>
+      <div style="font-size: 0.8rem; color: var(--text-muted);" id="loading-submsg">WGS 84 Karney Geodesics & UTM Metric Kernel</div>
+    </div>
 
-  <!-- Navigation Header -->
-  <header>
-    <div class="brand">
-      <div class="logo-container">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
-          <line x1="8" y1="2" x2="8" y2="18"></line>
-          <line x1="16" y1="6" x2="16" y2="22"></line>
-        </svg>
-      </div>
-      <div>
-        <div class="brand-title">
-          GeoMeasure Studio
-          <span class="brand-tag">v1.0 Production</span>
+    <!-- Notification Toast -->
+    <div id="toast">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      <span id="toast-text">Notification</span>
+    </div>
+
+    <!-- Top Command Header -->
+    <header>
+      <div class="brand-section">
+        <div class="brand-logo-hex">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
         </div>
-        <div class="brand-subtitle">Dual-Oracle Geodesic Engine &bull; Dynamic UTM/UPS &bull; WGS 84 Karney Geodesics</div>
-      </div>
-    </div>
-
-    <div class="header-actions">
-      <div class="status-pill">
-        <div class="pulse-dot"></div>
-        <span>LIVE ORACLE ACTIVE</span>
+        <div>
+          <div class="brand-title">
+            GeoMeasure
+            <span class="brand-badge">Tactical 2024</span>
+          </div>
+        </div>
       </div>
 
-      <!-- Unit Selector -->
-      <div class="unit-selector">
-        <button class="unit-btn active" id="btn-unit-metric" onclick="setUnits('metric')">Metric (m², ha)</button>
-        <button class="unit-btn" id="btn-unit-imperial" onclick="setUnits('imperial')">Imperial (ft², ac)</button>
+      <div class="header-center-pills">
+        <button class="header-pill active" onclick="openIngestModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          Ingest Dataset
+        </button>
+        <button class="header-pill" id="btn-toggle-registry" onclick="toggleRegistryDrawer()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+          Feature Registry
+        </button>
+        <button class="header-pill" onclick="openKeyModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-1-1l-3 3m-1 3l4 4 7-7-3-3z"></path><circle cx="8" cy="16" r="5"></circle></svg>
+          Mapbox HD
+        </button>
+        <button class="header-pill" onclick="openCreditsModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          Architecture & Credits
+        </button>
       </div>
 
-      <button class="nav-btn" onclick="openKeyModal()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-1-1l-3 3m-1 3l4 4 7-7-3-3z"></path><circle cx="8" cy="16" r="5"></circle></svg>
-        Mapbox HD
-      </button>
+      <div class="header-right">
+        <div class="status-indicator">
+          <div class="pulsing-radar-dot"></div>
+          <span>ORACLE ONLINE</span>
+        </div>
 
-      <button class="nav-btn" onclick="openCreditsModal()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-        Credits & Author
-      </button>
+        <div class="unit-switch">
+          <button class="unit-switch-btn active" id="btn-unit-metric" onclick="setUnits('metric')">METRIC</button>
+          <button class="unit-switch-btn" id="btn-unit-imperial" onclick="setUnits('imperial')">IMPERIAL</button>
+        </div>
+      </div>
+    </header>
 
-      <a href="/docs" target="_blank" class="nav-btn">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-        API Docs
-      </a>
-
-      <a href="https://github.com/Raghunath2604/geospatial-measurement-api" target="_blank" class="nav-btn">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-        GitHub
-      </a>
-    </div>
-  </header>
-
-  <!-- Workspace Container -->
-  <main>
-    <!-- Left Column: Ingestion, Studio Tools, Telemetry -->
-    <div style="display: flex; flex-direction: column; gap: 1.35rem;">
+    <!-- Main Map Workstation -->
+    <div id="map-viewport">
       
-      <!-- Ingestion Panel -->
-      <div class="glass-panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-            Dataset Ingestion Dock
+      <!-- Live Rubberband Banner -->
+      <div class="live-rubberband-banner" id="drawing-banner">
+        MEASURING LIVE PARCEL...
+      </div>
+
+      <div class="crosshairs-overlay" id="crosshairs"></div>
+
+      <!-- Floating Sub-Header Action Toolbar (Modeled on Screenshot) -->
+      <div class="floating-action-toolbar">
+        <button class="toolbar-tool-btn" id="tool-polygon" onclick="activateDrawTool('polygon')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+          <span>Polygon Area</span>
+          <span class="kbd">P</span>
+        </button>
+
+        <button class="toolbar-tool-btn" id="tool-line" onclick="activateDrawTool('line')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19L19 4"></path><circle cx="4" cy="19" r="2"></circle><circle cx="19" cy="4" r="2"></circle></svg>
+          <span>Path Distance</span>
+          <span class="kbd">L</span>
+        </button>
+
+        <button class="toolbar-tool-btn" id="tool-circle" onclick="activateDrawTool('circle')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 12l5 -5"></path></svg>
+          <span>Radial Buffer</span>
+          <span class="kbd">B</span>
+        </button>
+
+        <button class="toolbar-tool-btn" id="tool-pin" onclick="activateDrawTool('pin')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <span>Inspect Pin</span>
+          <span class="kbd">X</span>
+        </button>
+
+        <div class="toolbar-sep"></div>
+
+        <button class="toolbar-tool-btn" onclick="locateUserPosition()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3m0 14v3M2 12h3m14 0h3"></path></svg>
+          <span>GPS Locate</span>
+        </button>
+
+        <button class="toolbar-tool-btn" onclick="clearLiveDrawings()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          <span>Clear</span>
+        </button>
+      </div>
+
+      <!-- Floating Left HUD: Elevation & Geodetic Telemetry (Modeled on Screenshot) -->
+      <div class="floating-left-hud">
+        <div class="hud-header">
+          <div class="hud-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            Elevation & Telemetry
+          </div>
+          <span id="hud-status-badge" class="brand-badge">IDLE</span>
+        </div>
+
+        <div class="hud-metrics-stack">
+          <div class="hud-metric-row">
+            <div>
+              <div class="hud-metric-label">Planar Metric Area</div>
+              <div class="hud-metric-big-val" id="hud-area-val">0.00 <span style="font-size: 0.8rem; color: var(--text-muted);">m²</span></div>
+            </div>
+            <div class="hud-metric-sub" id="hud-area-sub">Dynamic UTM</div>
+          </div>
+
+          <div class="hud-metric-row">
+            <div>
+              <div class="hud-metric-label">Boundary / Path Length</div>
+              <div class="hud-metric-big-val" id="hud-length-val">0.00 <span style="font-size: 0.8rem; color: var(--text-muted);">m</span></div>
+            </div>
+            <div class="hud-metric-sub" id="hud-length-sub">Perimeter</div>
+          </div>
+
+          <div class="hud-metric-row">
+            <div>
+              <div class="hud-metric-label">Terrain Altitude (MSL)</div>
+              <div class="hud-metric-big-val" id="hud-elev-val" style="color: #34d399;">-- <span style="font-size: 0.8rem; color: var(--text-muted);">m</span></div>
+            </div>
+            <div class="hud-metric-sub">NASA SRTM</div>
           </div>
         </div>
 
-        <div class="dropzone" id="dropzone">
-          <div class="dropzone-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><path d="M12 12v9"></path><path d="m16 16-4-4-4 4"></path></svg>
-          </div>
-          <div class="dropzone-title">Drop geospatial archive here</div>
-          <div class="dropzone-subtitle">Click to browse local filesystem</div>
-          
-          <div class="badge-pill-row">
-            <span class="badge-pill" id="limit-upload-pill">Max 50 MB</span>
-            <span class="badge-pill">.kml &bull; .kmz</span>
-            <span class="badge-pill">Shapefile .zip</span>
-            <span class="badge-pill">10,000 Features</span>
-          </div>
-
-          <input type="file" id="file-input" accept=".kml,.kmz,.zip" style="display: none;">
+        <div class="hud-details-box" id="hud-details-box">
+          <div>Projection: <span id="hud-crs-val" style="color: #fff;">EPSG:32643 (UTM 43N)</span></div>
+          <div>Scale Factor: <span id="hud-scale-val" style="color: var(--accent-yellow);">1.0000 (Isometric)</span></div>
+          <div>Location: <span id="hud-loc-val" style="color: #cbd5e1;">Click or draw parcel</span></div>
         </div>
 
-        <!-- Ingested File Details Card -->
-        <div id="file-meta-panel" style="display: none; margin-top: 1.15rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle);">
-          <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.8rem;">
-            <div style="display: flex; justify-content: space-between;">
-              <span style="color: var(--text-muted);">Active Dataset:</span>
-              <strong id="meta-filename" style="font-family: var(--font-mono); color: #93c5fd;">-</strong>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="color: var(--text-muted);">Native CRS:</span>
-              <span id="meta-crs" class="badge" style="background: rgba(59,130,246,0.18); color: #93c5fd;">-</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="color: var(--text-muted);">Pipeline Status:</span>
-              <span id="meta-status" class="badge badge-measured">-</span>
-            </div>
-          </div>
+        <button class="hud-btn-primary" onclick="exportGeoJSON()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Export Survey GeoJSON
+        </button>
+      </div>
+
+      <!-- Floating Bottom-Left Drawing Palette (Modeled on Screenshot) -->
+      <div class="floating-bottom-palette">
+        <div class="color-swatches">
+          <div class="color-swatch active" style="background: #facc15;" onclick="selectColor('#facc15', this)"></div>
+          <div class="color-swatch" style="background: #38bdf8;" onclick="selectColor('#38bdf8', this)"></div>
+          <div class="color-swatch" style="background: #10b981;" onclick="selectColor('#10b981', this)"></div>
+          <div class="color-swatch" style="background: #a855f7;" onclick="selectColor('#a855f7', this)"></div>
+          <div class="color-swatch" style="background: #f43f5e;" onclick="selectColor('#f43f5e', this)"></div>
+        </div>
+
+        <div class="toolbar-sep"></div>
+
+        <div class="opacity-control">
+          <span>Fill:</span>
+          <input type="range" id="layer-opacity" min="0" max="100" value="40" oninput="setLayerOpacity(this.value)">
+          <span id="layer-opacity-text" style="font-family: var(--font-mono); font-weight: 700;">40%</span>
+        </div>
+
+        <div class="toolbar-sep"></div>
+
+        <button class="toolbar-tool-btn" id="btn-crosshairs" onclick="toggleCrosshairs()" style="padding: 0.35rem 0.65rem;">
+          Crosshairs
+        </button>
+      </div>
+
+      <!-- Floating Bottom-Right Coordinates & Basemap HUD -->
+      <div class="floating-bottom-hud">
+        <div class="coords-readout-pill" id="coords-hud">
+          <span>LAT: 12.97160°</span>
+          <span>LON: 77.59460°</span>
+          <span id="hud-utm-zone">ZONE 43N</span>
+          <span id="hud-zoom-val">Z13</span>
+        </div>
+
+        <div class="basemap-selector-pill" id="basemap-controls">
+          <button class="basemap-btn active" id="btn-tile-sat" onclick="switchBaseMap('sat')">Esri Sat</button>
+          <button class="basemap-btn" id="btn-tile-dark" onclick="switchBaseMap('dark')">Carto Dark</button>
+          <button class="basemap-btn" id="btn-tile-osm" onclick="switchBaseMap('osm')">Streets</button>
         </div>
       </div>
 
-      <!-- Real-Time Interactive Measurement Studio -->
-      <div class="glass-panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><path d="m4.93 4.93 4.24 4.24"></path><path d="m14.83 9.17 4.24-4.24"></path><path d="m14.83 14.83 4.24 4.24"></path><path d="m9.17 14.83-4.24 4.24"></path></svg>
-            Interactive Vector Studio
-          </div>
-        </div>
-
-        <p style="font-size: 0.77rem; color: var(--text-muted); margin-bottom: 0.95rem; line-height: 1.45;">
-          Digitize arbitrary real-world parcels or paths directly on satellite imagery to evaluate dual UTM planar and ellipsoidal geodesics.
-        </p>
-
-        <div class="tool-grid">
-          <button class="btn-tool" id="tool-polygon" onclick="activateDrawTool('polygon')">
-            <div class="btn-tool-inner">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-              <span>Polygon Area</span>
-            </div>
-            <span class="kbd-chip">P</span>
-          </button>
-
-          <button class="btn-tool" id="tool-line" onclick="activateDrawTool('line')">
-            <div class="btn-tool-inner">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19L19 4"></path><circle cx="4" cy="19" r="2"></circle><circle cx="19" cy="4" r="2"></circle></svg>
-              <span>Path Distance</span>
-            </div>
-            <span class="kbd-chip">L</span>
-          </button>
-
-          <button class="btn-tool" id="tool-circle" onclick="activateDrawTool('circle')">
-            <div class="btn-tool-inner">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 12l5 -5"></path></svg>
-              <span>Radial Buffer</span>
-            </div>
-            <span class="kbd-chip">B</span>
-          </button>
-
-          <button class="btn-tool" id="tool-pin" onclick="activateDrawTool('pin')">
-            <div class="btn-tool-inner">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-              <span>Coordinate Pin</span>
-            </div>
-            <span class="kbd-chip">X</span>
-          </button>
-        </div>
-
-        <div class="tool-instruction-banner" id="tool-instruction">
-          <strong>Tool Active</strong>
-        </div>
-
-        <div style="display: flex; gap: 0.6rem;">
-          <button class="btn-action" style="flex: 1; justify-content: center;" onclick="locateUserPosition()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3m0 14v3M2 12h3m14 0h3"></path></svg>
-            My Location
-          </button>
-          <button class="btn-action" style="flex: 1; justify-content: center;" onclick="clearLiveDrawings()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-            Clear Vectors
-          </button>
-        </div>
-      </div>
-
-      <!-- Engine Telemetry Panel -->
-      <div class="glass-panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-            Geodetic Engine State
-          </div>
-        </div>
-
-        <div class="specs-list">
-          <div class="spec-row">
-            <span class="spec-label">Ellipsoid Oracle:</span>
-            <span class="spec-value">WGS 84 (Karney 2013)</span>
-          </div>
-          <div class="spec-row">
-            <span class="spec-label">Projection Kernel:</span>
-            <span class="spec-value">Dynamic UTM / UPS</span>
-          </div>
-          <div class="spec-row">
-            <span class="spec-label">Semimajor Axis (a):</span>
-            <span class="spec-value">6,378,137.0 m</span>
-          </div>
-          <div class="spec-row">
-            <span class="spec-label">Inverse Flattening (1/f):</span>
-            <span class="spec-value">298.257223563</span>
-          </div>
-          <div class="spec-row">
-            <span class="spec-label">Geometry Kernel:</span>
-            <span class="spec-value">GEOS 3.12+ / Shapely 2.0</span>
-          </div>
-          <div class="spec-row">
-            <span class="spec-label">Concurrency Model:</span>
-            <span class="spec-value">Non-blocking Threadpool</span>
-          </div>
-        </div>
-      </div>
-
+      <!-- Leaflet Map Canvas -->
+      <div id="map"></div>
     </div>
 
-    <!-- Right Column: Visual Metrics, Leaflet Map & Inspection Table -->
-    <div style="display: flex; flex-direction: column; gap: 1.35rem;">
-      
-      <!-- Top Metrics Counters -->
-      <div class="metric-grid">
-        <div class="metric-card">
-          <div class="metric-label-row">
-            <span>Total Features</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-          </div>
-          <div class="metric-val" id="val-features">0</div>
-          <div class="metric-sub">Imported & Digitized</div>
+    <!-- Right-Side Slide-out Feature Registry Drawer -->
+    <aside id="registry-drawer">
+      <div class="registry-header">
+        <div style="font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 0.6rem; color: #fff;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2.2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+          Survey Registry & Inspector
         </div>
-
-        <div class="metric-card">
-          <div class="metric-label-row">
-            <span>Surveyed Rate</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          </div>
-          <div class="metric-val" id="val-measured" style="color: #34d399;">0</div>
-          <div class="metric-sub" id="sub-measured">100% Topologically Valid</div>
-        </div>
-
-        <div class="metric-card">
-          <div class="metric-label-row">
-            <span id="title-total-area">Total Planar Area</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline></svg>
-          </div>
-          <div class="metric-val" id="val-area">0.00 <span style="font-size: 0.85rem; color: var(--text-muted);">m²</span></div>
-          <div class="metric-sub" id="sub-area">Projected UTM Metric</div>
-        </div>
-
-        <div class="metric-card">
-          <div class="metric-label-row">
-            <span id="title-total-length">Total Trajectory</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M4 19L19 4"></path><circle cx="4" cy="19" r="2"></circle><circle cx="19" cy="4" r="2"></circle></svg>
-          </div>
-          <div class="metric-val" id="val-length">0.00 <span style="font-size: 0.85rem; color: var(--text-muted);">m</span></div>
-          <div class="metric-sub" id="sub-length">Linear Perimeter & Paths</div>
-        </div>
+        <button class="btn-close" onclick="toggleRegistryDrawer()">&times;</button>
       </div>
 
-      <!-- Map Viewport Panel -->
-      <div class="glass-panel" style="padding: 1.2rem;">
-        <div class="panel-header" style="margin-bottom: 0.85rem;">
-          <div class="panel-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon></svg>
-            Geospatial Cartography & Vector Visualizer
-          </div>
-          <div style="font-size: 0.74rem; color: var(--text-muted); font-weight: 600;">
-            Click any vector or table row to inspect telemetry drawer
-          </div>
+      <div class="registry-body">
+        <div class="registry-search-bar">
+          <input type="text" class="search-input" id="search-input" placeholder="Search features..." oninput="handleSearch()">
         </div>
 
-        <div id="map-wrapper">
-          <div class="drawing-live-banner" id="drawing-banner">MEASURING...</div>
-          <div class="crosshairs-overlay" id="crosshairs"></div>
-
-          <!-- Basemaps Switcher -->
-          <div class="map-controls-top" id="basemap-controls">
-            <button class="map-btn active" id="btn-tile-sat" onclick="switchBaseMap('sat')">Esri Satellite</button>
-            <button class="map-btn" id="btn-tile-dark" onclick="switchBaseMap('dark')">Carto Dark</button>
-            <button class="map-btn" id="btn-tile-osm" onclick="switchBaseMap('osm')">Streets</button>
-            <button class="map-btn" id="btn-crosshairs" onclick="toggleCrosshairs()">Crosshairs</button>
-          </div>
-
-          <!-- Coordinates HUD -->
-          <div class="map-hud-bottom" id="coords-hud">
-            <span>LAT: 12.97160°</span>
-            <span>LON: 77.59460°</span>
-            <span id="hud-utm">UTM: ZONE 43N</span>
-            <span id="hud-zoom">ZOOM: 13</span>
-          </div>
-
-          <!-- Fill Opacity Control -->
-          <div class="map-layer-slider-box">
-            <span>Vector Opacity:</span>
-            <input type="range" id="layer-opacity" min="0" max="100" value="35" oninput="setLayerOpacity(this.value)">
-            <span id="layer-opacity-val" style="font-family: var(--font-mono); font-weight: 700;">35%</span>
-          </div>
-
-          <div id="map"></div>
-        </div>
-      </div>
-
-      <!-- Feature Measurement Registry Data Grid -->
-      <div class="glass-panel">
-        <div class="filter-bar">
-          <div class="panel-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-            Feature Measurement Registry
-          </div>
-
-          <div style="display: flex; gap: 0.65rem; align-items: center; flex-wrap: wrap;">
-            <input type="text" class="search-input" id="search-input" placeholder="Search features..." oninput="handleSearch()">
-
-            <div class="filter-pills">
-              <button class="filter-pill active" id="pill-all" onclick="filterGeometry('ALL', this)">All (0)</button>
-              <button class="filter-pill" id="pill-poly" onclick="filterGeometry('Polygon', this)">Polygons</button>
-              <button class="filter-pill" id="pill-line" onclick="filterGeometry('LineString', this)">Lines</button>
-              <button class="filter-pill" id="pill-point" onclick="filterGeometry('Point', this)">Points</button>
-            </div>
-
-            <button class="btn-action" onclick="exportGeoJSON()">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              GeoJSON
-            </button>
-            <button class="btn-action" onclick="exportCSV()">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-              CSV
-            </button>
-          </div>
+        <div class="filter-pills-row">
+          <button class="filter-pill active" id="pill-all" onclick="filterGeometry('ALL', this)">All (0)</button>
+          <button class="filter-pill" id="pill-poly" onclick="filterGeometry('Polygon', this)">Polygons</button>
+          <button class="filter-pill" id="pill-line" onclick="filterGeometry('LineString', this)">Lines</button>
+          <button class="filter-pill" id="pill-point" onclick="filterGeometry('Point', this)">Points</button>
         </div>
 
-        <div class="table-container">
+        <div class="table-box">
           <table>
             <thead>
               <tr>
-                <th onclick="sortTable('feature_index')">Index <span id="sort-feature_index"></span></th>
-                <th onclick="sortTable('geometry_type')">Geometry Type <span id="sort-geometry_type"></span></th>
-                <th onclick="sortTable('status')">Status <span id="sort-status"></span></th>
-                <th id="th-area" onclick="sortTable('area_sq_m')">Area <span id="sort-area_sq_m"></span></th>
-                <th id="th-length" onclick="sortTable('length_m')">Length / Perimeter <span id="sort-length_m"></span></th>
-                <th>Projected CRS</th>
-                <th>Diagnostics</th>
+                <th onclick="sortTable('feature_index')">Index</th>
+                <th onclick="sortTable('geometry_type')">Type</th>
+                <th onclick="sortTable('area_sq_m')">Area</th>
+                <th onclick="sortTable('length_m')">Perimeter</th>
               </tr>
             </thead>
             <tbody id="measurement-rows">
               <tr>
-                <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 3.5rem 1rem;">
-                  No dataset loaded. Drag and drop a .kml, .kmz, or .zip archive above, or use the Interactive Vector Studio to draw parcels.
-                </td>
+                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">No vectors digitized yet.</td>
               </tr>
             </tbody>
           </table>
         </div>
+
+        <!-- Selected Feature Detailed Card -->
+        <div class="telemetry-card" id="selected-feature-card" style="display: none;">
+          <div class="telemetry-card-title">Survey Feature Diagnostics</div>
+          <div style="display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.78rem; font-family: var(--font-mono);">
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Feature ID:</span>
+              <strong id="feat-id-val" style="color: var(--accent-yellow);">#0</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Planar UTM:</span>
+              <span id="feat-area-val" style="color: #34d399; font-weight: 700;">--</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Geodesic WGS84:</span>
+              <span id="feat-geod-val" style="color: #38bdf8; font-weight: 700;">--</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Territory:</span>
+              <span id="feat-addr-val" style="color: #cbd5e1; font-size: 0.72rem; text-align: right; max-width: 200px;">--</span>
+            </div>
+          </div>
+          <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+            <button class="header-pill" style="flex: 1; justify-content: center;" onclick="copyCurrentFeatureGeoJson()">Copy GeoJSON</button>
+            <button class="header-pill" style="flex: 1; justify-content: center; color: var(--accent-rose);" onclick="deleteCurrentFeature()">Delete</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; margin-top: auto;">
+          <button class="header-pill" style="flex: 1; justify-content: center;" onclick="exportGeoJSON()">Export GeoJSON</button>
+          <button class="header-pill" style="flex: 1; justify-content: center;" onclick="exportCSV()">Export CSV</button>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Ingest Dataset Modal -->
+  <div class="modal-overlay" id="ingest-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div style="font-weight: 800; font-size: 1.15rem; color: #fff; display: flex; align-items: center; gap: 0.6rem;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          Ingest Geospatial Archive
+        </div>
+        <button class="btn-close" onclick="closeIngestModal()">&times;</button>
       </div>
 
-    </div>
-  </main>
-
-  <!-- Slide-Out Feature Inspector Drawer -->
-  <aside id="inspector-drawer">
-    <div class="drawer-header">
-      <div style="font-weight: 800; font-size: 0.98rem; display: flex; align-items: center; gap: 0.6rem;" id="drawer-title">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-        Feature Inspector
+      <div class="dropzone" id="dropzone">
+        <div style="font-size: 2rem; margin-bottom: 0.75rem;">🛰️</div>
+        <div style="font-weight: 800; font-size: 1rem; color: #fff; margin-bottom: 0.25rem;">Drag & drop geospatial archive</div>
+        <div style="font-size: 0.78rem; color: var(--text-muted);">Supports KML (.kml), KMZ (.kmz), and Shapefiles (.zip) up to 50 MB</div>
+        <input type="file" id="file-input" accept=".kml,.kmz,.zip" style="display: none;">
       </div>
-      <button class="btn-close" onclick="closeDrawer()">&times;</button>
     </div>
+  </div>
 
-    <div class="drawer-body" id="drawer-body">
-      <!-- Injected dynamically -->
-    </div>
-  </aside>
-
-  <!-- Engineering Attribution Footer -->
-  <footer style="padding: 1.35rem 2.25rem; border-top: 1px solid var(--border-subtle); background: rgba(6, 8, 14, 0.95); display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted); flex-wrap: wrap; gap: 1rem;">
-    <div style="display: flex; align-items: center; gap: 0.85rem;">
-      <span style="font-weight: 700; color: #f8fafc;">GeoMeasure Studio</span>
-      <span>&bull;</span>
-      <span>Engineered by <strong style="color: #60a5fa;" id="footer-author-name">Raghunath</strong></span>
-      <span>&bull;</span>
-      <span>SDE Intern Assignment</span>
-      <span>&bull;</span>
-      <span style="font-family: var(--font-mono); color: #34d399;">v1.0.0 Production</span>
-    </div>
-    <div style="display: flex; gap: 1.15rem; align-items: center;">
-      <a href="https://github.com/Raghunath2604" target="_blank" style="color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 0.4rem;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-        GitHub Profile
-      </a>
-      <a href="https://github.com/Raghunath2604/geospatial-measurement-api" target="_blank" style="color: var(--text-muted); text-decoration: none;">Repository</a>
-      <a href="/docs" target="_blank" style="color: var(--text-muted); text-decoration: none;">API Docs</a>
-      <button onclick="openCreditsModal()" style="background: none; border: none; color: #60a5fa; cursor: pointer; font-size: inherit; font-weight: 600;">System Architecture</button>
-    </div>
-  </footer>
-
-  <!-- Credits & Architecture Modal -->
+  <!-- System Credits Modal -->
   <div class="modal-overlay" id="credits-modal">
     <div class="modal-card">
       <div class="modal-header">
-        <div class="modal-title">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-          System Architecture & Engineering Credits
+        <div style="font-weight: 800; font-size: 1.15rem; color: #fff; display: flex; align-items: center; gap: 0.6rem;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          Tactical Architecture & Engineering Credits
         </div>
         <button class="btn-close" onclick="closeCreditsModal()">&times;</button>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 1.15rem; font-size: 0.83rem; line-height: 1.55;">
-        <div style="background: rgba(37, 99, 235, 0.08); border: 1px solid rgba(59, 130, 246, 0.28); border-radius: 14px; padding: 1.15rem;">
-          <div style="font-weight: 800; font-size: 1.05rem; color: #f8fafc; margin-bottom: 0.25rem;">
+      <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.82rem; line-height: 1.5;">
+        <div style="background: rgba(250, 204, 21, 0.08); border: 1px solid rgba(250, 204, 21, 0.3); border-radius: 12px; padding: 1.1rem;">
+          <div style="font-weight: 800; font-size: 1.05rem; color: #fff;">
             Raghunath
           </div>
-          <div style="color: #93c5fd; font-size: 0.76rem; font-family: var(--font-mono); margin-bottom: 0.75rem;">
-            Lead Software Engineer &bull; GitHub: <a href="https://github.com/Raghunath2604" target="_blank" style="color: #60a5fa; text-decoration: underline;">@Raghunath2604</a>
+          <div style="color: var(--accent-yellow); font-size: 0.76rem; font-family: var(--font-mono); margin-bottom: 0.6rem;">
+            Lead Software Engineer &bull; GitHub: <a href="https://github.com/Raghunath2604" target="_blank" style="color: #facc15; text-decoration: underline;">@Raghunath2604</a>
           </div>
-          <div style="color: #cbd5e1; font-size: 0.81rem;">
-            Engineered for the SDE Hiring Assignment. Architecture incorporates streaming O(1) ingestion caps, threadpool async delegation for all C-bound geodetic operations, dynamic Transverse Mercator (UTM/UPS) zoning, and full WGS 84 Karney geodesic validation.
+          <div style="color: #cbd5e1; font-size: 0.8rem;">
+            Engineered for the SDE Hiring Assignment. High-throughput geospatial measurement engine with streaming O(1) ingestion, threadpool async execution, dynamic UTM/UPS cartographic zoning, and WGS 84 Karney ellipsoidal geodesics.
           </div>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 0.6rem;">
-          <div style="font-weight: 700; color: #94a3b8; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.05em;">Foundational Geodetic Standards & Scientific Credits</div>
-
-          <div class="spec-row">
-            <span class="spec-label">Geodesic Ellipsoidal Oracle:</span>
-            <span class="spec-value">Charles F.F. Karney (WGS 84 / GRS 1980)</span>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; font-family: var(--font-mono); font-size: 0.74rem;">
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Ellipsoidal Oracle:</span>
+            <span style="color: #fff;">Charles F.F. Karney (WGS 84 / pyproj)</span>
           </div>
-          <div class="spec-row">
-            <span class="spec-label">Topological Kernel:</span>
-            <span class="spec-value">GEOS 3.12+ / Shapely 2.0 C-API</span>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Topological Kernel:</span>
+            <span style="color: #fff;">GEOS 3.12+ / Shapely 2.0 C-API</span>
           </div>
-          <div class="spec-row">
-            <span class="spec-label">Cartographic Registry:</span>
-            <span class="spec-value">EPSG Parameter Dataset (IOGP)</span>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Cartographic Registry:</span>
+            <span style="color: #fff;">EPSG Geodetic Parameter Dataset (IOGP)</span>
           </div>
-          <div class="spec-row">
-            <span class="spec-label">Satellite Imagery:</span>
-            <span class="spec-value">Mapbox Satellite Streets HD, Esri, CARTO</span>
-          </div>
-          <div class="spec-row">
-            <span class="spec-label">Reverse Geocoding:</span>
-            <span class="spec-value">OpenStreetMap Nominatim (ODbL)</span>
-          </div>
-          <div class="spec-row">
-            <span class="spec-label">Elevation Model:</span>
-            <span class="spec-value">NASA SRTM 30m / Open-Elevation</span>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">High-Res Satellites:</span>
+            <span style="color: #fff;">Mapbox Satellite Streets HD, Esri, CARTO</span>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Custom Mapbox Token Modal -->
+  <!-- Custom Mapbox HD Token Modal -->
   <div class="modal-overlay" id="key-modal">
-    <div class="modal-card" style="max-width: 520px;">
+    <div class="modal-card" style="max-width: 500px;">
       <div class="modal-header">
-        <div class="modal-title">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"><path d="M21 2l-2 2m-1-1l-3 3m-1 3l4 4 7-7-3-3z"></path><circle cx="8" cy="16" r="5"></circle></svg>
-          Mapbox HD Vector Tiles
-        </div>
+        <div style="font-weight: 800; font-size: 1.15rem; color: #fff;">Mapbox HD Satellite Imagery</div>
         <button class="btn-close" onclick="closeKeyModal()">&times;</button>
       </div>
-      <p style="font-size: 0.81rem; color: var(--text-muted); margin-bottom: 1.1rem; line-height: 1.45;">
-        Configure your personal Mapbox token to unlock ultra-crisp 512px @2x retina satellite imagery and street navigation.
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.4;">
+        Provide your personal Mapbox token to unlock 512px @2x retina satellite street tiles and vector contours.
       </p>
-      <input type="text" id="mapbox-token-input" placeholder="pk.eyJ1..." style="width: 100%; padding: 0.75rem 0.95rem; background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle); border-radius: 9px; color: #fff; font-family: var(--font-mono); font-size: 0.82rem; margin-bottom: 1.25rem;">
+      <input type="text" id="mapbox-token-input" placeholder="pk.eyJ1..." style="width: 100%; padding: 0.75rem 0.95rem; background: rgba(255,255,255,0.04); border: 1px solid var(--border-panel); border-radius: 9px; color: #fff; font-family: var(--font-mono); font-size: 0.82rem; margin-bottom: 1.25rem;">
       <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
-        <button class="btn-action" onclick="saveMapboxToken()">Activate Token</button>
+        <button class="hud-btn-primary" style="width: auto; padding: 0.6rem 1.4rem;" onclick="saveMapboxToken()">Activate Token</button>
       </div>
     </div>
   </div>
 
   <script>
     // State
-    let currentFileId = null;
-    let currentFileMeta = null;
     let currentMeasurements = [];
     let currentFeatures = [];
     let activeFilter = 'ALL';
@@ -1456,10 +1185,10 @@
     let sortColumn = 'feature_index';
     let sortAsc = true;
     let unitSystem = 'metric';
-    let systemLimits = { max_upload_bytes: 52428800, max_upload_mb: 50 };
     let customMapboxToken = localStorage.getItem('mapbox_token') || '';
     let selectedFeatureIndex = null;
-    let layerOpacityValue = 0.35;
+    let layerOpacityValue = 0.40;
+    let activeVectorColor = '#facc15';
 
     // Interactive Drawing State
     let currentDrawTool = null; // null | 'polygon' | 'line' | 'circle' | 'pin'
@@ -1480,9 +1209,15 @@
     });
 
     let tilesMapboxSat = null;
-    let tilesMapboxDark = null;
 
-    const map = L.map('map', { layers: [tilesSat] }).setView([12.9716, 77.5946], 13);
+    const map = L.map('map', { 
+      layers: [tilesSat],
+      zoomControl: false 
+    }).setView([12.9716, 77.5946], 14);
+
+    // Zoom control in bottom right
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+
     liveDrawingsLayerGroup = L.layerGroup().addTo(map);
 
     function setupMapboxLayers() {
@@ -1499,20 +1234,18 @@
         if (!document.getElementById('btn-tile-mb-sat')) {
           const btn = document.createElement('button');
           btn.id = 'btn-tile-mb-sat';
-          btn.className = 'map-btn';
-          btn.textContent = 'Mapbox Satellite HD';
+          btn.className = 'basemap-btn';
+          btn.textContent = 'Mapbox HD';
           btn.onclick = () => switchBaseMap('mapbox-sat');
-          container.insertBefore(btn, document.getElementById('btn-crosshairs'));
+          container.insertBefore(btn, container.firstChild);
         }
       } catch (e) {
-        console.warn('Mapbox setup error:', e);
+        console.warn('Mapbox setup:', e);
       }
     }
 
     function switchBaseMap(type) {
-      document.querySelectorAll('#basemap-controls .map-btn').forEach(b => {
-        if (b.id !== 'btn-crosshairs') b.classList.remove('active');
-      });
+      document.querySelectorAll('#basemap-controls .basemap-btn').forEach(b => b.classList.remove('active'));
       map.removeLayer(tilesSat);
       map.removeLayer(tilesDark);
       map.removeLayer(tilesOsm);
@@ -1546,9 +1279,15 @@
       }
     }
 
+    function selectColor(hex, el) {
+      activeVectorColor = hex;
+      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+    }
+
     function setLayerOpacity(val) {
       layerOpacityValue = val / 100.0;
-      document.getElementById('layer-opacity-val').textContent = `${val}%`;
+      document.getElementById('layer-opacity-text').textContent = `${val}%`;
       geoJsonLayer.setStyle({ fillOpacity: layerOpacityValue });
       liveDrawingsLayerGroup.eachLayer(l => {
         if (l.setStyle) l.setStyle({ fillOpacity: layerOpacityValue });
@@ -1563,8 +1302,8 @@
       const hemi = lat >= 0 ? 'N' : 'S';
       document.getElementById('coords-hud').children[0].textContent = `LAT: ${lat.toFixed(5)}°`;
       document.getElementById('coords-hud').children[1].textContent = `LON: ${lon.toFixed(5)}°`;
-      document.getElementById('hud-utm').textContent = `UTM: ZONE ${zone}${hemi}`;
-      document.getElementById('hud-zoom').textContent = `ZOOM: ${map.getZoom()}`;
+      document.getElementById('hud-utm-zone').textContent = `ZONE ${zone}${hemi}`;
+      document.getElementById('hud-zoom-val').textContent = `Z${map.getZoom()}`;
 
       if (currentDrawTool && drawnVertices.length > 0) {
         const rubberCoords = [...drawnVertices, [lat, lon]];
@@ -1585,36 +1324,36 @@
         }
         approxPerim += map.distance(drawnVertices[drawnVertices.length - 1], [lat, lon]);
         approxPerim += map.distance([lat, lon], drawnVertices[0]);
-        banner.innerHTML = `POLYGON &bull; ${drawnVertices.length + 1} VERTICES &bull; PERIMETER: <strong>${formatLength(approxPerim)}</strong>`;
+        banner.innerHTML = `DIGITIZING POLYGON &bull; ${drawnVertices.length + 1} VERTICES &bull; PERIMETER: <strong>${formatLength(approxPerim)}</strong>`;
       } else if (currentDrawTool === 'line' && drawnVertices.length >= 1) {
         let dist = 0;
         for (let i = 0; i < drawnVertices.length - 1; i++) {
           dist += map.distance(drawnVertices[i], drawnVertices[i+1]);
         }
         dist += map.distance(drawnVertices[drawnVertices.length - 1], [lat, lon]);
-        banner.innerHTML = `PATH &bull; ${drawnVertices.length + 1} WAYPOINTS &bull; DISTANCE: <strong>${formatLength(dist)}</strong>`;
+        banner.innerHTML = `TRACING TRAJECTORY &bull; ${drawnVertices.length + 1} NODES &bull; DISTANCE: <strong>${formatLength(dist)}</strong>`;
       }
     }
 
     function locateUserPosition() {
       if (!navigator.geolocation) {
-        alert('Geolocation not supported by this browser.');
+        alert('Geolocation not supported by this device.');
         return;
       }
-      showToast('Acquiring high-precision GPS coordinate...');
+      showToast('Locking onto satellite GPS coordinates...');
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const lat = pos.coords.latitude;
           const lon = pos.coords.longitude;
           map.setView([lat, lon], 16);
           const userMarker = L.circleMarker([lat, lon], {
-            radius: 9, color: '#38bdf8', fillColor: '#0284c7', fillOpacity: 0.9, weight: 3
+            radius: 8, color: '#facc15', fillColor: '#eab308', fillOpacity: 0.95, weight: 3
           }).addTo(map);
-          userMarker.bindPopup(`<strong>Your GPS Location</strong><br>Lat: ${lat.toFixed(5)}°<br>Lon: ${lon.toFixed(5)}°`).openPopup();
-          showToast('GPS Satellite position locked!');
+          userMarker.bindPopup(`<strong>Satellite GPS Lock</strong><br>Lat: ${lat.toFixed(5)}°<br>Lon: ${lon.toFixed(5)}°`).openPopup();
+          showToast('GPS Satellite Coordinates Acquired!');
         },
         (err) => {
-          alert('Location acquisition failed: ' + err.message);
+          alert('GPS Acquisition Failed: ' + err.message);
         },
         { enableHighAccuracy: true, timeout: 8000 }
       );
@@ -1624,20 +1363,40 @@
     let layerMap = {};
     const geoJsonLayer = L.geoJSON(null, {
       style: function() {
-        return { color: '#3b82f6', weight: 2.5, fillColor: '#06b6d4', fillOpacity: layerOpacityValue };
+        return { 
+          color: activeVectorColor, 
+          weight: 2.5, 
+          dashArray: '4, 4', 
+          fillColor: activeVectorColor, 
+          fillOpacity: layerOpacityValue 
+        };
       },
       pointToLayer: function(feature, latlng) {
-        return L.circleMarker(latlng, { radius: 7, fillColor: '#f59e0b', color: '#fff', weight: 2, fillOpacity: 0.9 });
+        return L.circleMarker(latlng, { radius: 7, fillColor: '#facc15', color: '#000', weight: 2, fillOpacity: 1 });
       },
       onEachFeature: function(feature, layer) {
         const idx = feature.properties._feature_index;
         layerMap[idx] = layer;
         layer.on('click', () => {
           highlightFeature(idx);
-          openFeatureDrawer(idx);
         });
       }
     }).addTo(map);
+
+    function toggleRegistryDrawer() {
+      const el = document.getElementById('registry-drawer');
+      const btn = document.getElementById('btn-toggle-registry');
+      el.classList.toggle('open');
+      btn.classList.toggle('active', el.classList.contains('open'));
+    }
+
+    function openIngestModal() {
+      document.getElementById('ingest-modal').style.display = 'flex';
+    }
+
+    function closeIngestModal() {
+      document.getElementById('ingest-modal').style.display = 'none';
+    }
 
     function openCreditsModal() {
       document.getElementById('credits-modal').style.display = 'flex';
@@ -1665,52 +1424,38 @@
       if (customMapboxToken) {
         switchBaseMap('mapbox-sat');
       }
-      showToast('Mapbox HD Vector Tiles Activated!');
+      showToast('Mapbox HD Vector Satellite Tiles Activated!');
     }
 
-    // System Config & Limits
-    async function initSystemLimits() {
+    // Config Initialization
+    async function initSystemConfig() {
       try {
         const res = await fetch('/api/files/config/');
         if (res.ok) {
-          systemLimits = await res.json();
-          document.getElementById('limit-upload-pill').textContent = `Max ${systemLimits.max_upload_mb} MB`;
-
-          if (systemLimits.mapbox_token && !customMapboxToken) {
-            customMapboxToken = systemLimits.mapbox_token;
+          const cfg = await res.json();
+          if (cfg.mapbox_token && !customMapboxToken) {
+            customMapboxToken = cfg.mapbox_token;
             localStorage.setItem('mapbox_token', customMapboxToken);
           }
-
-          if (systemLimits.author && systemLimits.author.name) {
-            const authorEl = document.getElementById('footer-author-name');
-            if (authorEl) authorEl.textContent = systemLimits.author.name;
-          }
-
           setupMapboxLayers();
           if (customMapboxToken) {
             switchBaseMap('mapbox-sat');
           }
         }
       } catch (e) {
-        console.warn('Limits check:', e);
+        console.warn('Config initialization error:', e);
       }
     }
-    initSystemLimits();
+    initSystemConfig();
 
     // Unit Conversion
     function setUnits(system) {
       unitSystem = system;
       document.getElementById('btn-unit-metric').classList.toggle('active', system === 'metric');
       document.getElementById('btn-unit-imperial').classList.toggle('active', system === 'imperial');
-
-      document.getElementById('th-area').innerHTML = (system === 'metric' ? 'Area (m² / ha)' : 'Area (sq ft / ac)') + ` <span id="sort-area_sq_m"></span>`;
-      document.getElementById('th-length').innerHTML = (system === 'metric' ? 'Length (m / km)' : 'Length (ft / mi)') + ` <span id="sort-length_m"></span>`;
-
       updateStatsDisplay();
       renderTable();
-      if (selectedFeatureIndex !== null) {
-        openFeatureDrawer(selectedFeatureIndex);
-      }
+      if (selectedFeatureIndex !== null) highlightFeature(selectedFeatureIndex);
     }
 
     function formatArea(sq_m) {
@@ -1748,23 +1493,27 @@
     }
 
     function updateStatsDisplay() {
-      if (!window.latestSummary) {
-        document.getElementById('val-features').textContent = currentMeasurements.length;
-        document.getElementById('val-measured').textContent = currentMeasurements.filter(m => m.status === 'MEASURED').length;
-        return;
-      }
-      const s = window.latestSummary;
-      document.getElementById('val-features').textContent = s.feature_count;
-      document.getElementById('val-measured').textContent = s.measured_count;
-      document.getElementById('val-area').innerHTML = formatArea(s.total_area_sq_m);
-      document.getElementById('val-length').innerHTML = formatLength(s.total_length_m);
+      let totArea = 0;
+      let totLen = 0;
+      currentMeasurements.forEach(m => {
+        if (m.area_sq_m) totArea += m.area_sq_m;
+        if (m.length_m) totLen += m.length_m;
+      });
+      document.getElementById('hud-area-val').innerHTML = formatArea(totArea);
+      document.getElementById('hud-length-val').innerHTML = formatLength(totLen);
     }
 
-    // File Ingestion
+    function showToast(msg) {
+      document.getElementById('toast-text').textContent = msg;
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // Ingestion Handlers
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('file-input');
     const loadingOverlay = document.getElementById('loading-overlay');
-    const toast = document.getElementById('toast');
 
     dropzone.addEventListener('click', () => fileInput.click());
     dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -1772,33 +1521,15 @@
     dropzone.addEventListener('drop', (e) => {
       e.preventDefault();
       dropzone.classList.remove('dragover');
-      if (e.dataTransfer.files.length > 0) handleFileSelection(e.dataTransfer.files[0]);
+      if (e.dataTransfer.files.length > 0) uploadFile(e.dataTransfer.files[0]);
     });
 
     fileInput.addEventListener('change', () => {
-      if (fileInput.files.length > 0) handleFileSelection(fileInput.files[0]);
+      if (fileInput.files.length > 0) uploadFile(fileInput.files[0]);
     });
 
-    function showToast(msg) {
-      document.getElementById('toast-text').textContent = msg;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-
-    function handleFileSelection(file) {
-      const lower = file.name.toLowerCase();
-      if (!lower.endsWith('.kml') && !lower.endsWith('.kmz') && !lower.endsWith('.zip')) {
-        alert('Unsupported format. Please supply a valid .kml, .kmz, or Shapefile .zip.');
-        return;
-      }
-      if (file.size > systemLimits.max_upload_bytes) {
-        alert(`File exceeds size limit of ${systemLimits.max_upload_mb} MB.`);
-        return;
-      }
-      uploadFile(file);
-    }
-
     async function uploadFile(file) {
+      closeIngestModal();
       const formData = new FormData();
       formData.append('file', file);
 
@@ -1813,10 +1544,36 @@
           return;
         }
 
-        currentFileId = data.id;
-        currentFileMeta = data;
-        await loadAndRenderFile(data.id, data);
-        showToast(`Successfully processed ${file.name}`);
+        const [measRes, featRes] = await Promise.all([
+          fetch(`/api/files/${data.id}/measurements/?limit=1000`),
+          fetch(`/api/files/${data.id}/features/?limit=1000`)
+        ]);
+
+        const mData = await measRes.json();
+        const fData = await featRes.json();
+
+        currentMeasurements = mData.measurements || [];
+        currentFeatures = fData.features || [];
+
+        layerMap = {};
+        geoJsonLayer.clearLayers();
+        const collection = {
+          type: "FeatureCollection",
+          features: currentFeatures.map(f => ({
+            type: "Feature",
+            geometry: f.geometry,
+            properties: { ...f.properties, _feature_index: f.feature_index }
+          }))
+        };
+        geoJsonLayer.addData(collection);
+        if (geoJsonLayer.getLayers().length > 0) {
+          map.fitBounds(geoJsonLayer.getBounds(), { padding: [40, 40] });
+        }
+
+        renderTable();
+        updateStatsDisplay();
+        showToast(`Ingested ${file.name} (${currentFeatures.length} features)`);
+        document.getElementById('registry-drawer').classList.add('open');
       } catch (err) {
         alert('Upload failed: ' + err.message);
       } finally {
@@ -1824,50 +1581,9 @@
       }
     }
 
-    async function loadAndRenderFile(fileId, meta) {
-      const [measRes, featRes] = await Promise.all([
-        fetch(`/api/files/${fileId}/measurements/?limit=1000`),
-        fetch(`/api/files/${fileId}/features/?limit=1000`)
-      ]);
-
-      const measurementsData = await measRes.json();
-      const featuresData = await featRes.json();
-
-      currentMeasurements = measurementsData.measurements || [];
-      currentFeatures = featuresData.features || [];
-      window.latestSummary = measurementsData.summary;
-
-      document.getElementById('file-meta-panel').style.display = 'block';
-      document.getElementById('meta-filename').textContent = meta.filename;
-      document.getElementById('meta-crs').textContent = meta.crs || 'EPSG:4326';
-      document.getElementById('meta-status').textContent = meta.status;
-
-      updateStatsDisplay();
-
-      // Render Leaflet Layer
-      layerMap = {};
-      geoJsonLayer.clearLayers();
-      const collection = {
-        type: "FeatureCollection",
-        features: currentFeatures.map(f => ({
-          type: "Feature",
-          geometry: f.geometry,
-          properties: { ...f.properties, _feature_index: f.feature_index }
-        }))
-      };
-      geoJsonLayer.addData(collection);
-      if (geoJsonLayer.getLayers().length > 0) {
-        map.fitBounds(geoJsonLayer.getBounds(), { padding: [40, 40] });
-      }
-
-      renderTable();
-    }
-
     function renderTable() {
       const tbody = document.getElementById('measurement-rows');
       tbody.innerHTML = '';
-
-      // Update count badge
       document.getElementById('pill-all').textContent = `All (${currentMeasurements.length})`;
 
       let filtered = currentMeasurements.filter(m => {
@@ -1876,73 +1592,33 @@
         if (activeFilter === 'Point' && !m.geometry_type.includes('Point')) return false;
         if (searchQuery) {
           const q = searchQuery.toLowerCase();
-          const matchIndex = String(m.feature_index).includes(q);
-          const matchType = m.geometry_type.toLowerCase().includes(q);
-          const matchStatus = m.status.toLowerCase().includes(q);
-          if (!matchIndex && !matchType && !matchStatus) return false;
+          return String(m.feature_index).includes(q) || m.geometry_type.toLowerCase().includes(q);
         }
         return true;
       });
 
-      // Sorting
-      filtered.sort((a, b) => {
-        let vA = a[sortColumn];
-        let vB = b[sortColumn];
-        if (vA === null || vA === undefined) vA = -Infinity;
-        if (vB === null || vB === undefined) vB = -Infinity;
-        if (typeof vA === 'string') {
-          return sortAsc ? vA.localeCompare(vB) : vB.localeCompare(vA);
-        }
-        return sortAsc ? vA - vB : vB - vA;
-      });
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">No features match search or filter criteria.</td></tr>`;
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">No matching vectors.</td></tr>`;
         return;
       }
 
       filtered.forEach(m => {
-        const badgeClass = m.status === 'MEASURED' ? 'badge-measured' :
-                           m.status === 'NOT_APPLICABLE' ? 'badge-na' :
-                           m.status === 'UNSUPPORTED' ? 'badge-unsupported' : 'badge-error';
         const tr = document.createElement('tr');
         tr.id = `row-feat-${m.feature_index}`;
         if (selectedFeatureIndex === m.feature_index) tr.classList.add('selected');
 
-        tr.onclick = () => {
-          highlightFeature(m.feature_index);
-          openFeatureDrawer(m.feature_index);
-        };
+        tr.onclick = () => highlightFeature(m.feature_index);
         tr.innerHTML = `
-          <td><strong>#${m.feature_index}</strong></td>
-          <td><strong style="color: #f1f5f9;">${m.geometry_type}</strong></td>
-          <td><span class="badge ${badgeClass}">${m.status}</span></td>
-          <td style="color: #34d399; font-weight: 700;">${formatArea(m.area_sq_m)}</td>
-          <td style="color: #38bdf8; font-weight: 700;">${formatLength(m.length_m)}</td>
-          <td><code>${m.measurement_crs || '—'}</code></td>
-          <td style="color: #cbd5e1; font-size: 0.74rem;">${m.message || 'Validation passed'}</td>
+          <td><strong style="color: var(--accent-yellow);">#${m.feature_index}</strong></td>
+          <td>${m.geometry_type}</td>
+          <td style="color: #34d399;">${formatArea(m.area_sq_m)}</td>
+          <td style="color: #38bdf8;">${formatLength(m.length_m)}</td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    function sortTable(col) {
-      if (sortColumn === col) {
-        sortAsc = !sortAsc;
-      } else {
-        sortColumn = col;
-        sortAsc = true;
-      }
-      ['feature_index', 'geometry_type', 'status', 'area_sq_m', 'length_m'].forEach(c => {
-        const el = document.getElementById(`sort-${c}`);
-        if (el) el.textContent = '';
-      });
-      const activeEl = document.getElementById(`sort-${col}`);
-      if (activeEl) activeEl.textContent = sortAsc ? ' ▲' : ' ▼';
-      renderTable();
-    }
-
-    function highlightFeature(index) {
+    async function highlightFeature(index) {
       selectedFeatureIndex = index;
       document.querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
       const row = document.getElementById(`row-feat-${index}`);
@@ -1951,104 +1627,43 @@
         row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
 
-      const layer = layerMap[index];
-      if (layer) {
-        if (layer.getBounds) {
-          map.fitBounds(layer.getBounds(), { padding: [50, 50], maxZoom: 17 });
-        } else if (layer.getLatLng) {
-          map.setView(layer.getLatLng(), 16);
-        }
-      }
-    }
-
-    function filterGeometry(type, el) {
-      activeFilter = type;
-      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-      el.classList.add('active');
-      renderTable();
-    }
-
-    function handleSearch() {
-      searchQuery = document.getElementById('search-input').value.trim();
-      renderTable();
-    }
-
-    // Slide-out Feature Inspector Drawer
-    async function openFeatureDrawer(featureIndex) {
-      selectedFeatureIndex = featureIndex;
-      const meas = currentMeasurements.find(m => m.feature_index === featureIndex);
-      const feat = currentFeatures.find(f => f.feature_index === featureIndex);
+      const meas = currentMeasurements.find(m => m.feature_index === index);
+      const feat = currentFeatures.find(f => f.feature_index === index);
       if (!meas || !feat) return;
 
-      const drawer = document.getElementById('inspector-drawer');
-      const title = document.getElementById('drawer-title');
-      const body = document.getElementById('drawer-body');
-
-      title.innerHTML = `Feature #${featureIndex} &bull; ${meas.geometry_type}`;
-
-      let centroid = [0, 0];
-      if (feat.geometry.type === 'Point') {
-        centroid = feat.geometry.coordinates;
-      } else if (feat.geometry.type === 'Polygon') {
-        centroid = feat.geometry.coordinates[0][0];
-      } else if (feat.geometry.type === 'LineString') {
-        centroid = feat.geometry.coordinates[0];
+      const layer = layerMap[index];
+      if (layer) {
+        if (layer.getBounds) map.fitBounds(layer.getBounds(), { padding: [50, 50], maxZoom: 18 });
+        else if (layer.getLatLng) map.setView(layer.getLatLng(), 17);
       }
 
-      body.innerHTML = `
-        <div class="drawer-card">
-          <div class="drawer-card-title">Survey-Grade Geometric Metrics</div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.95rem;">
-            <div>
-              <div style="color: var(--text-muted); font-size: 0.72rem;">Planar UTM Area:</div>
-              <div style="font-size: 1.2rem; font-family: var(--font-mono); font-weight: 800; color: #34d399;">${formatArea(meas.area_sq_m)}</div>
-            </div>
-            <div>
-              <div style="color: var(--text-muted); font-size: 0.72rem;">Perimeter / Length:</div>
-              <div style="font-size: 1.2rem; font-family: var(--font-mono); font-weight: 800; color: #38bdf8;">${formatLength(meas.length_m)}</div>
-            </div>
-            <div>
-              <div style="color: var(--text-muted); font-size: 0.72rem;">Measurement CRS:</div>
-              <div style="font-family: var(--font-mono); font-size: 0.84rem; color: #fbbf24; font-weight: 700;">${meas.measurement_crs || '—'}</div>
-            </div>
-            <div>
-              <div style="color: var(--text-muted); font-size: 0.72rem;">Topological Status:</div>
-              <div><span class="badge badge-measured">${meas.status}</span></div>
-            </div>
-          </div>
-        </div>
+      // Populate Detailed Inspector
+      document.getElementById('selected-feature-card').style.display = 'block';
+      document.getElementById('feat-id-val').textContent = `#${index} (${meas.geometry_type})`;
+      document.getElementById('feat-area-val').innerHTML = formatArea(meas.area_sq_m);
+      document.getElementById('feat-geod-val').innerHTML = feat._geodesic_area_sq_m ? formatArea(feat._geodesic_area_sq_m) : '—';
 
-        <div class="drawer-card" id="drawer-geo-loc">
-          <div class="drawer-card-title">Territorial Administrative Context</div>
-          <div style="color: #94a3b8; font-size: 0.78rem;">Querying OpenStreetMap Nominatim reverse geocode...</div>
-        </div>
+      // Update Left Floating HUD
+      document.getElementById('hud-status-badge').textContent = `FEATURE #${index}`;
+      document.getElementById('hud-area-val').innerHTML = formatArea(meas.area_sq_m);
+      document.getElementById('hud-length-val').innerHTML = formatLength(meas.length_m);
+      document.getElementById('hud-crs-val').textContent = meas.measurement_crs || 'EPSG:32643';
 
-        <div class="drawer-card" id="drawer-elevation">
-          <div class="drawer-card-title">Terrain Altitude Profile</div>
-          <div style="color: #94a3b8; font-size: 0.78rem;">Querying NASA SRTM / Open-Elevation...</div>
-        </div>
+      let centroid = [0, 0];
+      if (feat.geometry.type === 'Point') centroid = feat.geometry.coordinates;
+      else if (feat.geometry.type === 'Polygon') centroid = feat.geometry.coordinates[0][0];
+      else if (feat.geometry.type === 'LineString') centroid = feat.geometry.coordinates[0];
 
-        <div class="drawer-card">
-          <div class="drawer-card-title">Geodetic Reference & Coordinates</div>
-          <div style="font-size: 0.76rem; font-family: var(--font-mono); display: flex; flex-direction: column; gap: 0.4rem; color: #cbd5e1;">
-            <div>Centroid: [${centroid[0].toFixed(6)}, ${centroid[1].toFixed(6)}]</div>
-            <div>Geometry: ${feat.geometry.type}</div>
-            <div>Diagnostics: ${meas.message || 'Topological validation passed'}</div>
-          </div>
-        </div>
+      // Scale Distortion Ratio
+      if (meas.area_sq_m && feat._geodesic_area_sq_m) {
+        const ratio = meas.area_sq_m / feat._geodesic_area_sq_m;
+        const pct = ((ratio - 1) * 100).toFixed(3);
+        document.getElementById('hud-scale-val').textContent = `${ratio.toFixed(4)} (${pct > 0 ? '+' : ''}${pct}% distortion)`;
+      } else {
+        document.getElementById('hud-scale-val').textContent = '1.0000 (Isometric)';
+      }
 
-        <div style="display: flex; gap: 0.65rem; margin-top: auto;">
-          <button class="btn-action" style="flex: 1; justify-content: center;" onclick="copyFeatureGeoJson(${featureIndex})">
-            Copy GeoJSON
-          </button>
-          <button class="btn-action" style="flex: 1; justify-content: center;" onclick="deleteFeature(${featureIndex})">
-            Remove Feature
-          </button>
-        </div>
-      `;
-
-      drawer.classList.add('open');
-
+      // Query Reverse Geocoding & Elevation
       try {
         const [geoRes, elevRes] = await Promise.all([
           fetch('/api/measure/reverse-geocode/', {
@@ -2064,51 +1679,51 @@
         ]);
         if (geoRes.ok) {
           const loc = await geoRes.json();
-          document.getElementById('drawer-geo-loc').innerHTML = `
-            <div class="drawer-card-title">Territorial Administrative Context</div>
-            <div style="font-weight: 700; color: #f1f5f9; font-size: 0.85rem; margin-bottom: 0.35rem; line-height: 1.4;">${loc.display_name}</div>
-            <div style="font-size: 0.74rem; color: var(--text-muted); font-family: var(--font-mono);">
-              Country: ${loc.country || '—'} &bull; State: ${loc.state || '—'} &bull; City: ${loc.city || '—'}
-            </div>
-          `;
+          document.getElementById('hud-loc-val').textContent = `${loc.city || loc.state || loc.country || 'Territory'}`;
+          document.getElementById('feat-addr-val').textContent = loc.display_name;
         }
         if (elevRes.ok) {
           const elev = await elevRes.json();
-          document.getElementById('drawer-elevation').innerHTML = `
-            <div class="drawer-card-title">Terrain Altitude Profile</div>
-            <div style="font-size: 1.25rem; font-family: var(--font-mono); font-weight: 800; color: #10b981;">
-              ${elev.elevation_m} m <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">(${elev.elevation_ft} ft MSL)</span>
-            </div>
-            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">Source: ${elev.source}</div>
-          `;
+          document.getElementById('hud-elev-val').innerHTML = `${elev.elevation_m} <span style="font-size: 0.8rem; color: var(--text-muted);">m</span>`;
         }
       } catch (e) {
-        console.debug('Reverse geocode error:', e);
+        console.debug('Lookup error:', e);
       }
     }
 
-    function closeDrawer() {
-      document.getElementById('inspector-drawer').classList.remove('open');
-      selectedFeatureIndex = null;
-      document.querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
+    function sortTable(col) {
+      if (sortColumn === col) sortAsc = !sortAsc;
+      else { sortColumn = col; sortAsc = true; }
+      renderTable();
     }
 
-    function copyFeatureGeoJson(idx) {
-      const feat = currentFeatures.find(f => f.feature_index === idx);
+    function filterGeometry(type, el) {
+      activeFilter = type;
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      renderTable();
+    }
+
+    function handleSearch() {
+      searchQuery = document.getElementById('search-input').value.trim();
+      renderTable();
+    }
+
+    function copyCurrentFeatureGeoJson() {
+      const feat = currentFeatures.find(f => f.feature_index === selectedFeatureIndex);
       if (!feat) return;
       navigator.clipboard.writeText(JSON.stringify(feat, null, 2));
       showToast('Feature GeoJSON copied to clipboard!');
     }
 
-    function deleteFeature(idx) {
+    function deleteCurrentFeature() {
+      const idx = selectedFeatureIndex;
       currentMeasurements = currentMeasurements.filter(m => m.feature_index !== idx);
       currentFeatures = currentFeatures.filter(f => f.feature_index !== idx);
       const layer = layerMap[idx];
-      if (layer) {
-        map.removeLayer(layer);
-        delete layerMap[idx];
-      }
-      closeDrawer();
+      if (layer) { map.removeLayer(layer); delete layerMap[idx]; }
+      document.getElementById('selected-feature-card').style.display = 'none';
+      selectedFeatureIndex = null;
       renderTable();
       updateStatsDisplay();
       showToast(`Removed feature #${idx}`);
@@ -2120,40 +1735,27 @@
         deactivateDrawTool();
         return;
       }
-
       currentDrawTool = tool;
       drawnVertices = [];
       clearTempMarkers();
 
-      document.querySelectorAll('.btn-tool').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.toolbar-tool-btn').forEach(b => b.classList.remove('active'));
       const activeBtn = document.getElementById(`tool-${tool}`);
       if (activeBtn) activeBtn.classList.add('active');
 
       const banner = document.getElementById('drawing-banner');
-      const hint = document.getElementById('tool-instruction');
       banner.style.display = 'block';
-      hint.style.display = 'block';
 
-      if (tool === 'polygon') {
-        banner.textContent = 'DRAWING POLYGON: CLICK TO SET VERTICES';
-        hint.innerHTML = '<strong>Polygon Mode:</strong> Click map to add boundary points. Click first point or double-click to close and compute survey-grade UTM metrics.';
-      } else if (tool === 'line') {
-        banner.textContent = 'MEASURING PATH: CLICK TO ADD WAYPOINTS';
-        hint.innerHTML = '<strong>Path Mode:</strong> Click along roads or trajectories. Double-click to complete distance calculation.';
-      } else if (tool === 'circle') {
-        banner.textContent = 'RADIUS BUFFER: CLICK CENTER POINT';
-        hint.innerHTML = '<strong>Radial Buffer:</strong> Click center point, then click outer edge to set radius.';
-      } else if (tool === 'pin') {
-        banner.textContent = 'INSPECT POINT: CLICK MAP LOCATION';
-        hint.innerHTML = '<strong>Coordinate Pin:</strong> Click anywhere on the map to query UTM zone, elevation, and territory address.';
-      }
+      if (tool === 'polygon') banner.textContent = 'DIGITIZING POLYGON: CLICK MAP TO ADD BOUNDARY POINTS';
+      else if (tool === 'line') banner.textContent = 'TRACING PATH: CLICK TO ADD WAYPOINTS';
+      else if (tool === 'circle') banner.textContent = 'RADIAL BUFFER: CLICK CENTER POINT';
+      else if (tool === 'pin') banner.textContent = 'INSPECT PIN: CLICK ANY LOCATION ON MAP';
     }
 
     function deactivateDrawTool() {
       currentDrawTool = null;
-      document.querySelectorAll('.btn-tool').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.toolbar-tool-btn').forEach(b => b.classList.remove('active'));
       document.getElementById('drawing-banner').style.display = 'none';
-      document.getElementById('tool-instruction').style.display = 'none';
       clearTempMarkers();
     }
 
@@ -2181,7 +1783,7 @@
       if (e.key === 'x' || e.key === 'X') activateDrawTool('pin');
       if (e.key === 'Escape') {
         deactivateDrawTool();
-        closeDrawer();
+        closeIngestModal();
         closeCreditsModal();
         closeKeyModal();
       }
@@ -2196,7 +1798,7 @@
 
       if (currentDrawTool === 'pin') {
         deactivateDrawTool();
-        const marker = L.marker([lat, lon]).addTo(liveDrawingsLayerGroup);
+        const marker = L.circleMarker([lat, lon], { radius: 7, fillColor: activeVectorColor, color: '#000', weight: 2, fillOpacity: 1 }).addTo(liveDrawingsLayerGroup);
         marker.bindPopup(`<strong>Coordinate Pin</strong><br>Lat: ${lat.toFixed(5)}°<br>Lon: ${lon.toFixed(5)}°`).openPopup();
         await inspectPointLive(lat, lon);
         return;
@@ -2205,9 +1807,9 @@
       if (currentDrawTool === 'circle') {
         if (drawnVertices.length === 0) {
           drawnVertices.push([lat, lon]);
-          const centerMarker = L.circleMarker([lat, lon], { radius: 6, color: '#06b6d4', fillColor: '#fff', fillOpacity: 1 }).addTo(map);
+          const centerMarker = L.circleMarker([lat, lon], { radius: 6, color: activeVectorColor, fillColor: '#fff', fillOpacity: 1 }).addTo(map);
           tempMarkers.push(centerMarker);
-          showToast('Center coordinate set. Click outer boundary point.');
+          showToast('Center set. Click boundary point.');
           return;
         } else {
           const center = drawnVertices[0];
@@ -2230,12 +1832,12 @@
       drawnVertices.push([lat, lon]);
 
       const marker = L.circleMarker([lat, lon], {
-        radius: 5, color: '#3b82f6', fillColor: '#fff', fillOpacity: 1, weight: 2
+        radius: 5, color: activeVectorColor, fillColor: '#fff', fillOpacity: 1, weight: 2
       }).addTo(map);
       tempMarkers.push(marker);
 
       if (!tempPolyline) {
-        tempPolyline = L.polyline(drawnVertices, { color: '#38bdf8', weight: 2.5, dashArray: '5, 5' }).addTo(map);
+        tempPolyline = L.polyline(drawnVertices, { color: activeVectorColor, weight: 2.5, dashArray: '5, 5' }).addTo(map);
       } else {
         tempPolyline.setLatLngs(drawnVertices);
       }
@@ -2254,7 +1856,7 @@
       deactivateDrawTool();
 
       loadingOverlay.style.display = 'flex';
-      document.getElementById('loading-msg').textContent = 'Computing Survey-Grade Metrics...';
+      document.getElementById('loading-msg').textContent = 'Computing Dual-Oracle Metrics...';
 
       let geoJsonGeom = null;
       if (tool === 'polygon') {
@@ -2277,11 +1879,11 @@
         let renderLayer;
         if (tool === 'polygon') {
           renderLayer = L.polygon(vertices, {
-            color: '#10b981', weight: 2.8, fillColor: '#10b981', fillOpacity: layerOpacityValue
+            color: activeVectorColor, weight: 2.8, dashArray: '4, 4', fillColor: activeVectorColor, fillOpacity: layerOpacityValue
           }).addTo(liveDrawingsLayerGroup);
         } else {
           renderLayer = L.polyline(vertices, {
-            color: '#06b6d4', weight: 3
+            color: activeVectorColor, weight: 3
           }).addTo(liveDrawingsLayerGroup);
         }
 
@@ -2293,7 +1895,7 @@
           area_sq_m: meas.planar_area_sq_m,
           length_m: meas.planar_length_m,
           measurement_crs: meas.measurement_crs,
-          message: meas.message || 'Interactive Vector Measurement'
+          message: meas.message || 'Interactive Measurement'
         });
         currentFeatures.push({
           feature_index: newIndex,
@@ -2303,15 +1905,12 @@
         });
         layerMap[newIndex] = renderLayer;
 
-        renderLayer.on('click', () => {
-          highlightFeature(newIndex);
-          openFeatureDrawer(newIndex);
-        });
+        renderLayer.on('click', () => highlightFeature(newIndex));
 
         renderTable();
         updateStatsDisplay();
-        openFeatureDrawer(newIndex);
-        showToast('Measurement calculated!');
+        highlightFeature(newIndex);
+        showToast('Survey-Grade Geodetic Measurement Computed!');
       } catch (err) {
         alert('Calculation error: ' + err.message);
       } finally {
@@ -2342,7 +1941,7 @@
       const meas = await res.json();
 
       const renderLayer = L.circle(center, {
-        radius: radiusM, color: '#8b5cf6', weight: 2.5, fillColor: '#8b5cf6', fillOpacity: layerOpacityValue
+        radius: radiusM, color: activeVectorColor, weight: 2.5, fillColor: activeVectorColor, fillOpacity: layerOpacityValue
       }).addTo(liveDrawingsLayerGroup);
 
       const newIndex = currentMeasurements.length;
@@ -2363,14 +1962,11 @@
       });
       layerMap[newIndex] = renderLayer;
 
-      renderLayer.on('click', () => {
-        highlightFeature(newIndex);
-        openFeatureDrawer(newIndex);
-      });
+      renderLayer.on('click', () => highlightFeature(newIndex));
 
       renderTable();
       updateStatsDisplay();
-      openFeatureDrawer(newIndex);
+      highlightFeature(newIndex);
       showToast(`Radial Buffer Created (${Math.round(radiusM)}m)`);
     }
 
@@ -2384,7 +1980,7 @@
         area_sq_m: null,
         length_m: null,
         measurement_crs: `Zone ${Math.floor((lon + 180) / 6) + 1}${lat >= 0 ? 'N' : 'S'}`,
-        message: 'Point Coordinate'
+        message: 'Coordinate Pin'
       });
       currentFeatures.push({
         feature_index: newIndex,
@@ -2393,7 +1989,7 @@
       });
       renderTable();
       updateStatsDisplay();
-      openFeatureDrawer(newIndex);
+      highlightFeature(newIndex);
     }
 
     // Export Handlers
@@ -2420,22 +2016,22 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `survey_export_${Date.now()}.geojson`;
+      a.download = `survey_tactical_${Date.now()}.geojson`;
       a.click();
       URL.revokeObjectURL(url);
     }
 
     function exportCSV() {
       if (!currentMeasurements.length) { alert('No measurements to export.'); return; }
-      let csv = "feature_index,geometry_type,status,area_sq_m,length_m,measurement_crs,diagnostics\n";
+      let csv = "feature_index,geometry_type,status,area_sq_m,length_m,measurement_crs\n";
       currentMeasurements.forEach(m => {
-        csv += `${m.feature_index},"${m.geometry_type}",${m.status},${m.area_sq_m || ''},${m.length_m || ''},"${m.measurement_crs || ''}","${(m.message || '').replace(/"/g, '""')}"\n`;
+        csv += `${m.feature_index},"${m.geometry_type}",${m.status},${m.area_sq_m || ''},${m.length_m || ''},"${m.measurement_crs || ''}"\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `measurements_report_${Date.now()}.csv`;
+      a.download = `measurements_${Date.now()}.csv`;
       a.click();
       URL.revokeObjectURL(url);
     }
