@@ -6,6 +6,7 @@ allowing FastAPI to execute them in its threadpool without blocking the asyncio 
 
 from __future__ import annotations
 
+import httpx
 from fastapi import APIRouter, Depends, File, Query, Response, UploadFile, status
 
 from app.api.deps import get_ingest_service, get_repository, get_settings
@@ -53,13 +54,46 @@ def get_system_limits(
         max_features=settings.max_features,
         allowed_extensions=[".kml", ".kmz", ".zip"],
         version="1.0.0",
-        mapbox_token=settings.mapbox_access_token or None,
+        has_mapbox=bool(settings.mapbox_access_token),
         author={
             "name": settings.author_name,
             "github": settings.author_github,
             "repo": settings.repository_url,
         },
     )
+
+
+@router.get(
+    "/tiles/mapbox/{z}/{x}/{y}.png",
+    summary="Secure Server-Side Mapbox Satellite Tile Proxy",
+)
+def get_mapbox_tile(
+    z: int,
+    x: int,
+    y: int,
+    settings: Settings = Depends(get_settings),
+) -> Response:
+    """Securely stream Mapbox Satellite Streets tiles without exposing API credentials to clients."""
+    if not settings.mapbox_access_token:
+        return Response(status_code=404, content=b"", media_type="image/png")
+
+    tile_url = (
+        f"https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/tiles/{z}/{x}/{y}@2x"
+        f"?access_token={settings.mapbox_access_token}"
+    )
+    try:
+        with httpx.Client(timeout=4.0) as client:
+            resp = client.get(tile_url)
+            if resp.status_code == 200:
+                media_type = resp.headers.get("content-type", "image/jpeg")
+                return Response(
+                    content=resp.content,
+                    media_type=media_type,
+                    headers={"Cache-Control": "public, max-age=86400"},
+                )
+    except Exception:
+        pass
+    return Response(status_code=404, content=b"", media_type="image/png")
 
 
 @router.post(

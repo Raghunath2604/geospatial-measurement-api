@@ -145,8 +145,8 @@ class SystemConfigResponse(BaseModel):
         description="Supported geospatial file extensions",
     )
     version: str = Field(default="1.0.0", description="API version")
-    mapbox_token: str | None = Field(
-        None, description="Configured Mapbox access token if set in environment"
+    has_mapbox: bool = Field(
+        default=False, description="Whether server-side Mapbox Satellite proxy is active"
     )
     author: dict[str, str] = Field(
         default_factory=lambda: {

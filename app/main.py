@@ -9,6 +9,7 @@ from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.api.routes import measure_router, router
 from app.api.schemas import FileInfo
@@ -103,7 +104,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return {"status": "ok", "service": "geo-measure-api"}
 
     # Interactive Web Dashboard
-    static_html = Path(__file__).parent / "static" / "index.html"
+    static_dir = Path(__file__).parent / "static"
+    static_html = static_dir / "index.html"
+
+    if static_dir.exists():
+        app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
     @app.get("/", tags=["Dashboard"], include_in_schema=False)
     def index_dashboard() -> FileResponse:
