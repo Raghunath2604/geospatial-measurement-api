@@ -6,11 +6,13 @@ A robust, production-grade backend service built with **FastAPI**, **Shapely >= 
 
 ## 1. Overview & Key Capabilities
 
-- **Supported Formats**: KML (`.kml`, KML 2.0/2.1/2.2) and Shapefile archives (`.zip` containing `.shp` and `.dbf` with optional `.prj`, `.shx`, `.cpg`).
-- **Dynamic Metric Projection**: Features defined in geographic coordinates (`EPSG:4326` degrees) or projected systems (e.g. Web Mercator) are reprojected to local metric **UTM zones** (`EPSG:32601-32660` North, `EPSG:32701-32760` South) or **Universal Polar Stereographic** (UPS North `EPSG:32661` / UPS South `EPSG:32761`).
+- **Supported Formats**: KML (`.kml`), KMZ (`.kmz` Google Earth compressed archives), and Shapefile archives (`.zip` containing `.shp` and `.dbf` with optional `.prj`, `.shx`, `.cpg`).
+- **Dynamic Metric Projection**: Features defined in geographic coordinates (`EPSG:4326` degrees) or projected systems (e.g. Web Mercator) are dynamically reprojected to local metric **UTM zones** (`EPSG:32601-32660` North, `EPSG:32701-32760` South) or **Universal Polar Stereographic** (UPS North `EPSG:32661` / UPS South `EPSG:32761`).
+- **Real-Time Geodetic Engine**: Sub-millisecond arbitrary geometry measurement (`POST /api/measure/geometry/`) returning dual planar UTM metrics and WGS 84 ellipsoidal geodesics (`pyproj.Geod`).
+- **Territorial Location & Terrain Elevation**: Real-time reverse geocoding via OpenStreetMap Nominatim and terrain altitude via Open-Elevation / SRTM.
 - **Survey-Grade Accuracy**: Never evaluates distance or area in angular degrees squared. Verified against `pyproj.Geod` ellipsoidal calculations with $< 0.5\%$ divergence.
-- **Defensive Ingestion**: Hardened against XXE/entity expansion, Zip-Slip path traversals, zip bombs, and oversized files.
-- **Clean Architecture**: Strict separation of concerns (`api -> services -> parsers/storage -> domain`) with stdlib SQLite WAL persistence.
+- **Defensive Ingestion**: Hardened against XXE/entity expansion, Zip-Slip path traversals, decompression bombs, and oversized uploads.
+- **Production GIS Workbench**: Interactive Leaflet visualizer with Esri Satellite imagery, vector drawing tools (Polygon, Path, Pin), precision HUD, and RFC 7946 GeoJSON/CSV exports.
 
 ---
 
@@ -34,7 +36,7 @@ pip install -r requirements-dev.txt
 # 3. Generate sample test data
 python tests/scripts/make_sample_shapefile.py
 
-# 4. Run full test suite with Pytest
+# 4. Run full test suite with Pytest (46 tests)
 pytest -v
 ```
 
@@ -43,7 +45,8 @@ pytest -v
 ```bash
 uvicorn app.main:create_app --factory --host 0.0.0.0 --port 8000 --reload
 ```
-Interactive API documentation is accessible at: `http://localhost:8000/docs`
+Interactive GIS Studio: `http://localhost:8000/`  
+Interactive API documentation: `http://localhost:8000/docs`
 
 ### 2.3 Running via Docker
 
@@ -74,17 +77,23 @@ Environment variables can override default runtime limits:
 
 ---
 
-## 3. API Reference & Captured Real Responses
+## 3. API Reference & Endpoints Summary
 
 ### 3.1 Endpoints Summary
 
 | Method | Endpoint | Description | Status Codes |
 |---|---|---|---|
 | `GET` | `/health` | Healthcheck endpoint | 200 |
-| `POST` | `/api/files/` | Upload and process KML or Shapefile ZIP | 201, 413, 415, 422 |
+| `GET` | `/api/files/config/` | Retrieve runtime limits and allowed extensions | 200 |
+| `POST` | `/api/files/` | Stream and ingest KML, KMZ, or Shapefile ZIP | 201, 413, 415, 422 |
 | `GET` | `/api/files/{id}/` | Retrieve file ingestion status and metadata | 200, 404 |
 | `GET` | `/api/files/{id}/measurements/` | Paginated measurements and whole-file summary | 200, 404, 409 |
 | `GET` | `/api/files/{id}/features/` | Paginated GeoJSON features in native CRS | 200, 404, 409 |
+| `GET` | `/api/files/{id}/export/geojson/` | Download RFC 7946 GeoJSON FeatureCollection | 200, 404, 409 |
+| `GET` | `/api/files/{id}/export/csv/` | Download complete tabular measurements as CSV | 200, 404, 409 |
+| `POST` | `/api/measure/geometry/` | Real-time arbitrary GeoJSON geometry measurement | 200, 422 |
+| `POST` | `/api/measure/reverse-geocode/` | Real-time administrative location reverse lookup | 200 |
+| `POST` | `/api/measure/elevation/` | Real-time terrain altitude query (SRTM) | 200 |
 
 ---
 
