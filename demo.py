@@ -8,8 +8,8 @@ from __future__ import annotations
 
 import os
 import sys
-import time
 import webbrowser
+
 import httpx
 
 BASE_URL = "http://127.0.0.1:8000"
@@ -21,7 +21,7 @@ SHP_PATH = os.path.join(
 
 def run_demo() -> None:
     print("=" * 70)
-    print("  GEOSPATIAL FILE MEASUREMENT API — END-TO-END DEMO")
+    print("  GEOSPATIAL FILE MEASUREMENT API -- END-TO-END DEMO")
     print("=" * 70)
 
     # 1. Check health
@@ -57,7 +57,9 @@ def run_demo() -> None:
         meas_resp = client.get(f"{BASE_URL}/api/files/{kml_id}/measurements/")
         kml_meas = meas_resp.json()
         summary = kml_meas["summary"]
-        print(f"      Summary: {summary['measured_count']} measured, {summary['not_applicable_count']} N/A")
+        print(
+            f"      Summary: {summary['measured_count']} measured, {summary['not_applicable_count']} N/A"
+        )
         print(f"      Total Area:   {summary['total_area_sq_m']:,.2f} sq metres")
         print(f"      Total Length: {summary['total_length_m']:,.2f} metres")
 

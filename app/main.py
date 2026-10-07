@@ -114,10 +114,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     # Sample download endpoints for instant demo testing
     sample_kml = Path(__file__).parent.parent / "tests" / "sample_data" / "survey.kml"
     sample_shp = (
-        Path(__file__).parent.parent
-        / "tests"
-        / "sample_data"
-        / "survey_shapefile.zip"
+        Path(__file__).parent.parent / "tests" / "sample_data" / "survey_shapefile.zip"
     )
 
     @app.get("/sample/survey.kml", tags=["Samples"], include_in_schema=False)
