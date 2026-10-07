@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Bengaluru Drone Survey 2026</name>
+    <description>Drone field survey over agricultural test plots in Bengaluru, India</description>
+
+    <!-- Feature 0: Agricultural Field Polygon -->
+    <Placemark>
+      <name>Plot Alpha - Agricultural Field</name>
+      <description>Rice paddy field with perimeter fence</description>
+      <ExtendedData>
+        <Data name="crop_type">
+          <value>Paddy Rice</value>
+        </Data>
+        <Data name="irrigation">
+          <value>Canal</value>
+        </Data>
+      </ExtendedData>
+      <Polygon>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              77.5900,12.9700,920.0
+              77.5950,12.9700,920.0
+              77.5950,12.9750,920.0
+              77.5900,12.9750,920.0
+              77.5900,12.9700,920.0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+    <!-- Feature 1: Water Tank with interior hole (Donut) -->
+    <Placemark>
+      <name>Plot Beta - Storage Reservoir with Island</name>
+      <description>Water reservoir with a protected central vegetation island</description>
+      <ExtendedData>
+        <SchemaData schemaUrl="#SurveySchema">
+          <SimpleData name="facility_id">RES-402</SimpleData>
+          <SimpleData name="status">Active</SimpleData>
+        </SchemaData>
+      </ExtendedData>
+      <Polygon>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              77.6000,12.9800
+              77.6040,12.9800
+              77.6040,12.9840
+              77.6000,12.9840
+              77.6000,12.9800
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+        <innerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              77.6010,12.9810
+              77.6030,12.9810
+              77.6030,12.9830
+              77.6010,12.9830
+              77.6010,12.9810
+            </coordinates>
+          </LinearRing>
+        </innerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+    <!-- Feature 2: Drone Flight Path LineString -->
+    <Placemark>
+      <name>Survey Flight Transect A1</name>
+      <description>Autopilot grid flight transect line</description>
+      <ExtendedData>
+        <Data name="altitude_m">
+          <value>120.0</value>
+        </Data>
+        <Data name="speed_m_s">
+          <value>12.5</value>
+        </Data>
+      </ExtendedData>
+      <LineString>
+        <coordinates>
+          77.5900,12.9700,1040.0
+          77.5925,12.9725,1040.0
+          77.5950,12.9700,1040.0
+          77.5975,12.9725,1040.0
+          77.6000,12.9700,1040.0
+        </coordinates>
+      </LineString>
+    </Placemark>
+
+    <!-- Feature 3: Ground Control Point (GCP) Point -->
+    <Placemark>
+      <name>Base Station GCP-01</name>
+      <description>Dual-frequency RTK GNSS base station reference mark</description>
+      <ExtendedData>
+        <Data name="point_type">
+          <value>GCP</value>
+        </Data>
+        <Data name="elevation">
+          <value>921.4</value>
+        </Data>
+      </ExtendedData>
+      <Point>
+        <coordinates>77.5925,12.9725,921.4</coordinates>
+      </Point>
+    </Placemark>
+
+    <!-- Feature 4: Standalone LinearRing -->
+    <Placemark>
+      <name>Perimeter Fence</name>
+      <description>Boundary fence line mapped as LinearRing</description>
+      <LinearRing>
+        <coordinates>
+          77.5850,12.9650
+          77.5880,12.9650
+          77.5880,12.9680
+          77.5850,12.9680
+          77.5850,12.9650
+        </coordinates>
+      </LinearRing>
+    </Placemark>
+
+  </Document>
+</kml>
