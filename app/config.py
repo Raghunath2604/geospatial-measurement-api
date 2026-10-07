@@ -26,6 +26,7 @@ class Settings:
 
     # Third-party credentials & tokens
     mapbox_access_token: str = ""
+    carto_api_key: str = ""
     opentopography_api_key: str = ""
 
     # Author & project attribution
@@ -51,6 +52,7 @@ class Settings:
         chunk_size_bytes = int(os.getenv("GEO_CHUNK_SIZE_BYTES", str(1024 * 1024)))
 
         mapbox_access_token = os.getenv("MAPBOX_ACCESS_TOKEN", "").strip()
+        carto_api_key = os.getenv("CARTO_API_KEY", "").strip()
         opentopography_api_key = os.getenv("OPENTOPOGRAPHY_API_KEY", "").strip()
 
         author_name = os.getenv("GEO_AUTHOR_NAME", "Raghunath").strip()
@@ -79,6 +81,7 @@ class Settings:
             max_warnings=max_warnings,
             chunk_size_bytes=chunk_size_bytes,
             mapbox_access_token=mapbox_access_token,
+            carto_api_key=carto_api_key,
             opentopography_api_key=opentopography_api_key,
             author_name=author_name,
             author_github=author_github,
