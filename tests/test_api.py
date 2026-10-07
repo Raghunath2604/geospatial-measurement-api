@@ -212,3 +212,43 @@ def test_get_nonexistent_file_returns_404(client: TestClient) -> None:
     resp = client.get("/api/files/nonexistent-uuid-1234/")
     assert resp.status_code == 404
     assert "not found" in resp.json()["detail"].lower()
+
+
+def test_list_files_and_get_latest(client: TestClient) -> None:
+    """Listing files and querying latest file returns expected items."""
+    # List files before upload (may contain auto-seeded file or be empty)
+    resp = client.get("/api/files/")
+    assert resp.status_code == 200
+    assert isinstance(resp.json(), list)
+
+    # Ingest a new sample file
+    with open("tests/sample_data/survey.kml", "rb") as f:
+        upload_resp = client.post(
+            "/api/files/",
+            files={"file": ("test_survey.kml", f, "application/vnd.google-earth.kml+xml")},
+        )
+    assert upload_resp.status_code == 201
+    file_id = upload_resp.json()["id"]
+
+    # Query latest file
+    latest_resp = client.get("/api/files/latest")
+    assert latest_resp.status_code == 200
+    assert latest_resp.json()["id"] == file_id
+
+    # Query file listing
+    list_resp = client.get("/api/files/?limit=10&offset=0")
+    assert list_resp.status_code == 200
+    file_ids = [item["id"] for item in list_resp.json()]
+    assert file_id in file_ids
+
+
+def test_get_reverse_geocode_and_elevation_query_params(client: TestClient) -> None:
+    """GET query parameters for reverse-geocode and elevation must succeed."""
+    geo_resp = client.get("/api/measure/reverse-geocode/?lat=12.9716&lon=77.5946")
+    assert geo_resp.status_code == 200
+    assert "bengaluru" in geo_resp.json()["display_name"].lower() or "india" in geo_resp.json()["country"].lower()
+
+    elev_resp = client.get("/api/measure/elevation/?lat=12.9716&lon=77.5946")
+    assert elev_resp.status_code == 200
+    assert elev_resp.json()["elevation_m"] is not None
+

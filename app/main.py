@@ -132,6 +132,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def download_sample_shapefile() -> FileResponse:
         return FileResponse(sample_shp, media_type="application/zip")
 
+    # Auto-seed database with real geospatial survey data if empty
+    try:
+        existing = repository.list_files(limit=1)
+        if not existing and sample_kml.exists():
+            with sample_kml.open("rb") as f:
+                ingest_service.ingest_stream(f, "survey.kml")
+            logger.info("Auto-seeded repository with real survey.kml dataset.")
+    except Exception as exc:
+        logger.warning("Auto-seed initial survey dataset skipped: %s", exc)
+
     # Include routes
     app.include_router(router)
     app.include_router(measure_router)

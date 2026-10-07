@@ -1708,19 +1708,15 @@
                   <svg viewBox="0 0 36 36" style="width: 100%; height: 100%; transform: rotate(-90deg);">
                     <!-- Background ring -->
                     <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4" />
-                    <!-- Seg 1: Rose (Polygons) 25% -->
-                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#f43f5e" stroke-width="4.2" stroke-dasharray="25, 100" stroke-dashoffset="0" />
-                    <!-- Seg 2: Blue (Lines) 30% -->
-                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#38bdf8" stroke-width="4.2" stroke-dasharray="30, 100" stroke-dashoffset="-25" />
-                    <!-- Seg 3: Yellow (Points) 20% -->
-                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#facc15" stroke-width="4.2" stroke-dasharray="20, 100" stroke-dashoffset="-55" />
-                    <!-- Seg 4: Emerald (Buffers) 15% -->
-                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#10b981" stroke-width="4.2" stroke-dasharray="15, 100" stroke-dashoffset="-75" />
-                    <!-- Seg 5: Purple (Unclassified) 10% -->
-                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#a855f7" stroke-width="4.2" stroke-dasharray="10, 100" stroke-dashoffset="-90" />
+                    <!-- Seg 1: Rose (Polygons) -->
+                    <path id="donut-arc-poly" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#f43f5e" stroke-width="4.2" stroke-dasharray="40, 100" stroke-dashoffset="0" />
+                    <!-- Seg 2: Blue (Lines) -->
+                    <path id="donut-arc-line" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#38bdf8" stroke-width="4.2" stroke-dasharray="35, 100" stroke-dashoffset="-40" />
+                    <!-- Seg 3: Yellow (Points) -->
+                    <path id="donut-arc-point" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#facc15" stroke-width="4.2" stroke-dasharray="25, 100" stroke-dashoffset="-75" />
                   </svg>
                   <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none;">
-                    <div style="font-size: 1.25rem; font-weight: 800; color: #fff; font-family: var(--font-mono);" id="analytics-total-count">2,568</div>
+                    <div style="font-size: 1.25rem; font-weight: 800; color: #fff; font-family: var(--font-mono);" id="analytics-total-count">0</div>
                     <div style="font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase;">Vectors</div>
                   </div>
                 </div>
@@ -1729,33 +1725,34 @@
                 <div style="flex: 1; display: flex; flex-direction: column; gap: 0.4rem; font-family: var(--font-mono); font-size: 0.73rem;">
                   <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span style="display: flex; align-items: center; gap: 0.4rem; color: #cbd5e1;">
-                      <span style="width: 8px; height: 8px; border-radius: 50%; background: #f43f5e;"></span> Direct Survey
+                      <span style="width: 8px; height: 8px; border-radius: 50%; background: #f43f5e;"></span> Polygons / Parcels
                     </span>
-                    <strong style="color: #fff;">214</strong>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="display: flex; align-items: center; gap: 0.4rem; color: #cbd5e1;">
-                      <span style="width: 8px; height: 8px; border-radius: 50%; background: #38bdf8;"></span> Shapefile Zip
-                    </span>
-                    <strong style="color: #fff;">574</strong>
+                    <strong style="color: #fff;" id="donut-poly-count">0</strong>
                   </div>
                   <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span style="display: align-items: center; gap: 0.4rem; color: #cbd5e1;">
-                      <span style="width: 8px; height: 8px; border-radius: 50%; background: #facc15; display: inline-block;"></span> KML Archives
+                      <span style="width: 8px; height: 8px; border-radius: 50%; background: #38bdf8;"></span> Lines / Transects
                     </span>
-                    <strong style="color: #fff;">638</strong>
+                    <strong style="color: #fff;" id="donut-line-count">0</strong>
                   </div>
                   <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="display: flex; align-items: center; gap: 0.4rem; color: #cbd5e1;">
-                      <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981;"></span> KMZ Streams
+                    <span style="display: align-items: center; gap: 0.4rem; color: #cbd5e1;">
+                      <span style="width: 8px; height: 8px; border-radius: 50%; background: #facc15; display: inline-block;"></span> Points / Stations
                     </span>
-                    <strong style="color: #fff;">890</strong>
+                    <strong style="color: #fff;" id="donut-point-count">0</strong>
                   </div>
                   <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="display: flex; align-items: center; gap: 0.4rem; color: #cbd5e1;">
-                      <span style="width: 8px; height: 8px; border-radius: 50%; background: #a855f7;"></span> LiDAR Pointcloud
+                    <span style="display: align-items: center; gap: 0.4rem; color: #cbd5e1;">
+                      <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981;"></span> Total Area
                     </span>
-                    <strong style="color: #fff;">252</strong>
+                    <strong style="color: #34d399;" id="donut-area-count">—</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="display: align-items: center; gap: 0.4rem; color: #cbd5e1;">
+                      <span style="width: 8px; height: 8px; border-radius: 50%; background: #a855f7;"></span> Total Perimeter
+                    </span>
+                    <strong style="color: #a855f7;" id="donut-len-count">—</strong>
+                  </div>
                   </div>
                 </div>
               </div>
@@ -2422,6 +2419,7 @@
       } catch (e) { console.warn('Config init:', e); }
     }
     initSystemConfig();
+    loadActiveWorkspace();
 
     function setUnits(system) {
       unitSystem = system;
@@ -2462,19 +2460,101 @@
     }
 
     function updateStatsDisplay() {
-      const activeRows = getFilteredRows();
+      const activeRows = currentMeasurements;
       let totalArea = 0;
       let totalLength = 0;
-      let count = 0;
+      let polyCount = 0;
+      let lineCount = 0;
+      let pointCount = 0;
+      let count = activeRows.length;
 
       activeRows.forEach(f => {
         if (f.area_sq_m) totalArea += f.area_sq_m;
         if (f.length_m) totalLength += f.length_m;
-        count++;
+        const gType = (f.geometry_type || '').toLowerCase();
+        if (gType.includes('poly')) polyCount++;
+        else if (gType.includes('line')) lineCount++;
+        else if (gType.includes('point')) pointCount++;
       });
 
       const countEl = document.getElementById('analytics-total-count');
-      if (countEl) countEl.textContent = count > 0 ? count : '573';
+      if (countEl) countEl.textContent = count;
+
+      const polyEl = document.getElementById('donut-poly-count');
+      if (polyEl) polyEl.textContent = polyCount;
+
+      const lineEl = document.getElementById('donut-line-count');
+      if (lineEl) lineEl.textContent = lineCount;
+
+      const ptEl = document.getElementById('donut-point-count');
+      if (ptEl) ptEl.textContent = pointCount;
+
+      const areaEl = document.getElementById('donut-area-count');
+      if (areaEl) areaEl.textContent = formatArea(totalArea);
+
+      const lenEl = document.getElementById('donut-len-count');
+      if (lenEl) lenEl.textContent = formatLength(totalLength);
+
+      // Dynamically recompute SVG Donut segments based on real data
+      if (count > 0) {
+        const polyPct = Math.round((polyCount / count) * 100);
+        const linePct = Math.round((lineCount / count) * 100);
+        const ptPct = Math.max(0, 100 - polyPct - linePct);
+
+        const pArc = document.getElementById('donut-arc-poly');
+        if (pArc) {
+          pArc.setAttribute('stroke-dasharray', `${polyPct}, 100`);
+          pArc.setAttribute('stroke-dashoffset', '0');
+        }
+        const lArc = document.getElementById('donut-arc-line');
+        if (lArc) {
+          lArc.setAttribute('stroke-dasharray', `${linePct}, 100`);
+          lArc.setAttribute('stroke-dashoffset', `-${polyPct}`);
+        }
+        const ptArc = document.getElementById('donut-arc-point');
+        if (ptArc) {
+          ptArc.setAttribute('stroke-dasharray', `${ptPct}, 100`);
+          ptArc.setAttribute('stroke-dashoffset', `-${polyPct + linePct}`);
+        }
+      }
+    }
+
+    async function loadActiveWorkspace() {
+      try {
+        const res = await fetch('/api/files/latest');
+        if (!res.ok) return;
+        const fileInfo = await res.json();
+        if (!fileInfo || !fileInfo.id) return;
+
+        const [mRes, fRes] = await Promise.all([
+          fetch(`/api/files/${fileInfo.id}/measurements/`),
+          fetch(`/api/files/${fileInfo.id}/features/`)
+        ]);
+
+        if (mRes.ok && fRes.ok) {
+          const mData = await mRes.json();
+          const fData = await fRes.json();
+
+          currentMeasurements = mData.measurements || mData.items || [];
+          currentFeatures = (fData.features || []).map(f => ({
+            type: 'Feature',
+            geometry: f.geometry,
+            properties: { ...(f.properties || {}), feature_index: f.feature_index, geometry_type: f.geometry_type }
+          }));
+
+          loadFeaturesToMap();
+          renderTable();
+          updateTowersTable();
+          updateStatsDisplay();
+
+          if (currentMeasurements.length > 0) {
+            highlightFeature(0);
+          }
+          console.log(`[Workspace] Real dataset active: ${fileInfo.filename} (${currentMeasurements.length} features)`);
+        }
+      } catch (err) {
+        console.warn('[Workspace] Initial load notice:', err);
+      }
     }
 
     function showToast(msg) {
@@ -2502,17 +2582,23 @@
         }
 
         const data = await res.json();
-        const fileId = data.file.id;
+        const fileId = data.id || (data.file && data.file.id);
 
-        const mRes = await fetch(`/api/files/${fileId}/measurements`);
-        const fRes = await fetch(`/api/files/${fileId}/features`);
+        const [mRes, fRes] = await Promise.all([
+          fetch(`/api/files/${fileId}/measurements/`),
+          fetch(`/api/files/${fileId}/features/`)
+        ]);
 
         if (mRes.ok && fRes.ok) {
           const mData = await mRes.json();
           const fData = await fRes.json();
 
-          currentMeasurements = mData.items || [];
-          currentFeatures = fData.features || [];
+          currentMeasurements = mData.measurements || mData.items || [];
+          currentFeatures = (fData.features || []).map(f => ({
+            type: 'Feature',
+            geometry: f.geometry,
+            properties: { ...(f.properties || {}), feature_index: f.feature_index, geometry_type: f.geometry_type }
+          }));
 
           loadFeaturesToMap();
           renderTable();
@@ -2523,7 +2609,7 @@
             highlightFeature(0);
           }
 
-          showToast(`Ingested ${currentMeasurements.length} features successfully!`);
+          showToast(`Ingested ${currentMeasurements.length} features from ${data.filename || 'dataset'}!`);
         }
       } catch (e) {
         showToast(`Ingestion error: ${e.message}`);
@@ -2661,8 +2747,17 @@
           const lng = samplePt[0];
           const lat = samplePt[1];
 
+          // Zoom to feature if on map
+          try {
+            const tempLayer = L.geoJSON(feat);
+            const bounds = tempLayer.getBounds();
+            if (bounds.isValid()) {
+              map.fitBounds(bounds, { maxZoom: 16, padding: [60, 60] });
+            }
+          } catch(e) {}
+
           // Reverse geocode
-          fetch(`/api/measure/reverse-geocode?lat=${lat}&lon=${lng}`)
+          fetch(`/api/measure/reverse-geocode/?lat=${lat}&lon=${lng}`)
             .then(r => r.json())
             .then(g => {
               if (g && g.display_name) {
@@ -2672,7 +2767,7 @@
             }).catch(() => {});
 
           // Elevation
-          fetch(`/api/measure/elevation?lat=${lat}&lon=${lng}`)
+          fetch(`/api/measure/elevation/?lat=${lat}&lon=${lng}`)
             .then(r => r.json())
             .then(e => {
               if (e && e.elevation_m !== null && e.elevation_m !== undefined) {
@@ -2785,7 +2880,27 @@
           weight: 2,
           fillOpacity: 1
         }).addTo(liveDrawingsLayerGroup);
-        marker.bindPopup(`<b>INSPECT PIN</b><br>${lat.toFixed(6)}, ${lng.toFixed(6)}`).openPopup();
+        marker.bindPopup(`<b>INSPECT PIN</b><br>Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}<br><span style="color:#38bdf8">Querying telemetry...</span>`).openPopup();
+
+        fetch(`/api/measure/reverse-geocode/?lat=${lat}&lon=${lng}`)
+          .then(r => r.json())
+          .then(g => {
+            fetch(`/api/measure/elevation/?lat=${lat}&lon=${lng}`)
+              .then(er => er.json())
+              .then(ev => {
+                const loc = g.display_name || g.city || 'Survey Point';
+                const el = ev.elevation_m !== null ? `${ev.elevation_m.toFixed(1)} m ASL` : '0 m';
+                marker.setPopupContent(`
+                  <div style="font-family: var(--font-sans); min-width: 170px;">
+                    <div style="font-weight: 800; color: #facc15; font-size: 0.78rem; margin-bottom: 3px;">INSPECTION NODE</div>
+                    <div style="font-size: 0.72rem; color: #cbd5e1; margin-bottom: 2px;"><b>Location:</b> ${loc}</div>
+                    <div style="font-size: 0.72rem; color: #34d399; margin-bottom: 2px;"><b>Elevation:</b> ${el}</div>
+                    <div style="font-family: monospace; font-size: 0.68rem; color: #94a3b8;">${lat.toFixed(5)}, ${lng.toFixed(5)}</div>
+                  </div>
+                `);
+              }).catch(() => {});
+          }).catch(() => {});
+
         deactivateDrawTool();
         showToast(`Pin dropped at ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
         return;
@@ -2837,7 +2952,7 @@
       const geojsonGeom = { type: 'Polygon', coordinates: [coords] };
 
       try {
-        const res = await fetch('/api/measure/geometry', {
+        const res = await fetch('/api/measure/geometry/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ geometry: geojsonGeom })
@@ -2875,7 +2990,7 @@
         const geojsonGeom = { type: 'LineString', coordinates: drawnVertices };
 
         try {
-          const res = await fetch('/api/measure/geometry', {
+          const res = await fetch('/api/measure/geometry/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ geometry: geojsonGeom })

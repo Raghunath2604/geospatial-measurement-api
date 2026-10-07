@@ -227,6 +227,65 @@ class Repository:
             error=row["error"],
         )
 
+    def list_files(self, limit: int = 50, offset: int = 0) -> list[FileRecord]:
+        """Fetch list of all file records sorted newest first."""
+        with self._get_connection() as conn:
+            rows = conn.execute(
+                """
+                SELECT id, filename, feature_count, crs, status, created_at, warnings, error
+                FROM files
+                ORDER BY created_at DESC
+                LIMIT ? OFFSET ?;
+                """,
+                (limit, offset),
+            ).fetchall()
+
+        records: list[FileRecord] = []
+        for row in rows:
+            warnings = json.loads(row["warnings"]) if row["warnings"] else []
+            records.append(
+                FileRecord(
+                    id=row["id"],
+                    filename=row["filename"],
+                    feature_count=row["feature_count"],
+                    crs=row["crs"],
+                    status=FileStatus(row["status"]),
+                    created_at=row["created_at"],
+                    warnings=warnings,
+                    error=row["error"],
+                )
+            )
+        return records
+
+    def get_latest_completed_file(self) -> FileRecord | None:
+        """Fetch the most recent file with COMPLETED status."""
+        with self._get_connection() as conn:
+            row = conn.execute(
+                """
+                SELECT id, filename, feature_count, crs, status, created_at, warnings, error
+                FROM files
+                WHERE status = ?
+                ORDER BY created_at DESC
+                LIMIT 1;
+                """,
+                (FileStatus.COMPLETED.value,),
+            ).fetchone()
+
+        if not row:
+            return None
+
+        warnings = json.loads(row["warnings"]) if row["warnings"] else []
+        return FileRecord(
+            id=row["id"],
+            filename=row["filename"],
+            feature_count=row["feature_count"],
+            crs=row["crs"],
+            status=FileStatus(row["status"]),
+            created_at=row["created_at"],
+            warnings=warnings,
+            error=row["error"],
+        )
+
     def get_measurements_summary(self, file_id: str) -> MeasurementSummary:
         """Calculate whole-file measurement summary directly via SQL aggregates."""
         with self._get_connection() as conn:

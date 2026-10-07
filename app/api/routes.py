@@ -123,6 +123,39 @@ def upload_file(
 
 
 @router.get(
+    "/",
+    response_model=list[FileInfo],
+    summary="List all ingested geospatial files",
+)
+def list_files(
+    limit: int = Query(50, ge=1, le=500, description="Page limit"),
+    offset: int = Query(0, ge=0, description="Page offset"),
+    repo: Repository = Depends(get_repository),
+) -> list[FileInfo]:
+    """Retrieve all ingested geospatial files in descending order of upload."""
+    records = repo.list_files(limit=limit, offset=offset)
+    return [FileInfo.from_domain(r) for r in records]
+
+
+@router.get(
+    "/latest",
+    response_model=FileInfo,
+    responses={
+        404: {"model": ErrorResponse, "description": "No completed files available"},
+    },
+    summary="Get the most recently ingested completed file",
+)
+def get_latest_file(
+    repo: Repository = Depends(get_repository),
+) -> FileInfo:
+    """Retrieve the latest completed geospatial dataset for instant visualization."""
+    record = repo.get_latest_completed_file()
+    if not record:
+        raise NotFoundError("No completed geospatial files found in repository")
+    return FileInfo.from_domain(record)
+
+
+@router.get(
     "/{file_id}/",
     response_model=FileInfo,
     responses={
@@ -375,6 +408,20 @@ def measure_arbitrary_geometry(
     return GeometryMeasurementResponse(**result)
 
 
+@measure_router.get(
+    "/reverse-geocode/",
+    response_model=ReverseGeocodeResponse,
+    summary="Real-time reverse geocoding via query parameters",
+)
+def api_reverse_geocode_get(
+    lat: float = Query(..., alias="lat", description="Latitude in decimal degrees"),
+    lon: float = Query(..., alias="lon", description="Longitude in decimal degrees"),
+) -> ReverseGeocodeResponse:
+    """Query administrative location context via GET query parameters."""
+    res = reverse_geocode(lat, lon)
+    return ReverseGeocodeResponse(**res)
+
+
 @measure_router.post(
     "/reverse-geocode/",
     response_model=ReverseGeocodeResponse,
@@ -388,6 +435,20 @@ def api_reverse_geocode(
     return ReverseGeocodeResponse(**res)
 
 
+@measure_router.get(
+    "/elevation/",
+    response_model=ElevationResponse,
+    summary="Real-time terrain elevation query via query parameters",
+)
+def api_elevation_get(
+    lat: float = Query(..., alias="lat", description="Latitude in decimal degrees"),
+    lon: float = Query(..., alias="lon", description="Longitude in decimal degrees"),
+) -> ElevationResponse:
+    """Query terrain elevation in metres above sea level via GET query parameters."""
+    res = get_elevation(lat, lon)
+    return ElevationResponse(**res)
+
+
 @measure_router.post(
     "/elevation/",
     response_model=ElevationResponse,
@@ -399,4 +460,5 @@ def api_elevation(
     """Query terrain elevation in metres above sea level for a coordinate."""
     res = get_elevation(req.latitude, req.longitude)
     return ElevationResponse(**res)
+
 
