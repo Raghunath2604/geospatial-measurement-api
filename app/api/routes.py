@@ -53,6 +53,12 @@ def get_system_limits(
         max_features=settings.max_features,
         allowed_extensions=[".kml", ".kmz", ".zip"],
         version="1.0.0",
+        mapbox_token=settings.mapbox_access_token or None,
+        author={
+            "name": settings.author_name,
+            "github": settings.author_github,
+            "repo": settings.repository_url,
+        },
     )
 
 

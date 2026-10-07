@@ -145,6 +145,18 @@ class SystemConfigResponse(BaseModel):
         description="Supported geospatial file extensions",
     )
     version: str = Field(default="1.0.0", description="API version")
+    mapbox_token: str | None = Field(
+        None, description="Configured Mapbox access token if set in environment"
+    )
+    author: dict[str, str] = Field(
+        default_factory=lambda: {
+            "name": "Raghunath",
+            "github": "https://github.com/Raghunath2604",
+            "repo": "https://github.com/Raghunath2604/geospatial-measurement-api",
+        },
+        description="Engineering and project attribution metadata",
+    )
+
 
 
 class GeometryMeasurementRequest(BaseModel):

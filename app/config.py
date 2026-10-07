@@ -6,6 +6,11 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+# Load .env file automatically on application initialization
+load_dotenv()
+
 
 @dataclass(frozen=True)
 class Settings:
@@ -18,6 +23,19 @@ class Settings:
     max_features: int = 10_000  # Max features processed per file
     max_warnings: int = 50  # Warning list cutoff per file
     chunk_size_bytes: int = 1024 * 1024  # 1 MB streaming chunk
+
+    # Third-party credentials & tokens
+    mapbox_access_token: str = ""
+    opentopography_api_key: str = ""
+
+    # Author & project attribution
+    author_name: str = "Raghunath"
+    author_github: str = "https://github.com/Raghunath2604"
+    repository_url: str = "https://github.com/Raghunath2604/geospatial-measurement-api"
+
+    # Server binding
+    host: str = "127.0.0.1"
+    port: int = 8000
 
     @classmethod
     def from_env(cls) -> Settings:
@@ -32,6 +50,21 @@ class Settings:
         max_warnings = int(os.getenv("GEO_MAX_WARNINGS", "50"))
         chunk_size_bytes = int(os.getenv("GEO_CHUNK_SIZE_BYTES", str(1024 * 1024)))
 
+        mapbox_access_token = os.getenv("MAPBOX_ACCESS_TOKEN", "").strip()
+        opentopography_api_key = os.getenv("OPENTOPOGRAPHY_API_KEY", "").strip()
+
+        author_name = os.getenv("GEO_AUTHOR_NAME", "Raghunath").strip()
+        author_github = os.getenv(
+            "GEO_AUTHOR_GITHUB", "https://github.com/Raghunath2604"
+        ).strip()
+        repository_url = os.getenv(
+            "GEO_REPOSITORY_URL",
+            "https://github.com/Raghunath2604/geospatial-measurement-api",
+        ).strip()
+
+        host = os.getenv("GEO_HOST", "127.0.0.1").strip()
+        port = int(os.getenv("GEO_PORT", "8000"))
+
         # Ensure directory for sqlite database exists
         db_parent = Path(db_path).parent
         if db_parent and not db_parent.exists():
@@ -45,4 +78,12 @@ class Settings:
             max_features=max_features,
             max_warnings=max_warnings,
             chunk_size_bytes=chunk_size_bytes,
+            mapbox_access_token=mapbox_access_token,
+            opentopography_api_key=opentopography_api_key,
+            author_name=author_name,
+            author_github=author_github,
+            repository_url=repository_url,
+            host=host,
+            port=port,
         )
+

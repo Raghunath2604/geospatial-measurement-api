@@ -49,3 +49,9 @@ htmlcov/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Environment variables & local secrets
+.env
+.env.local
+!.env.example
+
