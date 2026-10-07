@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, File, Query, UploadFile, status
 
-from app.api.deps import get_ingest_service, get_repository
+from app.api.deps import get_ingest_service, get_repository, get_settings
 from app.api.schemas import (
     ErrorResponse,
     FeatureItem,
@@ -17,13 +17,34 @@ from app.api.schemas import (
     MeasurementItem,
     MeasurementsResponse,
     MeasurementSummarySchema,
+    SystemConfigResponse,
 )
+from app.config import Settings
 from app.domain import FileStatus
 from app.errors import ConflictError, NotFoundError
 from app.services.ingest import IngestService
 from app.storage.repository import Repository
 
 router = APIRouter(prefix="/api/files", tags=["Files & Measurements"])
+
+
+@router.get(
+    "/config/",
+    response_model=SystemConfigResponse,
+    summary="Get upload size and feature limits",
+)
+def get_system_limits(
+    settings: Settings = Depends(get_settings),
+) -> SystemConfigResponse:
+    """Retrieve runtime file limits and supported extensions."""
+    return SystemConfigResponse(
+        max_upload_bytes=settings.max_upload_bytes,
+        max_upload_mb=round(settings.max_upload_bytes / (1024 * 1024), 2),
+        max_uncompressed_bytes=settings.max_uncompressed_bytes,
+        max_features=settings.max_features,
+        allowed_extensions=[".kml", ".zip"],
+        version="1.0.0",
+    )
 
 
 @router.post(

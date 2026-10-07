@@ -129,3 +129,19 @@ class ErrorResponse(BaseModel):
 
     detail: str
     file: FileInfo | None = None
+
+
+class SystemConfigResponse(BaseModel):
+    """Runtime limits and system configuration."""
+
+    max_upload_bytes: int = Field(..., description="Max upload file size in bytes")
+    max_upload_mb: float = Field(..., description="Max upload size in megabytes")
+    max_uncompressed_bytes: int = Field(
+        ..., description="Max uncompressed zip size in bytes"
+    )
+    max_features: int = Field(..., description="Max features allowed per file")
+    allowed_extensions: list[str] = Field(
+        default_factory=lambda: [".kml", ".zip"],
+        description="Supported geospatial file extensions",
+    )
+    version: str = Field(default="1.0.0", description="API version")

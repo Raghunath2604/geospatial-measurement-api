@@ -41,6 +41,17 @@ def test_health_check(client: TestClient) -> None:
     assert response.json() == {"status": "ok", "service": "geo-measure-api"}
 
 
+def test_system_limits_endpoint(client: TestClient) -> None:
+    """Verify /api/files/config/ returns configured limits."""
+    response = client.get("/api/files/config/")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["max_upload_mb"] == 10.0
+    assert data["max_features"] == 1000
+    assert ".kml" in data["allowed_extensions"]
+    assert ".zip" in data["allowed_extensions"]
+
+
 def test_upload_kml_flow(client: TestClient) -> None:
     """Verify full upload, status retrieval, measurements, and features flow for KML."""
     with open(SAMPLE_KML_PATH, "rb") as f:

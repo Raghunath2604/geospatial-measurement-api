@@ -3,281 +3,542 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Geospatial File Measurement API — Dashboard</title>
+  <title>GeoMeasure Studio — Autonomous Geospatial Measurement API</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
   <style>
     :root {
-      --bg-dark: #0a0d14;
-      --card-bg: rgba(18, 24, 38, 0.75);
+      --bg-dark: #07090e;
+      --card-bg: rgba(15, 20, 32, 0.72);
       --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-glow: rgba(59, 130, 246, 0.25);
       --accent-blue: #3b82f6;
       --accent-cyan: #06b6d4;
       --accent-emerald: #10b981;
       --accent-amber: #f59e0b;
       --accent-rose: #f43f5e;
-      --text-main: #f3f4f6;
+      --accent-violet: #8b5cf6;
+      --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
     body {
       background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.10) 0px, transparent 50%);
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 55%),
+        radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.12) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.10) 0px, transparent 60%);
       color: var(--text-main);
       font-family: var(--font-sans);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow-x: hidden;
     }
 
+    /* Header */
     header {
-      padding: 1.25rem 2rem;
+      padding: 1.1rem 2.25rem;
       border-bottom: 1px solid var(--card-border);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: sticky;
       top: 0;
       z-index: 1000;
+      background: rgba(7, 9, 14, 0.82);
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.9rem;
     }
 
     .logo-badge {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet));
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 0 25px rgba(59, 130, 246, 0.45);
+      position: relative;
+    }
+
+    .logo-badge::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.4), transparent);
+      z-index: -1;
     }
 
     .brand-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(120deg, #fff 40%, #93c5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .brand-subtitle {
       font-size: 0.75rem;
       color: var(--text-muted);
-      font-weight: 500;
+      font-weight: 600;
+      letter-spacing: 0.02em;
     }
 
     .nav-links {
       display: flex;
-      gap: 1rem;
+      align-items: center;
+      gap: 0.85rem;
     }
 
-    .nav-btn {
+    .nav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 0.875rem;
+      font-size: 0.825rem;
       font-weight: 600;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
+      padding: 0.5rem 0.95rem;
+      border-radius: 10px;
       border: 1px solid var(--card-border);
       background: rgba(255, 255, 255, 0.03);
-      transition: all 0.2s ease;
+      transition: all 0.25s var(--ease-spring);
     }
 
-    .nav-btn:hover {
+    .nav-pill:hover {
       color: var(--text-main);
       background: rgba(255, 255, 255, 0.08);
       border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
     }
 
+    .system-status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent-emerald);
+      padding: 0.4rem 0.85rem;
+      border-radius: 20px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 10px var(--accent-emerald);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* Main Container */
     main {
       flex: 1;
-      padding: 2rem;
-      max-width: 1440px;
+      padding: 2.25rem;
+      max-width: 1540px;
       margin: 0 auto;
       width: 100%;
       display: grid;
-      grid-template-columns: 420px 1fr;
+      grid-template-columns: 440px 1fr;
       gap: 2rem;
     }
 
-    @media (max-width: 1024px) {
+    @media (max-width: 1120px) {
       main { grid-template-columns: 1fr; }
     }
 
-    .glass-card {
+    .glass-panel {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 1.5rem;
-      backdrop-filter: blur(16px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border-radius: 20px;
+      padding: 1.75rem;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+      position: relative;
+      overflow: hidden;
     }
 
-    .card-title {
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
+    .panel-header {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
     }
 
-    /* Upload Zone */
+    .panel-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      letter-spacing: -0.01em;
+    }
+
+    /* Dropzone */
     .dropzone {
-      border: 2px dashed rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      padding: 2.5rem 1.5rem;
+      border: 2px dashed rgba(255, 255, 255, 0.14);
+      border-radius: 16px;
+      padding: 2.75rem 1.5rem;
       text-align: center;
       cursor: pointer;
-      transition: all 0.2s ease;
-      background: rgba(255, 255, 255, 0.01);
+      transition: all 0.3s var(--ease-spring);
+      background: rgba(255, 255, 255, 0.015);
+      position: relative;
     }
 
     .dropzone:hover, .dropzone.dragover {
       border-color: var(--accent-blue);
-      background: rgba(59, 130, 246, 0.05);
+      background: rgba(59, 130, 246, 0.06);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
     }
 
     .dropzone-icon {
-      font-size: 2.5rem;
+      font-size: 2.75rem;
       margin-bottom: 0.75rem;
-      display: block;
+      display: inline-block;
+      transition: transform 0.3s var(--ease-spring);
+    }
+
+    .dropzone:hover .dropzone-icon {
+      transform: scale(1.1) translateY(-3px);
     }
 
     .dropzone-text {
-      font-size: 0.925rem;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
     }
 
-    .dropzone-hint {
-      font-size: 0.75rem;
+    .dropzone-subtext {
+      font-size: 0.8rem;
       color: var(--text-muted);
     }
 
-    .sample-buttons {
+    .limit-badge-row {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .limit-pill {
+      font-size: 0.72rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: #cbd5e1;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+
+    /* Preset Samples */
+    .section-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+    }
+
+    .sample-grid {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
-      margin-top: 1.25rem;
     }
 
     .btn-sample {
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.025);
       border: 1px solid var(--card-border);
       color: var(--text-main);
-      padding: 0.75rem 1rem;
-      border-radius: 10px;
+      padding: 0.95rem 1.15rem;
+      border-radius: 14px;
       font-family: inherit;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transition: all 0.2s;
+      transition: all 0.25s var(--ease-spring);
     }
 
     .btn-sample:hover {
-      background: rgba(59, 130, 246, 0.15);
-      border-color: var(--accent-blue);
+      background: rgba(59, 130, 246, 0.12);
+      border-color: rgba(59, 130, 246, 0.4);
+      transform: translateX(4px);
     }
 
-    /* Metric Grid */
+    .btn-sample-tag {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    /* Progress Bar */
+    .progress-bar-container {
+      display: none;
+      height: 6px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+      margin-top: 1rem;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+      transition: width 0.3s ease;
+    }
+
+    /* Metric Cards */
     .metric-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-      margin-bottom: 1.5rem;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.1rem;
     }
 
-    .metric-box {
-      background: rgba(255, 255, 255, 0.03);
+    @media (max-width: 860px) {
+      .metric-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .metric-card {
+      background: rgba(255, 255, 255, 0.025);
       border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 1rem;
+      border-radius: 16px;
+      padding: 1.25rem 1.2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s var(--ease-spring);
     }
 
-    .metric-label {
+    .metric-card:hover {
+      border-color: var(--card-border-glow);
+      transform: translateY(-2px);
+    }
+
+    .metric-icon {
+      position: absolute;
+      right: 1.2rem;
+      top: 1.2rem;
+      font-size: 1.25rem;
+      opacity: 0.6;
+    }
+
+    .metric-title {
       font-size: 0.75rem;
       color: var(--text-muted);
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
 
-    .metric-value {
-      font-size: 1.5rem;
+    .metric-num {
+      font-size: 1.7rem;
       font-weight: 800;
-      margin-top: 0.35rem;
+      margin-top: 0.45rem;
       font-family: var(--font-mono);
+      letter-spacing: -0.03em;
     }
 
     .metric-unit {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
-      font-weight: normal;
+      font-weight: 500;
+      font-family: var(--font-sans);
     }
 
     /* Map Box */
-    #map {
-      height: 420px;
-      border-radius: 12px;
+    #map-wrapper {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
       border: 1px solid var(--card-border);
-      background: #111;
-      margin-bottom: 1.5rem;
+    }
+
+    #map {
+      height: 440px;
+      width: 100%;
+      background: #0d1117;
+    }
+
+    .map-controls {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 500;
+      display: flex;
+      gap: 0.45rem;
+      background: rgba(10, 14, 24, 0.85);
+      backdrop-filter: blur(12px);
+      padding: 0.35rem;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+    }
+
+    .map-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.35rem 0.7rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .map-btn.active, .map-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .filter-pill {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.35rem 0.8rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-pill.active {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: var(--accent-blue);
+      color: #fff;
+    }
+
+    .action-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-action {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.2s;
+    }
+
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.25);
     }
 
     /* Table */
     .table-container {
       overflow-x: auto;
-      border-radius: 12px;
+      border-radius: 14px;
       border: 1px solid var(--card-border);
+      max-height: 480px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 0.85rem;
+      font-size: 0.84rem;
     }
 
     th {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 0.85rem 1rem;
+      background: rgba(15, 23, 42, 0.95);
+      position: sticky;
+      top: 0;
+      padding: 0.9rem 1.1rem;
       font-weight: 700;
       color: var(--text-muted);
       border-bottom: 1px solid var(--card-border);
+      z-index: 10;
     }
 
     td {
-      padding: 0.85rem 1rem;
+      padding: 0.85rem 1.1rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.04);
       font-family: var(--font-mono);
     }
 
-    tr:hover td {
-      background: rgba(255, 255, 255, 0.02);
+    tr {
+      cursor: pointer;
+      transition: background 0.15s ease;
     }
 
+    tr:hover td {
+      background: rgba(59, 130, 246, 0.06);
+    }
+
+    tr.selected td {
+      background: rgba(59, 130, 246, 0.15);
+      border-bottom-color: rgba(59, 130, 246, 0.4);
+    }
+
+    /* Badges */
     .badge {
-      display: inline-block;
-      padding: 0.2rem 0.55rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.22rem 0.6rem;
       border-radius: 6px;
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       font-weight: 700;
       font-family: var(--font-sans);
     }
@@ -287,176 +548,385 @@
     .badge-unsupported { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
     .badge-error { background: rgba(244, 63, 94, 0.15); color: #fb7185; }
 
+    /* Overlay / Toast */
     #loading-overlay {
       display: none;
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(10, 13, 20, 0.8);
-      backdrop-filter: blur(8px);
-      z-index: 2000;
+      inset: 0;
+      background: rgba(7, 9, 14, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 3000;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      gap: 1rem;
+      gap: 1.25rem;
     }
 
     .spinner {
-      width: 48px;
-      height: 48px;
-      border: 4px solid rgba(59, 130, 246, 0.2);
+      width: 52px;
+      height: 52px;
+      border: 4px solid rgba(59, 130, 246, 0.15);
       border-top-color: var(--accent-blue);
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      animation: spin 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--card-border-glow);
+      color: #fff;
+      padding: 0.85rem 1.4rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s var(--ease-spring);
+      z-index: 4000;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
 
+  <!-- Loading Animation -->
   <div id="loading-overlay">
     <div class="spinner"></div>
-    <div style="font-weight: 600; font-size: 1rem;">Processing Geospatial File & Computing Projections...</div>
+    <div style="font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em;" id="loading-msg">Processing Geospatial File & Computing Metric Projections...</div>
+    <div style="font-size: 0.8rem; color: var(--text-muted);" id="loading-submsg">Parsing geometries and transforming coordinates via Shapely & pyproj</div>
   </div>
 
+  <!-- Toast Notification -->
+  <div id="toast">Copied to clipboard!</div>
+
+  <!-- Header -->
   <header>
     <div class="brand">
       <div class="logo-badge">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
           <line x1="8" y1="2" x2="8" y2="18"></line>
           <line x1="16" y1="6" x2="16" y2="22"></line>
         </svg>
       </div>
       <div>
-        <div class="brand-title">GeoMeasure API</div>
-        <div class="brand-subtitle">Autonomous Metric Projection & Ingestion Engine</div>
+        <div class="brand-title">GeoMeasure Studio</div>
+        <div class="brand-subtitle">Autonomous Metric Coordinate Projection & Feature Measurement Engine</div>
       </div>
     </div>
+
     <div class="nav-links">
-      <a href="/docs" target="_blank" class="nav-btn">Swagger API Docs</a>
-      <a href="/redoc" target="_blank" class="nav-btn">ReDoc</a>
-      <a href="/health" target="_blank" class="nav-btn">Health Status</a>
-      <a href="https://github.com/Raghunath2604/geospatial-measurement-api" target="_blank" class="nav-btn">GitHub Repo</a>
+      <div class="system-status-indicator">
+        <div class="status-dot"></div>
+        <span>Service Active (Port 8000)</span>
+      </div>
+      <a href="/docs" target="_blank" class="nav-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+        Swagger Docs
+      </a>
+      <a href="/redoc" target="_blank" class="nav-pill">ReDoc</a>
+      <a href="https://github.com/Raghunath2604/geospatial-measurement-api" target="_blank" class="nav-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
     </div>
   </header>
 
+  <!-- Main View -->
   <main>
-    <!-- Left Column: Controls & Upload -->
+    <!-- Left Column: Upload & Metadata Controls -->
     <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-      <div class="glass-card">
-        <div class="card-title">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-          Ingest Geospatial File
+      
+      <!-- Ingestion Panel -->
+      <div class="glass-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            Ingest Geospatial File
+          </div>
         </div>
+
         <div class="dropzone" id="dropzone">
-          <span class="dropzone-icon">📁</span>
-          <div class="dropzone-text">Click to browse or drop file here</div>
-          <div class="dropzone-hint">Accepts KML (.kml) or Shapefile ZIP (.zip)</div>
+          <span class="dropzone-icon">🛰️</span>
+          <div class="dropzone-text">Drop your survey file here</div>
+          <div class="dropzone-subtext">Click to browse from local computer</div>
+          
+          <div class="limit-badge-row">
+            <span class="limit-pill" id="limit-upload-pill">Max 50 MB</span>
+            <span class="limit-pill">.KML or Shapefile .ZIP</span>
+            <span class="limit-pill">Up to 10k Features</span>
+          </div>
+
+          <div class="progress-bar-container" id="upload-progress">
+            <div class="progress-bar-fill" id="upload-fill"></div>
+          </div>
+
           <input type="file" id="file-input" accept=".kml,.zip" style="display: none;">
         </div>
 
         <div style="margin-top: 1.5rem;">
-          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">One-Click Sample Datasets</div>
-          <div class="sample-buttons">
+          <div class="section-label">One-Click Demonstration Datasets</div>
+          <div class="sample-grid">
             <button class="btn-sample" onclick="loadSampleKML()">
-              <span>🌾 Bengaluru Drone Survey (.kml)</span>
-              <span style="color: var(--accent-blue);">Load →</span>
+              <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <span style="font-size: 1.15rem;">🌾</span>
+                <div style="text-align: left;">
+                  <div>Bengaluru Drone Survey</div>
+                  <div style="font-size: 0.72rem; color: var(--text-muted);">5 features • Polygons, Lines, GCP Point</div>
+                </div>
+              </div>
+              <span class="btn-sample-tag" style="color: var(--accent-blue);">.kml</span>
             </button>
+
             <button class="btn-sample" onclick="loadSampleShapefile()">
-              <span>📐 Agricultural Parcels (.zip)</span>
-              <span style="color: var(--accent-cyan);">Load →</span>
+              <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <span style="font-size: 1.15rem;">📐</span>
+                <div style="text-align: left;">
+                  <div>Agricultural Parcels Archive</div>
+                  <div style="font-size: 0.72rem; color: var(--text-muted);">3 features • Donut holes & attributes</div>
+                </div>
+              </div>
+              <span class="btn-sample-tag" style="color: var(--accent-cyan);">.zip</span>
             </button>
           </div>
         </div>
       </div>
 
-      <!-- File Metadata Card -->
-      <div class="glass-card" id="file-meta-card" style="display: none;">
-        <div class="card-title">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-          File Details
+      <!-- Ingested File Details Card -->
+      <div class="glass-panel" id="file-meta-panel" style="display: none;">
+        <div class="panel-header">
+          <div class="panel-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            Ingested File Metadata
+          </div>
+          <button class="btn-action" onclick="copyFileJson()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Copy JSON
+          </button>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.85rem;">
-          <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Filename:</span><strong id="meta-filename" style="font-family: var(--font-mono);">-</strong></div>
-          <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">File ID:</span><span id="meta-id" style="font-family: var(--font-mono); font-size: 0.75rem;">-</span></div>
-          <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Source CRS:</span><span id="meta-crs" class="badge" style="background: rgba(59,130,246,0.15); color: #60a5fa;">-</span></div>
-          <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Status:</span><span id="meta-status" class="badge badge-measured">-</span></div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.84rem;">
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Filename:</span>
+            <strong id="meta-filename" style="font-family: var(--font-mono);">-</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">File UUID:</span>
+            <span id="meta-id" style="font-family: var(--font-mono); font-size: 0.75rem; color: #cbd5e1;">-</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: var(--text-muted);">Source CRS:</span>
+            <span id="meta-crs" class="badge" style="background: rgba(59,130,246,0.18); color: #93c5fd;">-</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: var(--text-muted);">Ingestion Status:</span>
+            <span id="meta-status" class="badge badge-measured">-</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: var(--text-muted);">Timestamp:</span>
+            <span id="meta-created" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">-</span>
+          </div>
         </div>
       </div>
+
     </div>
 
-    <!-- Right Column: Visualization & Results -->
+    <!-- Right Column: Visual Metrics, Leaflet Map & Inspection Table -->
     <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+      
+      <!-- Top Metrics Counters -->
       <div class="metric-grid">
-        <div class="metric-box">
-          <div class="metric-label">Total Features</div>
-          <div class="metric-value" id="val-features">0</div>
+        <div class="metric-card">
+          <div class="metric-icon">📑</div>
+          <div class="metric-title">Total Features</div>
+          <div class="metric-num" id="val-features">0</div>
         </div>
-        <div class="metric-box">
-          <div class="metric-label">Successfully Measured</div>
-          <div class="metric-value" id="val-measured" style="color: var(--accent-emerald);">0</div>
+
+        <div class="metric-card">
+          <div class="metric-icon">✅</div>
+          <div class="metric-title">Measured</div>
+          <div class="metric-num" id="val-measured" style="color: var(--accent-emerald);">0</div>
         </div>
-        <div class="metric-box">
-          <div class="metric-label">Total Area</div>
-          <div class="metric-value" id="val-area">0.00 <span class="metric-unit">m²</span></div>
+
+        <div class="metric-card">
+          <div class="metric-icon">🗺️</div>
+          <div class="metric-title">Total Metric Area</div>
+          <div class="metric-num" id="val-area">0.00 <span class="metric-unit">m²</span></div>
         </div>
-        <div class="metric-box">
-          <div class="metric-label">Total Distance</div>
-          <div class="metric-value" id="val-length">0.00 <span class="metric-unit">m</span></div>
+
+        <div class="metric-card">
+          <div class="metric-icon">📏</div>
+          <div class="metric-title">Total Metric Length</div>
+          <div class="metric-num" id="val-length">0.00 <span class="metric-unit">m</span></div>
         </div>
       </div>
 
-      <div class="glass-card" style="padding: 1.25rem;">
-        <div class="card-title">Interactive Geospatial Map (CartoDB Dark Matter)</div>
-        <div id="map"></div>
+      <!-- Map Panel -->
+      <div class="glass-panel" style="padding: 1.25rem;">
+        <div class="panel-header" style="margin-bottom: 0.85rem;">
+          <div class="panel-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon></svg>
+            Interactive Geospatial Inspector
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">
+            Click any feature or table row to focus and inspect
+          </div>
+        </div>
+
+        <div id="map-wrapper">
+          <div class="map-controls">
+            <button class="map-btn active" id="btn-tile-dark" onclick="switchBaseMap('dark')">Dark Matter</button>
+            <button class="map-btn" id="btn-tile-sat" onclick="switchBaseMap('sat')">Satellite</button>
+            <button class="map-btn" id="btn-tile-osm" onclick="switchBaseMap('osm')">Streets</button>
+          </div>
+          <div id="map"></div>
+        </div>
       </div>
 
-      <div class="glass-card">
-        <div class="card-title">Feature Measurement Breakdown</div>
+      <!-- Feature Table Panel -->
+      <div class="glass-panel">
+        <div class="filter-bar">
+          <div class="panel-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            Survey Feature Breakdown
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <div class="filter-pills">
+              <button class="filter-pill active" onclick="filterGeometry('ALL')">All</button>
+              <button class="filter-pill" onclick="filterGeometry('Polygon')">Polygons</button>
+              <button class="filter-pill" onclick="filterGeometry('LineString')">Lines</button>
+              <button class="filter-pill" onclick="filterGeometry('Point')">Points</button>
+            </div>
+
+            <div class="action-group">
+              <button class="btn-action" onclick="exportGeoJSON()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Export GeoJSON
+              </button>
+              <button class="btn-action" onclick="exportCSV()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                Export CSV
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div class="table-container">
           <table>
             <thead>
               <tr>
                 <th>Index</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th>Metric Area (m²)</th>
+                <th>Geometry Type</th>
+                <th>Measurement Status</th>
+                <th>Calculated Area (m²)</th>
                 <th>Length (m)</th>
-                <th>Projected CRS</th>
-                <th>Notice</th>
+                <th>Metric Projection</th>
+                <th>Notice / Validity</th>
               </tr>
             </thead>
             <tbody id="measurement-rows">
-              <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">Upload a file or choose a sample to inspect measurements.</td></tr>
+              <tr>
+                <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 3rem 1rem;">
+                  No file uploaded yet. Drop a .kml or .zip file above or load one of the demonstration datasets.
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
       </div>
+
     </div>
   </main>
 
   <script>
-    // Initialize Leaflet Map
-    const map = L.map('map').setView([12.9716, 77.5946], 13);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-      subdomains: 'abcd',
-      maxZoom: 19
-    }).addTo(map);
+    // State Store
+    let currentFileId = null;
+    let currentFileMeta = null;
+    let currentMeasurements = [];
+    let currentFeatures = [];
+    let activeFilter = 'ALL';
+    let systemLimits = { max_upload_bytes: 52428800, max_upload_mb: 50 };
 
-    let geoJsonLayer = L.geoJSON(null, {
-      style: function (feature) {
+    // Initialize Base Tile Layers
+    const tilesDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 19
+    });
+    const tilesSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS', maxZoom: 18
+    });
+    const tilesOsm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors', maxZoom: 19
+    });
+
+    const map = L.map('map', { layers: [tilesDark] }).setView([12.9716, 77.5946], 13);
+
+    function switchBaseMap(type) {
+      document.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
+      map.removeLayer(tilesDark);
+      map.removeLayer(tilesSat);
+      map.removeLayer(tilesOsm);
+
+      if (type === 'dark') {
+        map.addLayer(tilesDark);
+        document.getElementById('btn-tile-dark').classList.add('active');
+      } else if (type === 'sat') {
+        map.addLayer(tilesSat);
+        document.getElementById('btn-tile-sat').classList.add('active');
+      } else {
+        map.addLayer(tilesOsm);
+        document.getElementById('btn-tile-osm').classList.add('active');
+      }
+    }
+
+    // Leaflet GeoJSON layer
+    let layerMap = {};
+    const geoJsonLayer = L.geoJSON(null, {
+      style: function(feature) {
         return { color: '#3b82f6', weight: 2.5, fillColor: '#06b6d4', fillOpacity: 0.35 };
       },
-      pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng, { radius: 7, fillColor: '#f59e0b', color: '#fff', weight: 2, fillOpacity: 0.9 });
+      pointToLayer: function(feature, latlng) {
+        return L.circleMarker(latlng, { radius: 8, fillColor: '#f59e0b', color: '#fff', weight: 2, fillOpacity: 0.9 });
+      },
+      onEachFeature: function(feature, layer) {
+        const idx = feature.properties._feature_index;
+        layerMap[idx] = layer;
+        layer.on('click', () => {
+          highlightFeature(idx);
+        });
       }
     }).addTo(map);
 
+    // Fetch System Limits on Load
+    async function initSystemLimits() {
+      try {
+        const res = await fetch('/api/files/config/');
+        if (res.ok) {
+          systemLimits = await res.json();
+          document.getElementById('limit-upload-pill').textContent = `Max ${systemLimits.max_upload_mb} MB`;
+        }
+      } catch (e) {
+        console.warn('Could not load system limits:', e);
+      }
+    }
+    initSystemLimits();
+
+    // Setup Dropzone
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('file-input');
-    const loading = document.getElementById('loading-overlay');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const toast = document.getElementById('toast');
 
     dropzone.addEventListener('click', () => fileInput.click());
     dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -464,87 +934,159 @@
     dropzone.addEventListener('drop', (e) => {
       e.preventDefault();
       dropzone.classList.remove('dragover');
-      if (e.dataTransfer.files.length > 0) uploadFile(e.dataTransfer.files[0]);
+      if (e.dataTransfer.files.length > 0) handleFileSelection(e.dataTransfer.files[0]);
     });
 
     fileInput.addEventListener('change', () => {
-      if (fileInput.files.length > 0) uploadFile(fileInput.files[0]);
+      if (fileInput.files.length > 0) handleFileSelection(fileInput.files[0]);
     });
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // File Validation & Upload
+    function handleFileSelection(file) {
+      const lower = file.name.toLowerCase();
+      if (!lower.endsWith('.kml') && !lower.endsWith('.zip')) {
+        alert('Unsupported file format! Only .kml and .zip (Shapefile) files are allowed.');
+        return;
+      }
+
+      // Check upload size limit in frontend
+      if (file.size > systemLimits.max_upload_bytes) {
+        alert(`File is too large! Maximum permitted size is ${systemLimits.max_upload_mb} MB (file size: ${(file.size / (1024*1024)).toFixed(2)} MB).`);
+        return;
+      }
+
+      uploadFile(file);
+    }
 
     async function uploadFile(file) {
       const formData = new FormData();
       formData.append('file', file);
-      loading.style.display = 'flex';
+
+      loadingOverlay.style.display = 'flex';
+      document.getElementById('loading-msg').textContent = `Uploading ${file.name} ...`;
 
       try {
-        const uploadRes = await fetch('/api/files/', { method: 'POST', body: formData });
-        const fileData = await uploadRes.json();
+        const res = await fetch('/api/files/', { method: 'POST', body: formData });
+        const data = await res.json();
 
-        if (!uploadRes.ok) {
-          alert('Upload failed: ' + (fileData.detail || 'Unknown error'));
+        if (!res.ok) {
+          alert('Ingestion failed: ' + (data.detail || 'Unknown server error'));
           return;
         }
 
-        await displayResults(fileData.id, fileData);
+        currentFileId = data.id;
+        currentFileMeta = data;
+        await loadAndRenderFile(data.id, data);
+        showToast(`Successfully processed ${file.name}`);
       } catch (err) {
-        alert('Network error: ' + err.message);
+        alert('Connection error: ' + err.message);
       } finally {
-        loading.style.display = 'none';
+        loadingOverlay.style.display = 'none';
       }
     }
 
-    async function displayResults(fileId, fileMeta) {
-      // Fetch measurements & features
+    async function loadAndRenderFile(fileId, meta) {
       const [measRes, featRes] = await Promise.all([
-        fetch(`/api/files/${fileId}/measurements/`),
-        fetch(`/api/files/${fileId}/features/`)
+        fetch(`/api/files/${fileId}/measurements/?limit=1000`),
+        fetch(`/api/files/${fileId}/features/?limit=1000`)
       ]);
 
-      const measurements = await measRes.json();
-      const features = await featRes.json();
+      const measurementsData = await measRes.json();
+      const featuresData = await featRes.json();
 
-      // Update meta card
-      document.getElementById('file-meta-card').style.display = 'block';
-      document.getElementById('meta-filename').textContent = fileMeta.filename;
-      document.getElementById('meta-id').textContent = fileMeta.id;
-      document.getElementById('meta-crs').textContent = fileMeta.crs || 'Unknown';
-      document.getElementById('meta-status').textContent = fileMeta.status;
+      currentMeasurements = measurementsData.measurements || [];
+      currentFeatures = featuresData.features || [];
 
-      // Update summary boxes
-      document.getElementById('val-features').textContent = measurements.summary.feature_count;
-      document.getElementById('val-measured').textContent = measurements.summary.measured_count;
-      document.getElementById('val-area').innerHTML = `${measurements.summary.total_area_sq_m.toLocaleString()} <span class="metric-unit">m²</span>`;
-      document.getElementById('val-length').innerHTML = `${measurements.summary.total_length_m.toLocaleString()} <span class="metric-unit">m</span>`;
+      // Update Metadata Card
+      document.getElementById('file-meta-panel').style.display = 'block';
+      document.getElementById('meta-filename').textContent = meta.filename;
+      document.getElementById('meta-id').textContent = meta.id;
+      document.getElementById('meta-crs').textContent = meta.crs || 'Unknown';
+      document.getElementById('meta-status').textContent = meta.status;
+      document.getElementById('meta-created').textContent = new Date(meta.created_at).toLocaleString();
 
-      // Update Map
+      // Animate Stats
+      animateCount('val-features', measurementsData.summary.feature_count);
+      animateCount('val-measured', measurementsData.summary.measured_count);
+      document.getElementById('val-area').innerHTML = `${measurementsData.summary.total_area_sq_m.toLocaleString(undefined, {minimumFractionDigits: 2})} <span class="metric-unit">m²</span>`;
+      document.getElementById('val-length').innerHTML = `${measurementsData.summary.total_length_m.toLocaleString(undefined, {minimumFractionDigits: 2})} <span class="metric-unit">m</span>`;
+
+      // Update Leaflet Map
+      layerMap = {};
       geoJsonLayer.clearLayers();
-      const geojsonFeatureCollection = {
+
+      const featureCollection = {
         type: "FeatureCollection",
-        features: features.features.map(f => ({
+        features: currentFeatures.map(f => ({
           type: "Feature",
           geometry: f.geometry,
-          properties: f.properties
+          properties: { ...f.properties, _feature_index: f.feature_index }
         }))
       };
-      geoJsonLayer.addData(geojsonFeatureCollection);
+
+      geoJsonLayer.addData(featureCollection);
       if (geoJsonLayer.getLayers().length > 0) {
-        map.fitBounds(geoJsonLayer.getBounds(), { padding: [30, 30] });
+        map.fitBounds(geoJsonLayer.getBounds(), { padding: [35, 35] });
       }
 
-      // Populate Table
+      renderTable();
+    }
+
+    function animateCount(id, target) {
+      const el = document.getElementById(id);
+      let start = 0;
+      const duration = 600;
+      const stepTime = 20;
+      const steps = duration / stepTime;
+      const increment = target / steps;
+
+      const timer = setInterval(() => {
+        start += increment;
+        if (start >= target) {
+          el.textContent = target;
+          clearInterval(timer);
+        } else {
+          el.textContent = Math.floor(start);
+        }
+      }, stepTime);
+    }
+
+    function renderTable() {
       const tbody = document.getElementById('measurement-rows');
       tbody.innerHTML = '';
-      measurements.measurements.forEach(m => {
+
+      const filtered = currentMeasurements.filter(m => {
+        if (activeFilter === 'ALL') return true;
+        if (activeFilter === 'Polygon') return m.geometry_type.includes('Polygon');
+        if (activeFilter === 'LineString') return m.geometry_type.includes('LineString');
+        if (activeFilter === 'Point') return m.geometry_type.includes('Point');
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">No features matched filter '${activeFilter}'.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(m => {
         const badgeClass = m.status === 'MEASURED' ? 'badge-measured' :
                            m.status === 'NOT_APPLICABLE' ? 'badge-na' :
                            m.status === 'UNSUPPORTED' ? 'badge-unsupported' : 'badge-error';
         const tr = document.createElement('tr');
+        tr.id = `row-feat-${m.feature_index}`;
+        tr.onclick = () => highlightFeature(m.feature_index);
         tr.innerHTML = `
-          <td>${m.feature_index}</td>
+          <td><strong>#${m.feature_index}</strong></td>
           <td><strong>${m.geometry_type}</strong></td>
           <td><span class="badge ${badgeClass}">${m.status}</span></td>
-          <td>${m.area_sq_m !== null ? m.area_sq_m.toLocaleString() : '—'}</td>
-          <td>${m.length_m !== null ? m.length_m.toLocaleString() : '—'}</td>
+          <td>${m.area_sq_m !== null ? m.area_sq_m.toLocaleString(undefined, {minimumFractionDigits: 2}) : '—'}</td>
+          <td>${m.length_m !== null ? m.length_m.toLocaleString(undefined, {minimumFractionDigits: 2}) : '—'}</td>
           <td><code>${m.measurement_crs || '—'}</code></td>
           <td style="color: #cbd5e1; font-size: 0.75rem;">${m.message || '—'}</td>
         `;
@@ -552,29 +1094,110 @@
       });
     }
 
+    function highlightFeature(index) {
+      document.querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
+      const row = document.getElementById(`row-feat-${index}`);
+      if (row) {
+        row.classList.add('selected');
+        row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      const layer = layerMap[index];
+      if (layer) {
+        if (layer.getBounds) {
+          map.fitBounds(layer.getBounds(), { padding: [40, 40], maxZoom: 17 });
+        } else if (layer.getLatLng) {
+          map.setView(layer.getLatLng(), 16);
+        }
+
+        const meas = currentMeasurements.find(m => m.feature_index === index);
+        const feat = currentFeatures.find(f => f.feature_index === index);
+
+        let content = `<div style="font-family: var(--font-sans); min-width: 180px;">
+          <strong style="color: #3b82f6;">Feature #${index} (${meas ? meas.geometry_type : ''})</strong><br>
+          <div style="margin-top: 4px; font-size: 12px;">
+            ${meas && meas.area_sq_m !== null ? `Area: <strong>${meas.area_sq_m.toLocaleString()} m²</strong><br>` : ''}
+            ${meas && meas.length_m !== null ? `Length: <strong>${meas.length_m.toLocaleString()} m</strong><br>` : ''}
+            Projection: <code>${meas && meas.measurement_crs ? meas.measurement_crs : '—'}</code>
+          </div>
+        </div>`;
+        layer.bindPopup(content).openPopup();
+      }
+    }
+
+    function filterGeometry(type) {
+      activeFilter = type;
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      event.target.classList.add('active');
+      renderTable();
+    }
+
+    function copyFileJson() {
+      if (!currentFileMeta) return;
+      navigator.clipboard.writeText(JSON.stringify(currentFileMeta, null, 2));
+      showToast('Metadata copied to clipboard!');
+    }
+
+    function exportGeoJSON() {
+      if (!currentFeatures.length) { alert('No features to export!'); return; }
+      const collection = {
+        type: "FeatureCollection",
+        features: currentFeatures.map(f => ({
+          type: "Feature",
+          geometry: f.geometry,
+          properties: f.properties
+        }))
+      };
+      const blob = new Blob([JSON.stringify(collection, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${currentFileMeta.filename || 'export'}.geojson`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportCSV() {
+      if (!currentMeasurements.length) { alert('No measurements to export!'); return; }
+      let csv = "feature_index,geometry_type,status,area_sq_m,length_m,measurement_crs,message\n";
+      currentMeasurements.forEach(m => {
+        csv += `${m.feature_index},"${m.geometry_type}",${m.status},${m.area_sq_m || ''},${m.length_m || ''},"${m.measurement_crs || ''}","${(m.message || '').replace(/"/g, '""')}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${currentFileMeta.filename || 'measurements'}_report.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Sample Loaders
     async function loadSampleKML() {
-      loading.style.display = 'flex';
+      loadingOverlay.style.display = 'flex';
+      document.getElementById('loading-msg').textContent = 'Loading Bengaluru Drone Survey (.kml)...';
       try {
         const res = await fetch('/sample/survey.kml');
         const blob = await res.blob();
         await uploadFile(new File([blob], 'survey.kml', { type: 'application/vnd.google-earth.kml+xml' }));
-      } catch (err) {
-        alert('Failed loading sample: ' + err.message);
+      } catch (e) {
+        alert('Failed loading sample: ' + e.message);
       } finally {
-        loading.style.display = 'none';
+        loadingOverlay.style.display = 'none';
       }
     }
 
     async function loadSampleShapefile() {
-      loading.style.display = 'flex';
+      loadingOverlay.style.display = 'flex';
+      document.getElementById('loading-msg').textContent = 'Loading Agricultural Parcels (.zip)...';
       try {
         const res = await fetch('/sample/survey_shapefile.zip');
         const blob = await res.blob();
         await uploadFile(new File([blob], 'survey_shapefile.zip', { type: 'application/zip' }));
-      } catch (err) {
-        alert('Failed loading sample: ' + err.message);
+      } catch (e) {
+        alert('Failed loading sample: ' + e.message);
       } finally {
-        loading.style.display = 'none';
+        loadingOverlay.style.display = 'none';
       }
     }
   </script>
