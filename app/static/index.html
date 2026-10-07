@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GeoMeasure Tactical GIS — Mission Control & Geodetic Intelligence Deck</title>
+  <title>CYBERDEFEND // Tactical Geospatial Command & Orbital Geodetic Deck</title>
   
-  <!-- Premium Fonts -->
+  <!-- Premium High-Tech Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,32 +16,30 @@
   
   <style>
     :root {
-      --bg-void: #05070c;
-      --bg-panel: rgba(10, 14, 23, 0.88);
-      --bg-panel-solid: #0b0f19;
+      --bg-void: #06090e;
+      --bg-panel: rgba(11, 16, 26, 0.88);
+      --bg-panel-solid: #0d131f;
       --bg-card: rgba(15, 22, 36, 0.75);
-      --bg-card-hover: rgba(22, 32, 52, 0.9);
+      --bg-card-hover: rgba(22, 33, 54, 0.9);
       
-      --border-panel: rgba(255, 255, 255, 0.09);
+      --border-panel: rgba(255, 255, 255, 0.08);
       --border-accent: rgba(250, 204, 21, 0.45);
       --border-cyan: rgba(56, 189, 248, 0.4);
       
       --accent-yellow: #facc15;
       --accent-yellow-glow: rgba(250, 204, 21, 0.35);
       --accent-cyan: #38bdf8;
-      --accent-cyan-glow: rgba(56, 189, 248, 0.3);
+      --accent-cyan-glow: rgba(56, 189, 248, 0.35);
       --accent-emerald: #10b981;
-      --accent-emerald-glow: rgba(16, 185, 129, 0.3);
+      --accent-emerald-glow: rgba(16, 185, 129, 0.35);
       --accent-purple: #a855f7;
       --accent-rose: #f43f5e;
-      --accent-amber: #f59e0b;
       
       --text-main: #f8fafc;
       --text-sub: #cbd5e1;
-      --text-muted: #7e8c9f;
-      --text-dim: #4b5563;
+      --text-muted: #73849a;
 
-      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
       --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -58,13 +56,12 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Custom Tactical Scrollbars */
+    /* Tactical Custom Scrollbars */
     ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); }
-    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 4px; }
+    ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.4); }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.16); border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--accent-yellow); }
 
-    /* Tactical Application Wrapper */
     #app-container {
       display: flex;
       flex-direction: column;
@@ -73,12 +70,12 @@
       position: relative;
     }
 
-    /* Top Command Header */
+    /* Top Command Header (Cyberdefend / SpaceX Aesthetic) */
     header {
-      height: 58px;
+      height: 56px;
       padding: 0 1.5rem;
       border-bottom: 1px solid var(--border-panel);
-      background: rgba(8, 11, 18, 0.94);
+      background: rgba(7, 10, 17, 0.94);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       display: flex;
@@ -95,11 +92,11 @@
     }
 
     .brand-logo-hex {
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       background: linear-gradient(135deg, #1e293b, #0f172a);
       border: 1px solid var(--border-accent);
-      border-radius: 10px;
+      border-radius: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -108,7 +105,7 @@
     }
 
     .brand-title {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 800;
       letter-spacing: -0.02em;
       color: #fff;
@@ -119,55 +116,60 @@
 
     .brand-badge {
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       font-weight: 800;
       color: var(--accent-yellow);
       background: rgba(250, 204, 21, 0.12);
       border: 1px solid rgba(250, 204, 21, 0.3);
       padding: 0.12rem 0.45rem;
-      border-radius: 6px;
+      border-radius: 5px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
 
-    .header-center-pills {
+    .header-nav-tabs {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-    }
-
-    .header-pill {
-      background: rgba(255, 255, 255, 0.035);
+      gap: 0.35rem;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 3px;
+      border-radius: 10px;
       border: 1px solid var(--border-panel);
-      color: var(--text-sub);
+    }
+
+    .nav-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
       font-size: 0.74rem;
-      font-weight: 600;
-      padding: 0.35rem 0.75rem;
-      border-radius: 8px;
+      font-weight: 700;
+      padding: 0.35rem 0.85rem;
+      border-radius: 7px;
       cursor: pointer;
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 0.45rem;
+      gap: 0.4rem;
       transition: all 0.2s var(--ease-spring);
-      text-decoration: none;
     }
 
-    .header-pill:hover, .header-pill.active {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.25);
-    }
-
-    .header-pill.active {
-      background: rgba(250, 204, 21, 0.15);
-      border-color: var(--accent-yellow);
-      color: var(--accent-yellow);
-    }
+    .nav-tab:hover { color: #fff; background: rgba(255, 255, 255, 0.06); }
+    .nav-tab.active { background: var(--accent-yellow); color: #000; box-shadow: 0 0 15px var(--accent-yellow-glow); }
 
     .header-right {
       display: flex;
       align-items: center;
-      gap: 0.85rem;
+      gap: 0.95rem;
+    }
+
+    .utc-clock {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-panel);
     }
 
     .status-indicator {
@@ -180,7 +182,7 @@
       color: #34d399;
       background: rgba(16, 185, 129, 0.08);
       border: 1px solid rgba(16, 185, 129, 0.25);
-      padding: 0.3rem 0.75rem;
+      padding: 0.28rem 0.75rem;
       border-radius: 20px;
     }
 
@@ -213,7 +215,7 @@
       color: var(--text-muted);
       font-size: 0.72rem;
       font-weight: 700;
-      padding: 0.3rem 0.65rem;
+      padding: 0.25rem 0.6rem;
       border-radius: 6px;
       cursor: pointer;
       transition: all 0.2s;
@@ -225,7 +227,7 @@
       font-weight: 800;
     }
 
-    /* Map Workspace - Full Viewport */
+    /* Map Workspace */
     #map-viewport {
       flex: 1;
       width: 100%;
@@ -235,81 +237,15 @@
     #map {
       width: 100%;
       height: 100%;
-      background: #090c14;
+      background: #080c14;
     }
 
-    /* Floating Sub-Header Action Toolbar (Modeled on Screenshot) */
-    .floating-action-toolbar {
+    /* Card 1: Top-Left Floating Tactical Telemetry (Cyberdefend Sat-Feed Style) */
+    .floating-telemetry-hud {
       position: absolute;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 500;
-      background: rgba(11, 15, 25, 0.92);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--border-panel);
-      border-radius: 14px;
-      padding: 0.35rem 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
-    }
-
-    .toolbar-tool-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      color: var(--text-sub);
-      padding: 0.5rem 0.85rem;
-      border-radius: 10px;
-      font-size: 0.76rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.2s var(--ease-spring);
-    }
-
-    .toolbar-tool-btn .kbd {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      background: rgba(255, 255, 255, 0.08);
-      padding: 0.1rem 0.35rem;
-      border-radius: 4px;
-      color: var(--text-muted);
-    }
-
-    .toolbar-tool-btn:hover {
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
-    }
-
-    .toolbar-tool-btn.active {
-      background: var(--accent-yellow);
-      color: #000;
-      box-shadow: 0 0 20px var(--accent-yellow-glow);
-    }
-
-    .toolbar-tool-btn.active .kbd {
-      background: rgba(0, 0, 0, 0.2);
-      color: #000;
-    }
-
-    .toolbar-sep {
-      width: 1px;
-      height: 22px;
-      background: var(--border-panel);
-      margin: 0 0.2rem;
-    }
-
-    /* Floating Left HUD: Elevation & Geodetic Telemetry (Modeled on Screenshot) */
-    .floating-left-hud {
-      position: absolute;
-      top: 14px;
-      left: 14px;
-      width: 320px;
+      top: 16px;
+      left: 16px;
+      width: 330px;
       z-index: 500;
       background: rgba(10, 14, 23, 0.94);
       backdrop-filter: blur(24px);
@@ -317,22 +253,22 @@
       border: 1px solid var(--border-panel);
       border-radius: 16px;
       padding: 1.25rem;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75);
       display: flex;
       flex-direction: column;
-      gap: 1.1rem;
+      gap: 1rem;
     }
 
-    .hud-header {
+    .hud-title-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      padding-bottom: 0.75rem;
+      padding-bottom: 0.65rem;
     }
 
     .hud-title {
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       font-weight: 800;
       color: var(--accent-yellow);
       text-transform: uppercase;
@@ -342,10 +278,10 @@
       gap: 0.45rem;
     }
 
-    .hud-metrics-stack {
+    .hud-metrics-grid {
       display: flex;
       flex-direction: column;
-      gap: 0.85rem;
+      gap: 0.75rem;
     }
 
     .hud-metric-row {
@@ -355,9 +291,11 @@
     }
 
     .hud-metric-label {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
       font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
     .hud-metric-big-val {
@@ -370,7 +308,7 @@
 
     .hud-metric-sub {
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--accent-cyan);
     }
 
@@ -378,11 +316,11 @@
       background: rgba(255, 255, 255, 0.025);
       border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 10px;
-      padding: 0.75rem 0.85rem;
+      padding: 0.7rem 0.85rem;
       display: flex;
       flex-direction: column;
-      gap: 0.45rem;
-      font-size: 0.74rem;
+      gap: 0.4rem;
+      font-size: 0.72rem;
       font-family: var(--font-mono);
       color: #94a3b8;
     }
@@ -410,87 +348,209 @@
       transform: translateY(-1px);
     }
 
-    /* Bottom-Left Floating Vector Drawing Palette (Modeled on Screenshot) */
-    .floating-bottom-palette {
+    /* Card 2: Top-Right Floating Orbital Satellite Fleet Card (Cyberdefend Starlink Style) */
+    .floating-satellite-card {
       position: absolute;
-      bottom: 20px;
-      left: 14px;
+      top: 16px;
+      right: 16px;
+      width: 280px;
       z-index: 500;
       background: rgba(10, 14, 23, 0.94);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--border-panel);
-      border-radius: 14px;
-      padding: 0.65rem 1rem;
+      border-radius: 16px;
+      padding: 1.15rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75);
       display: flex;
-      align-items: center;
-      gap: 1.1rem;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+      flex-direction: column;
+      gap: 0.85rem;
     }
 
-    .color-swatches {
+    .sat-header {
       display: flex;
+      justify-content: space-between;
       align-items: center;
+    }
+
+    .sat-name {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .sat-status-badge {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      font-weight: 700;
+    }
+
+    .sat-metrics-list {
+      display: flex;
+      flex-direction: column;
       gap: 0.45rem;
-    }
-
-    .color-swatch {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: 2px solid transparent;
-    }
-
-    .color-swatch.active {
-      transform: scale(1.25);
-      border-color: #fff;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    }
-
-    .opacity-control {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      font-size: 0.72rem;
-      color: var(--text-muted);
-    }
-
-    .opacity-control input[type="range"] {
-      width: 75px;
-      accent-color: var(--accent-yellow);
-      cursor: pointer;
-    }
-
-    /* Floating Bottom-Right Tactical Coordinates HUD */
-    .floating-bottom-hud {
-      position: absolute;
-      bottom: 20px;
-      right: 14px;
-      z-index: 500;
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-    }
-
-    .coords-readout-pill {
-      background: rgba(10, 14, 23, 0.94);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--border-panel);
-      border-radius: 12px;
-      padding: 0.55rem 1.1rem;
       font-family: var(--font-mono);
       font-size: 0.72rem;
       color: #cbd5e1;
-      display: flex;
-      gap: 0.95rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
     }
 
-    /* Basemaps Switcher */
-    .basemap-selector-pill {
+    .sat-metric-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Signal waveform bar */
+    .signal-bar-wrap {
+      display: flex;
+      gap: 3px;
+      align-items: flex-end;
+      height: 16px;
+    }
+    .sig-col {
+      width: 4px;
+      border-radius: 2px;
+      background: #38bdf8;
+    }
+
+    /* Card 3: Bottom-Right Real-Time Terrain Elevation Waveform Profile (Cyberdefend Waveform Style) */
+    .floating-waveform-hud {
+      position: absolute;
+      bottom: 20px;
+      right: 16px;
+      width: 360px;
+      z-index: 500;
+      background: rgba(10, 14, 23, 0.94);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border-panel);
+      border-radius: 16px;
+      padding: 1.15rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .waveform-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .terrain-svg-canvas {
+      width: 100%;
+      height: 60px;
+      overflow: visible;
+    }
+
+    /* Center-Bottom Floating Action Toolbar (2024 Geospatial Data Processing Style) */
+    .floating-center-dock {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 500;
+      background: rgba(10, 14, 23, 0.94);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border-panel);
+      border-radius: 16px;
+      padding: 0.45rem 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+    }
+
+    .tool-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-sub);
+      padding: 0.5rem 0.85rem;
+      border-radius: 10px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.2s var(--ease-spring);
+    }
+
+    .tool-btn .kbd {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      color: var(--text-muted);
+    }
+
+    .tool-btn:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+    .tool-btn.active {
+      background: var(--accent-yellow);
+      color: #000;
+      box-shadow: 0 0 20px var(--accent-yellow-glow);
+    }
+    .tool-btn.active .kbd { background: rgba(0, 0, 0, 0.2); color: #000; }
+
+    .tool-sep {
+      width: 1px;
+      height: 22px;
+      background: var(--border-panel);
+      margin: 0 0.15rem;
+    }
+
+    .color-swatch-row {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .color-swatch {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .color-swatch.active { transform: scale(1.3); box-shadow: 0 0 10px #fff; }
+
+    /* Live Measuring Banner */
+    .live-banner {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 500;
+      background: rgba(250, 204, 21, 0.95);
+      color: #000;
+      padding: 0.55rem 1.4rem;
+      border-radius: 20px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+      box-shadow: 0 0 25px var(--accent-yellow-glow);
+      display: none;
+      border: 1px solid #fff;
+    }
+
+    /* Basemap Switcher In Bottom Left */
+    .floating-basemap-pill {
+      position: absolute;
+      bottom: 20px;
+      left: 16px;
+      z-index: 500;
       background: rgba(10, 14, 23, 0.94);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
@@ -499,7 +559,7 @@
       padding: 0.35rem;
       display: flex;
       gap: 0.3rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
     }
 
     .basemap-btn {
@@ -514,37 +574,10 @@
       transition: all 0.2s;
     }
 
-    .basemap-btn.active, .basemap-btn:hover {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.1);
-    }
+    .basemap-btn.active, .basemap-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+    .basemap-btn.active { background: var(--accent-yellow); color: #000; font-weight: 800; }
 
-    .basemap-btn.active {
-      background: var(--accent-yellow);
-      color: #000;
-      font-weight: 800;
-    }
-
-    /* Live Rubberband Measuring Banner */
-    .live-rubberband-banner {
-      position: absolute;
-      top: 75px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 500;
-      background: rgba(250, 204, 21, 0.95);
-      color: #000;
-      padding: 0.55rem 1.35rem;
-      border-radius: 20px;
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      font-weight: 800;
-      box-shadow: 0 0 25px var(--accent-yellow-glow);
-      display: none;
-      border: 1px solid #fff;
-    }
-
-    /* Right-Side Feature Registry & Slide-out Inspector Drawer */
+    /* Feature Registry Slide-out Drawer */
     #registry-drawer {
       position: absolute;
       top: 0;
@@ -552,11 +585,11 @@
       bottom: 0;
       width: 440px;
       max-width: 95vw;
-      background: rgba(9, 13, 22, 0.96);
+      background: rgba(8, 12, 20, 0.96);
       backdrop-filter: blur(32px);
       -webkit-backdrop-filter: blur(32px);
       border-left: 1px solid var(--border-panel);
-      box-shadow: -20px 0 60px rgba(0, 0, 0, 0.8);
+      box-shadow: -20px 0 60px rgba(0, 0, 0, 0.85);
       z-index: 1200;
       transform: translateX(100%);
       transition: transform 0.35s var(--ease-spring);
@@ -564,36 +597,27 @@
       flex-direction: column;
     }
 
-    #registry-drawer.open {
-      transform: translateX(0);
-    }
+    #registry-drawer.open { transform: translateX(0); }
 
-    .registry-header {
+    .drawer-header {
       padding: 1.15rem 1.4rem;
       border-bottom: 1px solid var(--border-panel);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-shrink: 0;
     }
 
-    .registry-body {
+    .drawer-body {
       flex: 1;
       overflow-y: auto;
       padding: 1.25rem 1.4rem;
       display: flex;
       flex-direction: column;
-      gap: 1.15rem;
-    }
-
-    .registry-search-bar {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
+      gap: 1.1rem;
     }
 
     .search-input {
-      flex: 1;
+      width: 100%;
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--border-panel);
       border-radius: 9px;
@@ -603,16 +627,9 @@
       font-family: inherit;
     }
 
-    .search-input:focus {
-      outline: none;
-      border-color: var(--accent-yellow);
-    }
+    .search-input:focus { outline: none; border-color: var(--accent-yellow); }
 
-    .filter-pills-row {
-      display: flex;
-      gap: 0.35rem;
-    }
-
+    .filter-pills-row { display: flex; gap: 0.35rem; }
     .filter-pill {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--border-panel);
@@ -623,14 +640,8 @@
       border-radius: 7px;
       cursor: pointer;
     }
+    .filter-pill.active { background: rgba(250, 204, 21, 0.15); border-color: var(--accent-yellow); color: var(--accent-yellow); }
 
-    .filter-pill.active {
-      background: rgba(250, 204, 21, 0.15);
-      border-color: var(--accent-yellow);
-      color: var(--accent-yellow);
-    }
-
-    /* Tactical Table */
     .table-box {
       border: 1px solid var(--border-panel);
       border-radius: 12px;
@@ -639,13 +650,7 @@
       overflow-y: auto;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.78rem;
-    }
-
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.78rem; }
     th {
       background: rgba(14, 19, 32, 0.98);
       position: sticky;
@@ -658,33 +663,15 @@
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
-
     td {
       padding: 0.65rem 0.85rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.04);
       font-family: var(--font-mono);
       font-size: 0.74rem;
     }
-
     tr { cursor: pointer; transition: background 0.15s ease; }
     tr:hover td { background: rgba(250, 204, 21, 0.08); }
     tr.selected td { background: rgba(250, 204, 21, 0.2); }
-
-    .telemetry-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border-panel);
-      border-radius: 12px;
-      padding: 1rem;
-    }
-
-    .telemetry-card-title {
-      font-size: 0.7rem;
-      font-weight: 800;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.65rem;
-    }
 
     /* Modal System */
     .modal-overlay {
@@ -703,7 +690,7 @@
       border: 1px solid var(--border-panel);
       border-radius: 20px;
       width: 90%;
-      max-width: 600px;
+      max-width: 620px;
       padding: 2rem;
       box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85);
       position: relative;
@@ -724,10 +711,8 @@
       font-size: 1.4rem;
       line-height: 1;
     }
-
     .btn-close:hover { color: #fff; }
 
-    /* Ingestion Dropzone */
     .dropzone {
       border: 2px dashed rgba(250, 204, 21, 0.35);
       border-radius: 14px;
@@ -737,7 +722,6 @@
       transition: all 0.3s;
       background: rgba(250, 204, 21, 0.02);
     }
-
     .dropzone:hover, .dropzone.dragover {
       border-color: var(--accent-yellow);
       background: rgba(250, 204, 21, 0.08);
@@ -759,10 +743,10 @@
       content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(250, 204, 21, 0.4);
     }
 
-    /* Toast Notification */
+    /* Toast */
     #toast {
       position: fixed;
-      bottom: 25px;
+      bottom: 80px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
       background: #0f172a;
@@ -780,11 +764,7 @@
       align-items: center;
       gap: 0.6rem;
     }
-
-    #toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
     /* Loading Overlay */
     #loading-overlay {
@@ -808,7 +788,6 @@
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
-
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
@@ -829,7 +808,7 @@
       <span id="toast-text">Notification</span>
     </div>
 
-    <!-- Top Command Header -->
+    <!-- Top Command Header (Cyberdefend / SpaceX Aesthetic) -->
     <header>
       <div class="brand-section">
         <div class="brand-logo-hex">
@@ -837,35 +816,41 @@
         </div>
         <div>
           <div class="brand-title">
-            GeoMeasure
-            <span class="brand-badge">Tactical 2024</span>
+            CYBERDEFEND // GEOSPATIAL
+            <span class="brand-badge">TACTICAL DECK</span>
           </div>
         </div>
       </div>
 
-      <div class="header-center-pills">
-        <button class="header-pill active" onclick="openIngestModal()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-          Ingest Dataset
+      <div class="header-nav-tabs">
+        <button class="nav-tab active" onclick="switchNavMode('survey')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon></svg>
+          Tactical Survey
         </button>
-        <button class="header-pill" id="btn-toggle-registry" onclick="toggleRegistryDrawer()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+        <button class="nav-tab" onclick="openIngestModal()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          Ingestion Deck
+        </button>
+        <button class="nav-tab" id="btn-toggle-registry" onclick="toggleRegistryDrawer()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line></svg>
           Feature Registry
         </button>
-        <button class="header-pill" onclick="openKeyModal()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-1-1l-3 3m-1 3l4 4 7-7-3-3z"></path><circle cx="8" cy="16" r="5"></circle></svg>
+        <button class="nav-tab" onclick="openKeyModal()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-1-1l-3 3m-1 3l4 4 7-7-3-3z"></path><circle cx="8" cy="16" r="5"></circle></svg>
           Mapbox HD
         </button>
-        <button class="header-pill" onclick="openCreditsModal()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-          Architecture & Credits
+        <button class="nav-tab" onclick="openCreditsModal()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line></svg>
+          Credits & Author
         </button>
       </div>
 
       <div class="header-right">
+        <div class="utc-clock" id="live-utc-clock">00:00:00 UTC</div>
+
         <div class="status-indicator">
           <div class="pulsing-radar-dot"></div>
-          <span>ORACLE ONLINE</span>
+          <span>ORACLE 99.98%</span>
         </div>
 
         <div class="unit-switch">
@@ -875,66 +860,24 @@
       </div>
     </header>
 
-    <!-- Main Map Workstation -->
+    <!-- Map Viewport -->
     <div id="map-viewport">
-      
-      <!-- Live Rubberband Banner -->
-      <div class="live-rubberband-banner" id="drawing-banner">
-        MEASURING LIVE PARCEL...
-      </div>
 
+      <!-- Live Rubberband Banner -->
+      <div class="live-banner" id="drawing-banner">DIGITIZING PARCEL...</div>
       <div class="crosshairs-overlay" id="crosshairs"></div>
 
-      <!-- Floating Sub-Header Action Toolbar (Modeled on Screenshot) -->
-      <div class="floating-action-toolbar">
-        <button class="toolbar-tool-btn" id="tool-polygon" onclick="activateDrawTool('polygon')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-          <span>Polygon Area</span>
-          <span class="kbd">P</span>
-        </button>
-
-        <button class="toolbar-tool-btn" id="tool-line" onclick="activateDrawTool('line')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19L19 4"></path><circle cx="4" cy="19" r="2"></circle><circle cx="19" cy="4" r="2"></circle></svg>
-          <span>Path Distance</span>
-          <span class="kbd">L</span>
-        </button>
-
-        <button class="toolbar-tool-btn" id="tool-circle" onclick="activateDrawTool('circle')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 12l5 -5"></path></svg>
-          <span>Radial Buffer</span>
-          <span class="kbd">B</span>
-        </button>
-
-        <button class="toolbar-tool-btn" id="tool-pin" onclick="activateDrawTool('pin')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          <span>Inspect Pin</span>
-          <span class="kbd">X</span>
-        </button>
-
-        <div class="toolbar-sep"></div>
-
-        <button class="toolbar-tool-btn" onclick="locateUserPosition()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3m0 14v3M2 12h3m14 0h3"></path></svg>
-          <span>GPS Locate</span>
-        </button>
-
-        <button class="toolbar-tool-btn" onclick="clearLiveDrawings()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-          <span>Clear</span>
-        </button>
-      </div>
-
-      <!-- Floating Left HUD: Elevation & Geodetic Telemetry (Modeled on Screenshot) -->
-      <div class="floating-left-hud">
-        <div class="hud-header">
+      <!-- Card 1: Top-Left Floating Tactical Telemetry (Cyberdefend Style) -->
+      <div class="floating-telemetry-hud">
+        <div class="hud-title-row">
           <div class="hud-title">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-            Elevation & Telemetry
+            SURVEY SENSOR TELEMETRY
           </div>
           <span id="hud-status-badge" class="brand-badge">IDLE</span>
         </div>
 
-        <div class="hud-metrics-stack">
+        <div class="hud-metrics-grid">
           <div class="hud-metric-row">
             <div>
               <div class="hud-metric-label">Planar Metric Area</div>
@@ -945,10 +888,18 @@
 
           <div class="hud-metric-row">
             <div>
-              <div class="hud-metric-label">Boundary / Path Length</div>
+              <div class="hud-metric-label">Geodesic Ellipsoidal</div>
+              <div class="hud-metric-big-val" id="hud-geod-val" style="color: #38bdf8;">0.00 <span style="font-size: 0.8rem; color: var(--text-muted);">m²</span></div>
+            </div>
+            <div class="hud-metric-sub">WGS 84 Karney</div>
+          </div>
+
+          <div class="hud-metric-row">
+            <div>
+              <div class="hud-metric-label">Boundary / Perimeter</div>
               <div class="hud-metric-big-val" id="hud-length-val">0.00 <span style="font-size: 0.8rem; color: var(--text-muted);">m</span></div>
             </div>
-            <div class="hud-metric-sub" id="hud-length-sub">Perimeter</div>
+            <div class="hud-metric-sub">Metric Length</div>
           </div>
 
           <div class="hud-metric-row">
@@ -956,14 +907,14 @@
               <div class="hud-metric-label">Terrain Altitude (MSL)</div>
               <div class="hud-metric-big-val" id="hud-elev-val" style="color: #34d399;">-- <span style="font-size: 0.8rem; color: var(--text-muted);">m</span></div>
             </div>
-            <div class="hud-metric-sub">NASA SRTM</div>
+            <div class="hud-metric-sub">NASA SRTM 30m</div>
           </div>
         </div>
 
-        <div class="hud-details-box" id="hud-details-box">
+        <div class="hud-details-box">
           <div>Projection: <span id="hud-crs-val" style="color: #fff;">EPSG:32643 (UTM 43N)</span></div>
           <div>Scale Factor: <span id="hud-scale-val" style="color: var(--accent-yellow);">1.0000 (Isometric)</span></div>
-          <div>Location: <span id="hud-loc-val" style="color: #cbd5e1;">Click or draw parcel</span></div>
+          <div>Territory: <span id="hud-loc-val" style="color: #cbd5e1;">Click or draw parcel</span></div>
         </div>
 
         <button class="hud-btn-primary" onclick="exportGeoJSON()">
@@ -972,9 +923,103 @@
         </button>
       </div>
 
-      <!-- Floating Bottom-Left Drawing Palette (Modeled on Screenshot) -->
-      <div class="floating-bottom-palette">
-        <div class="color-swatches">
+      <!-- Card 2: Top-Right Floating Orbital Satellite Fleet Card (Cyberdefend Starlink Style) -->
+      <div class="floating-satellite-card">
+        <div class="sat-header">
+          <div class="sat-name">SENTINEL-2B // ORBITAL FEED</div>
+          <span class="sat-status-badge">LOCK 98%</span>
+        </div>
+
+        <div class="sat-metrics-list">
+          <div class="sat-metric-item">
+            <span style="color: var(--text-muted);">LEO Altitude:</span>
+            <span>705.2 km</span>
+          </div>
+          <div class="sat-metric-item">
+            <span style="color: var(--text-muted);">Orbital Velocity:</span>
+            <span style="color: var(--accent-cyan);">7.52 km/s</span>
+          </div>
+          <div class="sat-metric-item">
+            <span style="color: var(--text-muted);">Sensor Elevation:</span>
+            <span>42.5° MSL</span>
+          </div>
+          <div class="sat-metric-item">
+            <span style="color: var(--text-muted);">Signal Bandwidth:</span>
+            <div class="signal-bar-wrap">
+              <div class="sig-col" style="height: 6px;"></div>
+              <div class="sig-col" style="height: 10px;"></div>
+              <div class="sig-col" style="height: 13px;"></div>
+              <div class="sig-col" style="height: 16px;"></div>
+            </div>
+          </div>
+          <div class="sat-metric-item">
+            <span style="color: var(--text-muted);">Basemap Source:</span>
+            <span style="color: var(--accent-yellow);" id="sat-basemap-name">Esri World Imagery</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Bottom-Right Real-Time Terrain Elevation Waveform (Cyberdefend Waveform Style) -->
+      <div class="floating-waveform-hud">
+        <div class="waveform-title-row">
+          <span>Terrain Topography Profile</span>
+          <span style="color: #34d399;" id="wave-peak-alt">PEAK: 911.3 M</span>
+        </div>
+
+        <!-- Glowing SVG Waveform -->
+        <svg class="terrain-svg-canvas" viewBox="0 0 320 60">
+          <defs>
+            <linearGradient id="waveGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.4" />
+              <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.0" />
+            </linearGradient>
+            <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#38bdf8" />
+              <stop offset="50%" stop-color="#facc15" />
+              <stop offset="100%" stop-color="#10b981" />
+            </linearGradient>
+          </defs>
+          <path id="wave-fill" d="M 0 50 Q 40 20, 80 40 T 160 25 T 240 35 T 320 20 L 320 60 L 0 60 Z" fill="url(#waveGrad)" />
+          <path id="wave-stroke" d="M 0 50 Q 40 20, 80 40 T 160 25 T 240 35 T 320 20" fill="none" stroke="url(#lineGrad)" stroke-width="2.5" />
+          <circle cx="160" cy="25" r="4" fill="#facc15" />
+        </svg>
+
+        <div style="display: flex; justify-content: space-between; font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-muted);">
+          <span>ENTRY VERTEX</span>
+          <span>SRTM MSL TRANSECT</span>
+          <span>EXIT VERTEX</span>
+        </div>
+      </div>
+
+      <!-- Center-Bottom Floating Action Dock (2024 Geospatial Data Processing Style) -->
+      <div class="floating-center-dock">
+        <button class="tool-btn" id="tool-polygon" onclick="activateDrawTool('polygon')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+          <span>Polygon Area</span>
+          <span class="kbd">P</span>
+        </button>
+
+        <button class="tool-btn" id="tool-line" onclick="activateDrawTool('line')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19L19 4"></path><circle cx="4" cy="19" r="2"></circle><circle cx="19" cy="4" r="2"></circle></svg>
+          <span>Path Distance</span>
+          <span class="kbd">L</span>
+        </button>
+
+        <button class="tool-btn" id="tool-circle" onclick="activateDrawTool('circle')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 12l5 -5"></path></svg>
+          <span>Radial Buffer</span>
+          <span class="kbd">B</span>
+        </button>
+
+        <button class="tool-btn" id="tool-pin" onclick="activateDrawTool('pin')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <span>Inspect Pin</span>
+          <span class="kbd">X</span>
+        </button>
+
+        <div class="tool-sep"></div>
+
+        <div class="color-swatch-row">
           <div class="color-swatch active" style="background: #facc15;" onclick="selectColor('#facc15', this)"></div>
           <div class="color-swatch" style="background: #38bdf8;" onclick="selectColor('#38bdf8', this)"></div>
           <div class="color-swatch" style="background: #10b981;" onclick="selectColor('#10b981', this)"></div>
@@ -982,35 +1027,24 @@
           <div class="color-swatch" style="background: #f43f5e;" onclick="selectColor('#f43f5e', this)"></div>
         </div>
 
-        <div class="toolbar-sep"></div>
+        <div class="tool-sep"></div>
 
-        <div class="opacity-control">
-          <span>Fill:</span>
-          <input type="range" id="layer-opacity" min="0" max="100" value="40" oninput="setLayerOpacity(this.value)">
-          <span id="layer-opacity-text" style="font-family: var(--font-mono); font-weight: 700;">40%</span>
-        </div>
+        <button class="tool-btn" onclick="locateUserPosition()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3m0 14v3M2 12h3m14 0h3"></path></svg>
+          <span>GPS</span>
+        </button>
 
-        <div class="toolbar-sep"></div>
-
-        <button class="toolbar-tool-btn" id="btn-crosshairs" onclick="toggleCrosshairs()" style="padding: 0.35rem 0.65rem;">
-          Crosshairs
+        <button class="tool-btn" onclick="clearLiveDrawings()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          <span>Clear</span>
         </button>
       </div>
 
-      <!-- Floating Bottom-Right Coordinates & Basemap HUD -->
-      <div class="floating-bottom-hud">
-        <div class="coords-readout-pill" id="coords-hud">
-          <span>LAT: 12.97160°</span>
-          <span>LON: 77.59460°</span>
-          <span id="hud-utm-zone">ZONE 43N</span>
-          <span id="hud-zoom-val">Z13</span>
-        </div>
-
-        <div class="basemap-selector-pill" id="basemap-controls">
-          <button class="basemap-btn active" id="btn-tile-sat" onclick="switchBaseMap('sat')">Esri Sat</button>
-          <button class="basemap-btn" id="btn-tile-dark" onclick="switchBaseMap('dark')">Carto Dark</button>
-          <button class="basemap-btn" id="btn-tile-osm" onclick="switchBaseMap('osm')">Streets</button>
-        </div>
+      <!-- Basemap Switcher In Bottom Left -->
+      <div class="floating-basemap-pill" id="basemap-controls">
+        <button class="basemap-btn active" id="btn-tile-sat" onclick="switchBaseMap('sat')">Esri Sat</button>
+        <button class="basemap-btn" id="btn-tile-dark" onclick="switchBaseMap('dark')">Carto Dark</button>
+        <button class="basemap-btn" id="btn-tile-osm" onclick="switchBaseMap('osm')">Streets</button>
       </div>
 
       <!-- Leaflet Map Canvas -->
@@ -1019,18 +1053,16 @@
 
     <!-- Right-Side Slide-out Feature Registry Drawer -->
     <aside id="registry-drawer">
-      <div class="registry-header">
+      <div class="drawer-header">
         <div style="font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 0.6rem; color: #fff;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2.2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-          Survey Registry & Inspector
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2.2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline></svg>
+          Survey Registry & Telemetry
         </div>
         <button class="btn-close" onclick="toggleRegistryDrawer()">&times;</button>
       </div>
 
-      <div class="registry-body">
-        <div class="registry-search-bar">
-          <input type="text" class="search-input" id="search-input" placeholder="Search features..." oninput="handleSearch()">
-        </div>
+      <div class="drawer-body">
+        <input type="text" class="search-input" id="search-input" placeholder="Search features..." oninput="handleSearch()">
 
         <div class="filter-pills-row">
           <button class="filter-pill active" id="pill-all" onclick="filterGeometry('ALL', this)">All (0)</button>
@@ -1058,67 +1090,55 @@
         </div>
 
         <!-- Selected Feature Detailed Card -->
-        <div class="telemetry-card" id="selected-feature-card" style="display: none;">
-          <div class="telemetry-card-title">Survey Feature Diagnostics</div>
-          <div style="display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.78rem; font-family: var(--font-mono);">
-            <div style="display: flex; justify-content: space-between;">
-              <span style="color: var(--text-muted);">Feature ID:</span>
-              <strong id="feat-id-val" style="color: var(--accent-yellow);">#0</strong>
-            </div>
-            <div style="display: flex; justify-content: space-between;">
-              <span style="color: var(--text-muted);">Planar UTM:</span>
-              <span id="feat-area-val" style="color: #34d399; font-weight: 700;">--</span>
-            </div>
-            <div style="display: flex; justify-content: space-between;">
-              <span style="color: var(--text-muted);">Geodesic WGS84:</span>
-              <span id="feat-geod-val" style="color: #38bdf8; font-weight: 700;">--</span>
-            </div>
-            <div style="display: flex; justify-content: space-between;">
-              <span style="color: var(--text-muted);">Territory:</span>
-              <span id="feat-addr-val" style="color: #cbd5e1; font-size: 0.72rem; text-align: right; max-width: 200px;">--</span>
-            </div>
+        <div class="hud-details-box" id="selected-feature-card" style="display: none; padding: 1rem;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+            <strong id="feat-id-val" style="color: var(--accent-yellow);">#0</strong>
+            <span id="feat-status-val" class="brand-badge">MEASURED</span>
           </div>
-          <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
-            <button class="header-pill" style="flex: 1; justify-content: center;" onclick="copyCurrentFeatureGeoJson()">Copy GeoJSON</button>
-            <button class="header-pill" style="flex: 1; justify-content: center; color: var(--accent-rose);" onclick="deleteCurrentFeature()">Delete</button>
+          <div>Planar Area: <span id="feat-area-val" style="color: #34d399; font-weight: 700;">--</span></div>
+          <div>Geodesic WGS84: <span id="feat-geod-val" style="color: #38bdf8; font-weight: 700;">--</span></div>
+          <div>Territory: <span id="feat-addr-val" style="color: #cbd5e1;">--</span></div>
+          <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+            <button class="tool-btn" style="flex: 1; justify-content: center; background: rgba(255,255,255,0.06);" onclick="copyCurrentFeatureGeoJson()">Copy GeoJSON</button>
+            <button class="tool-btn" style="flex: 1; justify-content: center; color: var(--accent-rose); background: rgba(244,63,94,0.1);" onclick="deleteCurrentFeature()">Delete</button>
           </div>
         </div>
 
         <div style="display: flex; gap: 0.5rem; margin-top: auto;">
-          <button class="header-pill" style="flex: 1; justify-content: center;" onclick="exportGeoJSON()">Export GeoJSON</button>
-          <button class="header-pill" style="flex: 1; justify-content: center;" onclick="exportCSV()">Export CSV</button>
+          <button class="tool-btn" style="flex: 1; justify-content: center; background: rgba(255,255,255,0.06);" onclick="exportGeoJSON()">Export GeoJSON</button>
+          <button class="tool-btn" style="flex: 1; justify-content: center; background: rgba(255,255,255,0.06);" onclick="exportCSV()">Export CSV</button>
         </div>
       </div>
     </aside>
 
   </div>
 
-  <!-- Ingest Dataset Modal -->
+  <!-- Ingestion Deck Modal -->
   <div class="modal-overlay" id="ingest-modal">
     <div class="modal-card">
       <div class="modal-header">
         <div style="font-weight: 800; font-size: 1.15rem; color: #fff; display: flex; align-items: center; gap: 0.6rem;">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-          Ingest Geospatial Archive
+          Ingestion Deck // Geospatial Archives
         </div>
         <button class="btn-close" onclick="closeIngestModal()">&times;</button>
       </div>
 
       <div class="dropzone" id="dropzone">
-        <div style="font-size: 2rem; margin-bottom: 0.75rem;">🛰️</div>
-        <div style="font-weight: 800; font-size: 1rem; color: #fff; margin-bottom: 0.25rem;">Drag & drop geospatial archive</div>
-        <div style="font-size: 0.78rem; color: var(--text-muted);">Supports KML (.kml), KMZ (.kmz), and Shapefiles (.zip) up to 50 MB</div>
+        <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">🛰️</div>
+        <div style="font-weight: 800; font-size: 1.05rem; color: #fff; margin-bottom: 0.25rem;">Drop geospatial archive to stream</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">Supports KML (.kml), KMZ (.kmz), and Shapefiles (.zip) up to 50 MB</div>
         <input type="file" id="file-input" accept=".kml,.kmz,.zip" style="display: none;">
       </div>
     </div>
   </div>
 
-  <!-- System Credits Modal -->
+  <!-- System Credits & Architecture Modal -->
   <div class="modal-overlay" id="credits-modal">
     <div class="modal-card">
       <div class="modal-header">
         <div style="font-weight: 800; font-size: 1.15rem; color: #fff; display: flex; align-items: center; gap: 0.6rem;">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line></svg>
           Tactical Architecture & Engineering Credits
         </div>
         <button class="btn-close" onclick="closeCreditsModal()">&times;</button>
@@ -1191,7 +1211,7 @@
     let activeVectorColor = '#facc15';
 
     // Interactive Drawing State
-    let currentDrawTool = null; // null | 'polygon' | 'line' | 'circle' | 'pin'
+    let currentDrawTool = null;
     let drawnVertices = [];
     let tempMarkers = [];
     let tempPolyline = null;
@@ -1215,10 +1235,16 @@
       zoomControl: false 
     }).setView([12.9716, 77.5946], 14);
 
-    // Zoom control in bottom right
-    L.control.zoom({ position: 'bottomright' }).addTo(map);
-
     liveDrawingsLayerGroup = L.layerGroup().addTo(map);
+
+    // Live UTC Clock
+    function updateClock() {
+      const now = new Date();
+      const utc = now.toUTCString().split(' ')[4];
+      document.getElementById('live-utc-clock').textContent = `${utc} UTC`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
 
     function setupMapboxLayers() {
       if (!customMapboxToken) return;
@@ -1254,29 +1280,26 @@
       if (type === 'sat') {
         map.addLayer(tilesSat);
         document.getElementById('btn-tile-sat').classList.add('active');
+        document.getElementById('sat-basemap-name').textContent = 'Esri World Imagery';
       } else if (type === 'dark') {
         map.addLayer(tilesDark);
         document.getElementById('btn-tile-dark').classList.add('active');
+        document.getElementById('sat-basemap-name').textContent = 'Carto Dark Matter';
       } else if (type === 'mapbox-sat' && tilesMapboxSat) {
         map.addLayer(tilesMapboxSat);
         const mb = document.getElementById('btn-tile-mb-sat');
         if (mb) mb.classList.add('active');
+        document.getElementById('sat-basemap-name').textContent = 'Mapbox Satellite HD';
       } else {
         map.addLayer(tilesOsm);
         document.getElementById('btn-tile-osm').classList.add('active');
+        document.getElementById('sat-basemap-name').textContent = 'OpenStreetMap';
       }
     }
 
     function toggleCrosshairs() {
       const el = document.getElementById('crosshairs');
-      const btn = document.getElementById('btn-crosshairs');
-      if (el.style.display === 'block') {
-        el.style.display = 'none';
-        btn.classList.remove('active');
-      } else {
-        el.style.display = 'block';
-        btn.classList.add('active');
-      }
+      el.style.display = (el.style.display === 'block') ? 'none' : 'block';
     }
 
     function selectColor(hex, el) {
@@ -1285,25 +1308,10 @@
       el.classList.add('active');
     }
 
-    function setLayerOpacity(val) {
-      layerOpacityValue = val / 100.0;
-      document.getElementById('layer-opacity-text').textContent = `${val}%`;
-      geoJsonLayer.setStyle({ fillOpacity: layerOpacityValue });
-      liveDrawingsLayerGroup.eachLayer(l => {
-        if (l.setStyle) l.setStyle({ fillOpacity: layerOpacityValue });
-      });
-    }
-
     // Cursor Tracking HUD
     map.on('mousemove', (e) => {
       const lat = e.latlng.lat;
       const lon = e.latlng.lng;
-      const zone = Math.floor((lon + 180) / 6) + 1;
-      const hemi = lat >= 0 ? 'N' : 'S';
-      document.getElementById('coords-hud').children[0].textContent = `LAT: ${lat.toFixed(5)}°`;
-      document.getElementById('coords-hud').children[1].textContent = `LON: ${lon.toFixed(5)}°`;
-      document.getElementById('hud-utm-zone').textContent = `ZONE ${zone}${hemi}`;
-      document.getElementById('hud-zoom-val').textContent = `Z${map.getZoom()}`;
 
       if (currentDrawTool && drawnVertices.length > 0) {
         const rubberCoords = [...drawnVertices, [lat, lon]];
@@ -1352,9 +1360,7 @@
           userMarker.bindPopup(`<strong>Satellite GPS Lock</strong><br>Lat: ${lat.toFixed(5)}°<br>Lon: ${lon.toFixed(5)}°`).openPopup();
           showToast('GPS Satellite Coordinates Acquired!');
         },
-        (err) => {
-          alert('GPS Acquisition Failed: ' + err.message);
-        },
+        (err) => { alert('GPS Failed: ' + err.message); },
         { enableHighAccuracy: true, timeout: 8000 }
       );
     }
@@ -1377,43 +1383,24 @@
       onEachFeature: function(feature, layer) {
         const idx = feature.properties._feature_index;
         layerMap[idx] = layer;
-        layer.on('click', () => {
-          highlightFeature(idx);
-        });
+        layer.on('click', () => { highlightFeature(idx); });
       }
     }).addTo(map);
 
     function toggleRegistryDrawer() {
       const el = document.getElementById('registry-drawer');
-      const btn = document.getElementById('btn-toggle-registry');
       el.classList.toggle('open');
-      btn.classList.toggle('active', el.classList.contains('open'));
     }
 
-    function openIngestModal() {
-      document.getElementById('ingest-modal').style.display = 'flex';
-    }
-
-    function closeIngestModal() {
-      document.getElementById('ingest-modal').style.display = 'none';
-    }
-
-    function openCreditsModal() {
-      document.getElementById('credits-modal').style.display = 'flex';
-    }
-
-    function closeCreditsModal() {
-      document.getElementById('credits-modal').style.display = 'none';
-    }
-
+    function openIngestModal() { document.getElementById('ingest-modal').style.display = 'flex'; }
+    function closeIngestModal() { document.getElementById('ingest-modal').style.display = 'none'; }
+    function openCreditsModal() { document.getElementById('credits-modal').style.display = 'flex'; }
+    function closeCreditsModal() { document.getElementById('credits-modal').style.display = 'none'; }
     function openKeyModal() {
       document.getElementById('mapbox-token-input').value = customMapboxToken;
       document.getElementById('key-modal').style.display = 'flex';
     }
-
-    function closeKeyModal() {
-      document.getElementById('key-modal').style.display = 'none';
-    }
+    function closeKeyModal() { document.getElementById('key-modal').style.display = 'none'; }
 
     function saveMapboxToken() {
       const val = document.getElementById('mapbox-token-input').value.trim();
@@ -1421,13 +1408,10 @@
       localStorage.setItem('mapbox_token', val);
       closeKeyModal();
       setupMapboxLayers();
-      if (customMapboxToken) {
-        switchBaseMap('mapbox-sat');
-      }
-      showToast('Mapbox HD Vector Satellite Tiles Activated!');
+      if (customMapboxToken) switchBaseMap('mapbox-sat');
+      showToast('Mapbox HD Satellite Layer Activated!');
     }
 
-    // Config Initialization
     async function initSystemConfig() {
       try {
         const res = await fetch('/api/files/config/');
@@ -1438,17 +1422,12 @@
             localStorage.setItem('mapbox_token', customMapboxToken);
           }
           setupMapboxLayers();
-          if (customMapboxToken) {
-            switchBaseMap('mapbox-sat');
-          }
+          if (customMapboxToken) switchBaseMap('mapbox-sat');
         }
-      } catch (e) {
-        console.warn('Config initialization error:', e);
-      }
+      } catch (e) { console.warn('Config init:', e); }
     }
     initSystemConfig();
 
-    // Unit Conversion
     function setUnits(system) {
       unitSystem = system;
       document.getElementById('btn-unit-metric').classList.toggle('active', system === 'metric');
@@ -1461,15 +1440,11 @@
     function formatArea(sq_m) {
       if (sq_m === null || sq_m === undefined) return '—';
       if (unitSystem === 'metric') {
-        if (sq_m >= 100000) {
-          return `${(sq_m / 10000).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ha`;
-        }
+        if (sq_m >= 100000) return `${(sq_m / 10000).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ha`;
         return `${sq_m.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} m²`;
       } else {
         const acres = sq_m * 0.000247105;
-        if (acres >= 1.0) {
-          return `${acres.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ac`;
-        }
+        if (acres >= 1.0) return `${acres.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ac`;
         const sqft = sq_m * 10.7639;
         return `${sqft.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})} sq ft`;
       }
@@ -1478,15 +1453,11 @@
     function formatLength(m) {
       if (m === null || m === undefined) return '—';
       if (unitSystem === 'metric') {
-        if (m >= 1000) {
-          return `${(m / 1000).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} km`;
-        }
+        if (m >= 1000) return `${(m / 1000).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} km`;
         return `${m.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} m`;
       } else {
         const miles = m * 0.000621371;
-        if (miles >= 1.0) {
-          return `${miles.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} mi`;
-        }
+        if (miles >= 1.0) return `${miles.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} mi`;
         const ft = m * 3.28084;
         return `${ft.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})} ft`;
       }
@@ -1534,7 +1505,7 @@
       formData.append('file', file);
 
       loadingOverlay.style.display = 'flex';
-      document.getElementById('loading-msg').textContent = `Ingesting ${file.name}...`;
+      document.getElementById('loading-msg').textContent = `Streaming ${file.name}...`;
 
       try {
         const res = await fetch('/api/files/', { method: 'POST', body: formData });
@@ -1646,6 +1617,7 @@
       // Update Left Floating HUD
       document.getElementById('hud-status-badge').textContent = `FEATURE #${index}`;
       document.getElementById('hud-area-val').innerHTML = formatArea(meas.area_sq_m);
+      document.getElementById('hud-geod-val').innerHTML = feat._geodesic_area_sq_m ? formatArea(feat._geodesic_area_sq_m) : formatArea(meas.area_sq_m);
       document.getElementById('hud-length-val').innerHTML = formatLength(meas.length_m);
       document.getElementById('hud-crs-val').textContent = meas.measurement_crs || 'EPSG:32643';
 
@@ -1685,10 +1657,9 @@
         if (elevRes.ok) {
           const elev = await elevRes.json();
           document.getElementById('hud-elev-val').innerHTML = `${elev.elevation_m} <span style="font-size: 0.8rem; color: var(--text-muted);">m</span>`;
+          document.getElementById('wave-peak-alt').textContent = `PEAK: ${elev.elevation_m} M`;
         }
-      } catch (e) {
-        console.debug('Lookup error:', e);
-      }
+      } catch (e) { console.debug('Lookup error:', e); }
     }
 
     function sortTable(col) {
@@ -1739,14 +1710,14 @@
       drawnVertices = [];
       clearTempMarkers();
 
-      document.querySelectorAll('.toolbar-tool-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
       const activeBtn = document.getElementById(`tool-${tool}`);
       if (activeBtn) activeBtn.classList.add('active');
 
       const banner = document.getElementById('drawing-banner');
       banner.style.display = 'block';
 
-      if (tool === 'polygon') banner.textContent = 'DIGITIZING POLYGON: CLICK MAP TO ADD BOUNDARY POINTS';
+      if (tool === 'polygon') banner.textContent = 'DIGITIZING PARCEL: CLICK MAP TO ADD BOUNDARY POINTS';
       else if (tool === 'line') banner.textContent = 'TRACING PATH: CLICK TO ADD WAYPOINTS';
       else if (tool === 'circle') banner.textContent = 'RADIAL BUFFER: CLICK CENTER POINT';
       else if (tool === 'pin') banner.textContent = 'INSPECT PIN: CLICK ANY LOCATION ON MAP';
@@ -1754,7 +1725,7 @@
 
     function deactivateDrawTool() {
       currentDrawTool = null;
-      document.querySelectorAll('.toolbar-tool-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
       document.getElementById('drawing-banner').style.display = 'none';
       clearTempMarkers();
     }
@@ -2016,7 +1987,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `survey_tactical_${Date.now()}.geojson`;
+      a.download = `cyberdefend_survey_${Date.now()}.geojson`;
       a.click();
       URL.revokeObjectURL(url);
     }
