@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import logging
 import time
+from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 
 from app.api.routes import router
 from app.api.schemas import FileInfo
@@ -100,6 +101,34 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     )
     def health_check() -> dict[str, str]:
         return {"status": "ok", "service": "geo-measure-api"}
+
+    # Interactive Web Dashboard
+    static_html = Path(__file__).parent / "static" / "index.html"
+
+    @app.get("/", tags=["Dashboard"], include_in_schema=False)
+    def index_dashboard() -> FileResponse:
+        if static_html.exists():
+            return FileResponse(static_html, media_type="text/html")
+        return FileResponse(static_html)
+
+    # Sample download endpoints for instant demo testing
+    sample_kml = Path(__file__).parent.parent / "tests" / "sample_data" / "survey.kml"
+    sample_shp = (
+        Path(__file__).parent.parent
+        / "tests"
+        / "sample_data"
+        / "survey_shapefile.zip"
+    )
+
+    @app.get("/sample/survey.kml", tags=["Samples"], include_in_schema=False)
+    def download_sample_kml() -> FileResponse:
+        return FileResponse(
+            sample_kml, media_type="application/vnd.google-earth.kml+xml"
+        )
+
+    @app.get("/sample/survey_shapefile.zip", tags=["Samples"], include_in_schema=False)
+    def download_sample_shapefile() -> FileResponse:
+        return FileResponse(sample_shp, media_type="application/zip")
 
     # Include routes
     app.include_router(router)
