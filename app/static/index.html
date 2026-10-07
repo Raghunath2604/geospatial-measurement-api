@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GeoMeasure Studio — Autonomous Geospatial Measurement API</title>
+  <title>GeoMeasure Studio — Professional Geospatial Intelligence & Measurement Engine</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,15 +13,14 @@
   <style>
     :root {
       --bg-dark: #07090e;
-      --card-bg: rgba(15, 20, 32, 0.72);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-border-glow: rgba(59, 130, 246, 0.25);
+      --bg-panel: rgba(14, 19, 31, 0.78);
+      --border-panel: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(59, 130, 246, 0.35);
       --accent-blue: #3b82f6;
       --accent-cyan: #06b6d4;
       --accent-emerald: #10b981;
       --accent-amber: #f59e0b;
       --accent-rose: #f43f5e;
-      --accent-violet: #8b5cf6;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -34,9 +33,9 @@
     body {
       background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 55%),
-        radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.12) 0px, transparent 50%),
-        radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.10) 0px, transparent 60%);
+        radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.12) 0px, transparent 55%),
+        radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.08) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.06) 0px, transparent 60%);
       color: var(--text-main);
       font-family: var(--font-sans);
       min-height: 100vh;
@@ -47,8 +46,8 @@
 
     /* Header */
     header {
-      padding: 1.1rem 2.25rem;
-      border-bottom: 1px solid var(--card-border);
+      padding: 0.9rem 2rem;
+      border-bottom: 1px solid var(--border-panel);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       display: flex;
@@ -57,38 +56,28 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      background: rgba(7, 9, 14, 0.82);
+      background: rgba(7, 9, 14, 0.88);
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 0.9rem;
+      gap: 0.85rem;
     }
 
     .logo-badge {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet));
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 25px rgba(59, 130, 246, 0.45);
-      position: relative;
-    }
-
-    .logo-badge::after {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      border-radius: 13px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.4), transparent);
-      z-index: -1;
+      box-shadow: 0 0 24px rgba(37, 99, 235, 0.4);
     }
 
     .brand-title {
-      font-size: 1.35rem;
+      font-size: 1.25rem;
       font-weight: 800;
       letter-spacing: -0.03em;
       background: linear-gradient(120deg, #fff 40%, #93c5fd);
@@ -97,103 +86,131 @@
     }
 
     .brand-subtitle {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
-      font-weight: 600;
-      letter-spacing: 0.02em;
+      font-family: var(--font-mono);
+      letter-spacing: -0.01em;
     }
 
-    .nav-links {
+    .header-actions {
       display: flex;
       align-items: center;
-      gap: 0.85rem;
+      gap: 0.75rem;
+    }
+
+    .unit-selector {
+      display: flex;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-panel);
+      border-radius: 8px;
+      padding: 2px;
+    }
+
+    .unit-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.35rem 0.7rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .unit-btn.active {
+      background: var(--accent-blue);
+      color: #fff;
     }
 
     .nav-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
+      font-size: 0.78rem;
+      font-weight: 600;
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 0.825rem;
-      font-weight: 600;
-      padding: 0.5rem 0.95rem;
-      border-radius: 10px;
-      border: 1px solid var(--card-border);
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
       background: rgba(255, 255, 255, 0.03);
-      transition: all 0.25s var(--ease-spring);
+      border: 1px solid var(--border-panel);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
     }
 
     .nav-pill:hover {
-      color: var(--text-main);
+      color: #fff;
       background: rgba(255, 255, 255, 0.08);
       border-color: rgba(255, 255, 255, 0.2);
-      transform: translateY(-1px);
     }
 
-    .system-status-indicator {
+    .live-indicator {
       display: flex;
       align-items: center;
-      gap: 0.45rem;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--accent-emerald);
-      padding: 0.4rem 0.85rem;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: #34d399;
+      padding: 0.35rem 0.75rem;
       border-radius: 20px;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.25);
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.2);
     }
 
-    .status-dot {
-      width: 8px;
-      height: 8px;
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: var(--accent-emerald);
-      box-shadow: 0 0 10px var(--accent-emerald);
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
       animation: pulse 2s infinite;
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.2); }
+      100% { opacity: 1; transform: scale(1); }
     }
 
     /* Main Container */
     main {
       flex: 1;
-      padding: 2.25rem;
-      max-width: 1540px;
-      margin: 0 auto;
+      max-width: 1720px;
       width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem 2rem 2.5rem;
       display: grid;
-      grid-template-columns: 440px 1fr;
-      gap: 2rem;
+      grid-template-columns: 390px 1fr;
+      gap: 1.5rem;
     }
 
-    @media (max-width: 1120px) {
+    @media (max-width: 1200px) {
       main { grid-template-columns: 1fr; }
     }
 
+    /* Glass Panels */
     .glass-panel {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 1.75rem;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+      background: var(--bg-panel);
+      border: 1px solid var(--border-panel);
+      border-radius: 16px;
+      padding: 1.35rem;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
       position: relative;
-      overflow: hidden;
     }
 
     .panel-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.1rem;
     }
 
     .panel-title {
-      font-size: 1.05rem;
+      font-size: 0.95rem;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -204,13 +221,12 @@
     /* Dropzone */
     .dropzone {
       border: 2px dashed rgba(255, 255, 255, 0.14);
-      border-radius: 16px;
-      padding: 2.75rem 1.5rem;
+      border-radius: 14px;
+      padding: 2.2rem 1.25rem;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s var(--ease-spring);
       background: rgba(255, 255, 255, 0.015);
-      position: relative;
     }
 
     .dropzone:hover, .dropzone.dragover {
@@ -220,145 +236,139 @@
       box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
     }
 
-    .dropzone-icon {
-      font-size: 2.75rem;
-      margin-bottom: 0.75rem;
-      display: inline-block;
-      transition: transform 0.3s var(--ease-spring);
-    }
-
-    .dropzone:hover .dropzone-icon {
-      transform: scale(1.1) translateY(-3px);
-    }
-
     .dropzone-text {
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 700;
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.3rem;
     }
 
     .dropzone-subtext {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
     }
 
     .limit-badge-row {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.45rem;
       justify-content: center;
-      margin-top: 1rem;
+      margin-top: 0.9rem;
+      flex-wrap: wrap;
     }
 
     .limit-pill {
-      font-size: 0.72rem;
-      padding: 0.25rem 0.65rem;
-      border-radius: 20px;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 14px;
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
+      border: 1px solid var(--border-panel);
       color: #cbd5e1;
       font-weight: 600;
       font-family: var(--font-mono);
     }
 
-    /* Preset Samples */
-    .section-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 0.75rem;
+    /* Interactive Drawing Toolbar */
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1rem;
     }
 
-    .sample-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .btn-sample {
-      background: rgba(255, 255, 255, 0.025);
-      border: 1px solid var(--card-border);
+    .btn-tool {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-panel);
       color: var(--text-main);
-      padding: 0.95rem 1.15rem;
-      border-radius: 14px;
+      padding: 0.75rem 0.5rem;
+      border-radius: 10px;
       font-family: inherit;
-      font-size: 0.88rem;
+      font-size: 0.78rem;
       font-weight: 600;
       cursor: pointer;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      transition: all 0.25s var(--ease-spring);
+      gap: 0.4rem;
+      transition: all 0.2s var(--ease-spring);
     }
 
-    .btn-sample:hover {
-      background: rgba(59, 130, 246, 0.12);
+    .btn-tool:hover {
+      background: rgba(59, 130, 246, 0.1);
       border-color: rgba(59, 130, 246, 0.4);
-      transform: translateX(4px);
     }
 
-    .btn-sample-tag {
-      font-size: 0.75rem;
-      font-family: var(--font-mono);
-      padding: 0.2rem 0.5rem;
-      border-radius: 6px;
-      background: rgba(255,255,255,0.06);
+    .btn-tool.active {
+      background: rgba(59, 130, 246, 0.22);
+      border-color: var(--accent-blue);
+      color: #60a5fa;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.25);
     }
 
-    /* Progress Bar */
-    .progress-bar-container {
-      display: none;
-      height: 6px;
-      background: rgba(255,255,255,0.08);
+    .tool-hint-box {
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.25);
       border-radius: 10px;
-      margin-top: 1rem;
-      overflow: hidden;
+      padding: 0.75rem 0.9rem;
+      font-size: 0.78rem;
+      line-height: 1.4;
+      color: #bfdbfe;
+      margin-bottom: 1rem;
+      display: none;
     }
 
-    .progress-bar-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
-      transition: width 0.3s ease;
+    /* Engine Specs Box */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.65rem;
+      font-size: 0.78rem;
+    }
+
+    .spec-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .spec-label {
+      color: var(--text-muted);
+    }
+
+    .spec-val {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: #e2e8f0;
     }
 
     /* Metric Cards */
     .metric-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1.1rem;
+      gap: 1rem;
     }
 
-    @media (max-width: 860px) {
+    @media (max-width: 900px) {
       .metric-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     .metric-card {
       background: rgba(255, 255, 255, 0.025);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 1.25rem 1.2rem;
+      border: 1px solid var(--border-panel);
+      border-radius: 14px;
+      padding: 1.15rem 1.1rem;
       position: relative;
       overflow: hidden;
       transition: all 0.3s var(--ease-spring);
     }
 
     .metric-card:hover {
-      border-color: var(--card-border-glow);
+      border-color: var(--border-hover);
       transform: translateY(-2px);
     }
 
-    .metric-icon {
-      position: absolute;
-      right: 1.2rem;
-      top: 1.2rem;
-      font-size: 1.25rem;
-      opacity: 0.6;
-    }
-
     .metric-title {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       font-weight: 700;
       text-transform: uppercase;
@@ -366,15 +376,15 @@
     }
 
     .metric-num {
-      font-size: 1.7rem;
+      font-size: 1.6rem;
       font-weight: 800;
-      margin-top: 0.45rem;
+      margin-top: 0.4rem;
       font-family: var(--font-mono);
       letter-spacing: -0.03em;
     }
 
     .metric-unit {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       font-weight: 500;
       font-family: var(--font-sans);
@@ -383,29 +393,29 @@
     /* Map Box */
     #map-wrapper {
       position: relative;
-      border-radius: 16px;
+      border-radius: 14px;
       overflow: hidden;
-      border: 1px solid var(--card-border);
+      border: 1px solid var(--border-panel);
     }
 
     #map {
-      height: 440px;
+      height: 480px;
       width: 100%;
-      background: #0d1117;
+      background: #090d16;
     }
 
-    .map-controls {
+    .map-controls-top {
       position: absolute;
-      top: 14px;
-      right: 14px;
+      top: 12px;
+      right: 12px;
       z-index: 500;
       display: flex;
-      gap: 0.45rem;
-      background: rgba(10, 14, 24, 0.85);
+      gap: 0.4rem;
+      background: rgba(7, 10, 18, 0.88);
       backdrop-filter: blur(12px);
-      padding: 0.35rem;
+      padding: 0.3rem;
       border-radius: 10px;
-      border: 1px solid var(--card-border);
+      border: 1px solid var(--border-panel);
     }
 
     .map-btn {
@@ -413,9 +423,9 @@
       border: none;
       color: var(--text-muted);
       font-family: inherit;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 600;
-      padding: 0.35rem 0.7rem;
+      padding: 0.35rem 0.65rem;
       border-radius: 6px;
       cursor: pointer;
       transition: all 0.2s;
@@ -426,7 +436,70 @@
       background: rgba(255, 255, 255, 0.1);
     }
 
-    /* Filter Bar */
+    .map-hud-bottom {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      z-index: 500;
+      background: rgba(7, 10, 18, 0.88);
+      backdrop-filter: blur(12px);
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-panel);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: #cbd5e1;
+      display: flex;
+      gap: 0.85rem;
+      pointer-events: none;
+    }
+
+    .drawing-live-banner {
+      position: absolute;
+      top: 12px;
+      left: 60px;
+      z-index: 500;
+      background: rgba(37, 99, 235, 0.92);
+      color: #fff;
+      padding: 0.45rem 1rem;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      display: none;
+      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+    }
+
+    /* Crosshairs overlay */
+    .crosshairs-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 450;
+      display: none;
+    }
+
+    .crosshairs-overlay::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .crosshairs-overlay::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Table & Filter Bar */
     .filter-bar {
       display: flex;
       align-items: center;
@@ -438,17 +511,17 @@
 
     .filter-pills {
       display: flex;
-      gap: 0.4rem;
+      gap: 0.35rem;
     }
 
     .filter-pill {
       background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--card-border);
+      border: 1px solid var(--border-panel);
       color: var(--text-muted);
       font-family: inherit;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 600;
-      padding: 0.35rem 0.8rem;
+      padding: 0.35rem 0.75rem;
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s;
@@ -460,18 +533,29 @@
       color: #fff;
     }
 
-    .action-group {
-      display: flex;
-      gap: 0.5rem;
+    .search-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-panel);
+      border-radius: 8px;
+      padding: 0.35rem 0.75rem;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.78rem;
+      width: 180px;
+    }
+
+    .search-box:focus {
+      outline: none;
+      border-color: var(--accent-blue);
     }
 
     .btn-action {
       background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--card-border);
+      border: 1px solid var(--border-panel);
       color: var(--text-main);
       padding: 0.45rem 0.85rem;
       border-radius: 8px;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
@@ -485,11 +569,10 @@
       border-color: rgba(255, 255, 255, 0.25);
     }
 
-    /* Table */
     .table-container {
       overflow-x: auto;
-      border-radius: 14px;
-      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      border: 1px solid var(--border-panel);
       max-height: 480px;
     }
 
@@ -497,22 +580,22 @@
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 0.84rem;
+      font-size: 0.82rem;
     }
 
     th {
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(11, 15, 25, 0.95);
       position: sticky;
       top: 0;
-      padding: 0.9rem 1.1rem;
+      padding: 0.85rem 1rem;
       font-weight: 700;
       color: var(--text-muted);
-      border-bottom: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--border-panel);
       z-index: 10;
     }
 
     td {
-      padding: 0.85rem 1.1rem;
+      padding: 0.8rem 1rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.04);
       font-family: var(--font-mono);
     }
@@ -527,18 +610,17 @@
     }
 
     tr.selected td {
-      background: rgba(59, 130, 246, 0.15);
+      background: rgba(59, 130, 246, 0.18);
       border-bottom-color: rgba(59, 130, 246, 0.4);
     }
 
-    /* Badges */
     .badge {
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      padding: 0.22rem 0.6rem;
+      padding: 0.2rem 0.55rem;
       border-radius: 6px;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 700;
       font-family: var(--font-sans);
     }
@@ -548,41 +630,66 @@
     .badge-unsupported { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
     .badge-error { background: rgba(244, 63, 94, 0.15); color: #fb7185; }
 
-    /* Overlay / Toast */
-    #loading-overlay {
+    /* Inspector Modal / Slide-out */
+    .modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(7, 9, 14, 0.85);
+      background: rgba(7, 9, 14, 0.8);
       backdrop-filter: blur(12px);
       z-index: 3000;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
-      gap: 1.25rem;
     }
 
-    .spinner {
-      width: 52px;
-      height: 52px;
-      border: 4px solid rgba(59, 130, 246, 0.15);
-      border-top-color: var(--accent-blue);
-      border-radius: 50%;
-      animation: spin 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+    .modal-card {
+      background: #0d121f;
+      border: 1px solid var(--border-panel);
+      border-radius: 18px;
+      width: 90%;
+      max-width: 680px;
+      padding: 1.75rem;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+      position: relative;
     }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
 
+    .modal-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .btn-close:hover { color: #fff; }
+
+    /* Toast */
     #toast {
       position: fixed;
       bottom: 24px;
       right: 24px;
       background: rgba(15, 23, 42, 0.95);
-      border: 1px solid var(--card-border-glow);
+      border: 1px solid var(--border-hover);
       color: #fff;
       padding: 0.85rem 1.4rem;
       border-radius: 12px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
       backdrop-filter: blur(12px);
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -596,6 +703,31 @@
       transform: translateY(0);
       opacity: 1;
     }
+
+    /* Loading Overlay */
+    #loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 9, 14, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 3500;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid rgba(59, 130, 246, 0.2);
+      border-top-color: var(--accent-blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -603,41 +735,53 @@
   <!-- Loading Animation -->
   <div id="loading-overlay">
     <div class="spinner"></div>
-    <div style="font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em;" id="loading-msg">Processing Geospatial File & Computing Metric Projections...</div>
-    <div style="font-size: 0.8rem; color: var(--text-muted);" id="loading-submsg">Parsing geometries and transforming coordinates via Shapely & pyproj</div>
+    <div style="font-weight: 700; font-size: 1.05rem;" id="loading-msg">Processing Geospatial Stream...</div>
+    <div style="font-size: 0.78rem; color: var(--text-muted);" id="loading-submsg">Projecting coordinates to optimal metric UTM zones via Shapely & pyproj</div>
   </div>
 
   <!-- Toast Notification -->
-  <div id="toast">Copied to clipboard!</div>
+  <div id="toast">Notification</div>
 
   <!-- Header -->
   <header>
     <div class="brand">
       <div class="logo-badge">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
           <line x1="8" y1="2" x2="8" y2="18"></line>
           <line x1="16" y1="6" x2="16" y2="22"></line>
         </svg>
       </div>
       <div>
-        <div class="brand-title">GeoMeasure Workbench</div>
-        <div class="brand-subtitle">FastAPI • Shapely 2.0 • pyproj • SQLite WAL</div>
+        <div class="brand-title">GeoMeasure GIS Studio</div>
+        <div class="brand-subtitle">Real-Time Geodetic Engine • pyproj 3.6 • Shapely 2.0 • UTM Projections</div>
       </div>
     </div>
 
-    <div class="nav-links">
-      <div class="system-status-indicator">
-        <div class="status-dot"></div>
-        <span>System Active (Port 8000)</span>
+    <div class="header-actions">
+      <div class="live-indicator">
+        <div class="pulse-dot"></div>
+        <span>Production Node Active</span>
       </div>
+
+      <!-- Unit Selector -->
+      <div class="unit-selector">
+        <button class="unit-btn active" id="btn-unit-metric" onclick="setUnits('metric')">Metric (SI)</button>
+        <button class="unit-btn" id="btn-unit-imperial" onclick="setUnits('imperial')">Imperial (US)</button>
+      </div>
+
+      <button class="nav-pill" onclick="openKeyModal()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-1-1l-3 3m-1 3l4 4 7-7-3-3z"></path><circle cx="8" cy="16" r="5"></circle></svg>
+        Mapbox Token
+      </button>
+
       <a href="/docs" target="_blank" class="nav-pill">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-        Swagger Docs
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+        API Docs
       </a>
-      <a href="/redoc" target="_blank" class="nav-pill">ReDoc</a>
+
       <a href="https://github.com/Raghunath2604/geospatial-measurement-api" target="_blank" class="nav-pill">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
         GitHub
       </a>
     </div>
@@ -645,103 +789,128 @@
 
   <!-- Main View -->
   <main>
-    <!-- Left Column: Upload & Metadata Controls -->
-    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+    <!-- Left Column: Upload, Tools & Telemetry -->
+    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
       
       <!-- Ingestion Panel -->
       <div class="glass-panel">
         <div class="panel-header">
           <div class="panel-title">
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-            Upload Geospatial Survey
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            Live Dataset Ingestion
           </div>
         </div>
 
         <div class="dropzone" id="dropzone">
-          <div style="margin-bottom: 0.85rem;">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <div style="margin-bottom: 0.75rem;">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path>
               <path d="M12 12v9"></path>
               <path d="m16 16-4-4-4 4"></path>
             </svg>
           </div>
-          <div class="dropzone-text">Drop survey file here or browse</div>
-          <div class="dropzone-subtext">Supports KML (.kml) and Shapefile archives (.zip)</div>
+          <div class="dropzone-text">Drop geospatial file or click to browse</div>
+          <div class="dropzone-subtext">Processes KML (.kml), KMZ (.kmz), and Shapefiles (.zip)</div>
           
           <div class="limit-badge-row">
             <span class="limit-pill" id="limit-upload-pill">Max 50 MB</span>
-            <span class="limit-pill">.kml / .zip</span>
+            <span class="limit-pill">.kml / .kmz / .zip</span>
             <span class="limit-pill">Max 10,000 Features</span>
           </div>
 
-          <div class="progress-bar-container" id="upload-progress">
-            <div class="progress-bar-fill" id="upload-fill"></div>
-          </div>
-
-          <input type="file" id="file-input" accept=".kml,.zip" style="display: none;">
+          <input type="file" id="file-input" accept=".kml,.kmz,.zip" style="display: none;">
         </div>
 
-        <div style="margin-top: 1.5rem;">
-          <div class="section-label">Pre-loaded Test Datasets</div>
-          <div class="sample-grid">
-            <button class="btn-sample" onclick="loadSampleKML()">
-              <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
-                <div style="text-align: left;">
-                  <div>Bengaluru Drone Survey</div>
-                  <div style="font-size: 0.72rem; color: var(--text-muted);">5 features • Polygons, Lines, GCP Point</div>
-                </div>
-              </div>
-              <span class="btn-sample-tag" style="color: var(--accent-blue);">.kml</span>
-            </button>
-
-            <button class="btn-sample" onclick="loadSampleShapefile()">
-              <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-                <div style="text-align: left;">
-                  <div>Agricultural Parcels Archive</div>
-                  <div style="font-size: 0.72rem; color: var(--text-muted);">3 features • Polygons with hole cutout</div>
-                </div>
-              </div>
-              <span class="btn-sample-tag" style="color: var(--accent-cyan);">.zip</span>
-            </button>
+        <!-- Ingested File Details Card -->
+        <div id="file-meta-panel" style="display: none; margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--border-panel);">
+          <div style="display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.8rem;">
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Loaded File:</span>
+              <strong id="meta-filename" style="font-family: var(--font-mono); color: #93c5fd;">-</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color: var(--text-muted);">Source CRS:</span>
+              <span id="meta-crs" class="badge" style="background: rgba(59,130,246,0.18); color: #93c5fd;">-</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color: var(--text-muted);">Ingest Status:</span>
+              <span id="meta-status" class="badge badge-measured">-</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Ingested File Details Card -->
-      <div class="glass-panel" id="file-meta-panel" style="display: none;">
+      <!-- Real-Time Interactive Geodetic Measurement Tools -->
+      <div class="glass-panel">
         <div class="panel-header">
           <div class="panel-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-            Dataset Metadata
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><path d="m4.93 4.93 4.24 4.24"></path><path d="m14.83 9.17 4.24-4.24"></path><path d="m14.83 14.83 4.24 4.24"></path><path d="m9.17 14.83-4.24 4.24"></path></svg>
+            Interactive Geodetic Measurement Studio
           </div>
-          <button class="btn-action" onclick="copyFileJson()">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            Copy JSON
+        </div>
+
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.85rem; line-height: 1.4;">
+          Measure real-world land parcels and line trajectories on live satellite imagery with dual UTM planar and WGS 84 ellipsoidal accuracy.
+        </p>
+
+        <div class="tool-grid">
+          <button class="btn-tool" id="tool-poly" onclick="activateDrawTool('polygon')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            Polygon Area
+          </button>
+          <button class="btn-tool" id="tool-line" onclick="activateDrawTool('line')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19L19 4"></path><circle cx="4" cy="19" r="2"></circle><circle cx="19" cy="4" r="2"></circle></svg>
+            Path Length
+          </button>
+          <button class="btn-tool" id="tool-pin" onclick="activateDrawTool('pin')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            Inspect Point
           </button>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.84rem;">
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted);">Filename:</span>
-            <strong id="meta-filename" style="font-family: var(--font-mono);">-</strong>
+        <div class="tool-hint-box" id="tool-hint">
+          <strong>Polygon Tool Active:</strong> Click map to set vertices. Double-click or click start vertex to complete and trigger real-time metric UTM computation.
+        </div>
+
+        <button class="btn-action" style="width: 100%; justify-content: center;" onclick="clearLiveDrawings()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Clear Interactive Drawings
+        </button>
+      </div>
+
+      <!-- Engine Telemetry Panel -->
+      <div class="glass-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            Geodetic Engine State
           </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted);">File UUID:</span>
-            <span id="meta-id" style="font-family: var(--font-mono); font-size: 0.75rem; color: #cbd5e1;">-</span>
+        </div>
+
+        <div class="specs-grid">
+          <div class="spec-item">
+            <span class="spec-label">Ellipsoid Model:</span>
+            <span class="spec-val">WGS 84 (EPSG:7030)</span>
           </div>
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="color: var(--text-muted);">Source CRS:</span>
-            <span id="meta-crs" class="badge" style="background: rgba(59,130,246,0.18); color: #93c5fd;">-</span>
+          <div class="spec-item">
+            <span class="spec-label">Semimajor Axis (a):</span>
+            <span class="spec-val">6,378,137.0 m</span>
           </div>
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="color: var(--text-muted);">Status:</span>
-            <span id="meta-status" class="badge badge-measured">-</span>
+          <div class="spec-item">
+            <span class="spec-label">Inverse Flattening (1/f):</span>
+            <span class="spec-val">298.257223563</span>
           </div>
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="color: var(--text-muted);">Processed:</span>
-            <span id="meta-created" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">-</span>
+          <div class="spec-item">
+            <span class="spec-label">Projection Algorithm:</span>
+            <span class="spec-val">Transverse Mercator (UTM/UPS)</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Topological Kernel:</span>
+            <span class="spec-val">GEOS C-API (Shapely 2.0)</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Storage Architecture:</span>
+            <span class="spec-val">SQLite Write-Ahead Logging</span>
           </div>
         </div>
       </div>
@@ -749,7 +918,7 @@
     </div>
 
     <!-- Right Column: Visual Metrics, Leaflet Map & Inspection Table -->
-    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
       
       <!-- Top Metrics Counters -->
       <div class="metric-grid">
@@ -764,34 +933,46 @@
         </div>
 
         <div class="metric-card">
-          <div class="metric-title">Total Metric Area</div>
+          <div class="metric-title" id="title-total-area">Total Area</div>
           <div class="metric-num" id="val-area">0.00 <span class="metric-unit">m²</span></div>
         </div>
 
         <div class="metric-card">
-          <div class="metric-title">Total Metric Length</div>
+          <div class="metric-title" id="title-total-length">Total Length</div>
           <div class="metric-num" id="val-length">0.00 <span class="metric-unit">m</span></div>
         </div>
       </div>
 
       <!-- Map Panel -->
-      <div class="glass-panel" style="padding: 1.25rem;">
-        <div class="panel-header" style="margin-bottom: 0.85rem;">
+      <div class="glass-panel" style="padding: 1.15rem;">
+        <div class="panel-header" style="margin-bottom: 0.75rem;">
           <div class="panel-title">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon></svg>
-            Interactive Geospatial Inspector
+            Geospatial Visualizer
           </div>
           <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">
-            Click any feature or table row to focus and inspect
+            Select any feature on map or table to inspect survey metrics
           </div>
         </div>
 
         <div id="map-wrapper">
-          <div class="map-controls">
-            <button class="map-btn active" id="btn-tile-dark" onclick="switchBaseMap('dark')">Dark Matter</button>
-            <button class="map-btn" id="btn-tile-sat" onclick="switchBaseMap('sat')">Satellite</button>
+          <div class="drawing-live-banner" id="drawing-banner">MEASURING...</div>
+          <div class="crosshairs-overlay" id="crosshairs"></div>
+
+          <div class="map-controls-top">
+            <button class="map-btn active" id="btn-tile-sat" onclick="switchBaseMap('sat')">Esri Satellite</button>
+            <button class="map-btn" id="btn-tile-dark" onclick="switchBaseMap('dark')">Dark Matter</button>
             <button class="map-btn" id="btn-tile-osm" onclick="switchBaseMap('osm')">Streets</button>
+            <button class="map-btn" id="btn-crosshairs" onclick="toggleCrosshairs()">Crosshairs</button>
           </div>
+
+          <div class="map-hud-bottom" id="coords-hud">
+            <span>LAT: 12.9716°</span>
+            <span>LON: 77.5946°</span>
+            <span id="hud-utm">UTM: ZONE 43N</span>
+            <span id="hud-zoom">ZOOM: 13</span>
+          </div>
+
           <div id="map"></div>
         </div>
       </div>
@@ -801,27 +982,27 @@
         <div class="filter-bar">
           <div class="panel-title">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-            Survey Feature Breakdown
+            Feature Measurement Registry
           </div>
 
-          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+          <div style="display: flex; gap: 0.65rem; align-items: center; flex-wrap: wrap;">
+            <input type="text" class="search-box" id="search-input" placeholder="Search features..." oninput="handleSearch()">
+
             <div class="filter-pills">
-              <button class="filter-pill active" onclick="filterGeometry('ALL')">All</button>
-              <button class="filter-pill" onclick="filterGeometry('Polygon')">Polygons</button>
-              <button class="filter-pill" onclick="filterGeometry('LineString')">Lines</button>
-              <button class="filter-pill" onclick="filterGeometry('Point')">Points</button>
+              <button class="filter-pill active" onclick="filterGeometry('ALL', this)">All</button>
+              <button class="filter-pill" onclick="filterGeometry('Polygon', this)">Polygons</button>
+              <button class="filter-pill" onclick="filterGeometry('LineString', this)">Lines</button>
+              <button class="filter-pill" onclick="filterGeometry('Point', this)">Points</button>
             </div>
 
-            <div class="action-group">
-              <button class="btn-action" onclick="exportGeoJSON()">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                Export GeoJSON
-              </button>
-              <button class="btn-action" onclick="exportCSV()">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                Export CSV
-              </button>
-            </div>
+            <button class="btn-action" onclick="exportGeoJSON()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              GeoJSON
+            </button>
+            <button class="btn-action" onclick="exportCSV()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+              CSV
+            </button>
           </div>
         </div>
 
@@ -831,17 +1012,17 @@
               <tr>
                 <th>Index</th>
                 <th>Geometry Type</th>
-                <th>Measurement Status</th>
-                <th>Calculated Area (m²)</th>
-                <th>Length (m)</th>
-                <th>Metric Projection</th>
-                <th>Notice / Validity</th>
+                <th>Status</th>
+                <th id="th-area">Area</th>
+                <th id="th-length">Length / Perimeter</th>
+                <th>Projected CRS</th>
+                <th>Notices / Diagnostics</th>
               </tr>
             </thead>
             <tbody id="measurement-rows">
               <tr>
                 <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 3rem 1rem;">
-                  No file uploaded yet. Drop a .kml or .zip file above or load one of the demonstration datasets.
+                  No dataset loaded. Drag and drop a real .kml, .kmz, or .zip file above, or use the Interactive Measurement Studio to draw live polygons.
                 </td>
               </tr>
             </tbody>
@@ -852,65 +1033,148 @@
     </div>
   </main>
 
+  <!-- Feature Inspection / Live Measurement Modal -->
+  <div class="modal-overlay" id="inspector-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          Feature Metric Telemetry
+        </div>
+        <button class="btn-close" onclick="closeModal()">&times;</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.85rem;" id="modal-content">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Mapbox Token Configuration Modal -->
+  <div class="modal-overlay" id="key-modal">
+    <div class="modal-card" style="max-width: 500px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"><path d="M21 2l-2 2m-1-1l-3 3m-1 3l4 4 7-7-3-3z"></path><circle cx="8" cy="16" r="5"></circle></svg>
+          Configure Custom Mapbox Token
+        </div>
+        <button class="btn-close" onclick="closeKeyModal()">&times;</button>
+      </div>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.4;">
+        Optionally supply your personal Mapbox Access Token to unlock ultra-high-resolution 512px vector and satellite street tiles. Stored securely in client storage.
+      </p>
+      <input type="text" id="mapbox-token-input" placeholder="pk.eyJ1..." style="width: 100%; padding: 0.65rem 0.85rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-panel); border-radius: 8px; color: #fff; font-family: var(--font-mono); font-size: 0.82rem; margin-bottom: 1rem;">
+      <div style="display: flex; justify-content: flex-end; gap: 0.6rem;">
+        <button class="btn-action" onclick="saveMapboxToken()">Save Token</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // State Store
+    // Global State
     let currentFileId = null;
     let currentFileMeta = null;
     let currentMeasurements = [];
     let currentFeatures = [];
     let activeFilter = 'ALL';
+    let searchQuery = '';
+    let unitSystem = 'metric'; // 'metric' or 'imperial'
     let systemLimits = { max_upload_bytes: 52428800, max_upload_mb: 50 };
+    let customMapboxToken = localStorage.getItem('mapbox_token') || '';
 
-    // Initialize Base Tile Layers
+    // Interactive Drawing State
+    let currentDrawTool = null; // null | 'polygon' | 'line' | 'pin'
+    let drawnVertices = [];
+    let tempMarkers = [];
+    let tempPolyline = null;
+    let liveDrawingsLayerGroup = null;
+
+    // Basemaps Setup
+    const tilesSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; High-Res Satellite Imagery', maxZoom: 19
+    });
     const tilesDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 19
-    });
-    const tilesSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS', maxZoom: 18
     });
     const tilesOsm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors', maxZoom: 19
     });
 
-    const map = L.map('map', { layers: [tilesDark] }).setView([12.9716, 77.5946], 13);
+    const map = L.map('map', { layers: [tilesSat] }).setView([12.9716, 77.5946], 13);
+    liveDrawingsLayerGroup = L.layerGroup().addTo(map);
 
     function switchBaseMap(type) {
-      document.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
-      map.removeLayer(tilesDark);
+      document.querySelectorAll('.map-btn').forEach(b => {
+        if (b.id !== 'btn-crosshairs') b.classList.remove('active');
+      });
       map.removeLayer(tilesSat);
+      map.removeLayer(tilesDark);
       map.removeLayer(tilesOsm);
 
-      if (type === 'dark') {
-        map.addLayer(tilesDark);
-        document.getElementById('btn-tile-dark').classList.add('active');
-      } else if (type === 'sat') {
+      if (type === 'sat') {
         map.addLayer(tilesSat);
         document.getElementById('btn-tile-sat').classList.add('active');
+      } else if (type === 'dark') {
+        map.addLayer(tilesDark);
+        document.getElementById('btn-tile-dark').classList.add('active');
       } else {
         map.addLayer(tilesOsm);
         document.getElementById('btn-tile-osm').classList.add('active');
       }
     }
 
-    // Leaflet GeoJSON layer
+    // Crosshairs
+    function toggleCrosshairs() {
+      const el = document.getElementById('crosshairs');
+      const btn = document.getElementById('btn-crosshairs');
+      if (el.style.display === 'block') {
+        el.style.display = 'none';
+        btn.classList.remove('active');
+      } else {
+        el.style.display = 'block';
+        btn.classList.add('active');
+      }
+    }
+
+    // Map Cursor HUD
+    map.on('mousemove', (e) => {
+      const lat = e.latlng.lat;
+      const lon = e.latlng.lng;
+      const zone = Math.floor((lon + 180) / 6) + 1;
+      const hemi = lat >= 0 ? 'N' : 'S';
+      document.getElementById('coords-hud').children[0].textContent = `LAT: ${lat.toFixed(5)}°`;
+      document.getElementById('coords-hud').children[1].textContent = `LON: ${lon.toFixed(5)}°`;
+      document.getElementById('hud-utm').textContent = `UTM: ZONE ${zone}${hemi}`;
+      document.getElementById('hud-zoom').textContent = `ZOOM: ${map.getZoom()}`;
+
+      // Real-time rubberband drawing line
+      if (currentDrawTool && drawnVertices.length > 0) {
+        const rubberCoords = [...drawnVertices, [lat, lon]];
+        if (currentDrawTool === 'polygon') rubberCoords.push(drawnVertices[0]);
+        if (tempPolyline) tempPolyline.setLatLngs(rubberCoords);
+      }
+    });
+
+    // Layer Storage
     let layerMap = {};
     const geoJsonLayer = L.geoJSON(null, {
-      style: function(feature) {
+      style: function() {
         return { color: '#3b82f6', weight: 2.5, fillColor: '#06b6d4', fillOpacity: 0.35 };
       },
       pointToLayer: function(feature, latlng) {
-        return L.circleMarker(latlng, { radius: 8, fillColor: '#f59e0b', color: '#fff', weight: 2, fillOpacity: 0.9 });
+        return L.circleMarker(latlng, { radius: 7, fillColor: '#f59e0b', color: '#fff', weight: 2, fillOpacity: 0.9 });
       },
       onEachFeature: function(feature, layer) {
         const idx = feature.properties._feature_index;
         layerMap[idx] = layer;
         layer.on('click', () => {
           highlightFeature(idx);
+          openFeatureInspector(idx);
         });
       }
     }).addTo(map);
 
-    // Fetch System Limits on Load
+    // Load System Limits
     async function initSystemLimits() {
       try {
         const res = await fetch('/api/files/config/');
@@ -919,12 +1183,68 @@
           document.getElementById('limit-upload-pill').textContent = `Max ${systemLimits.max_upload_mb} MB`;
         }
       } catch (e) {
-        console.warn('Could not load system limits:', e);
+        console.warn('Limits check:', e);
       }
     }
     initSystemLimits();
 
-    // Setup Dropzone
+    // Unit Conversion Helpers
+    function setUnits(system) {
+      unitSystem = system;
+      document.getElementById('btn-unit-metric').classList.toggle('active', system === 'metric');
+      document.getElementById('btn-unit-imperial').classList.toggle('active', system === 'imperial');
+
+      document.getElementById('th-area').textContent = system === 'metric' ? 'Area (m² / ha)' : 'Area (sq ft / acres)';
+      document.getElementById('th-length').textContent = system === 'metric' ? 'Length (m / km)' : 'Length (ft / miles)';
+
+      updateStatsDisplay();
+      renderTable();
+    }
+
+    function formatArea(sq_m) {
+      if (sq_m === null || sq_m === undefined) return '—';
+      if (unitSystem === 'metric') {
+        if (sq_m >= 100000) {
+          return `${(sq_m / 10000).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ha`;
+        }
+        return `${sq_m.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} m²`;
+      } else {
+        const acres = sq_m * 0.000247105;
+        if (acres >= 1.0) {
+          return `${acres.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} acres`;
+        }
+        const sqft = sq_m * 10.7639;
+        return `${sqft.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})} sq ft`;
+      }
+    }
+
+    function formatLength(m) {
+      if (m === null || m === undefined) return '—';
+      if (unitSystem === 'metric') {
+        if (m >= 1000) {
+          return `${(m / 1000).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} km`;
+        }
+        return `${m.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} m`;
+      } else {
+        const miles = m * 0.000621371;
+        if (miles >= 1.0) {
+          return `${miles.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} mi`;
+        }
+        const ft = m * 3.28084;
+        return `${ft.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})} ft`;
+      }
+    }
+
+    function updateStatsDisplay() {
+      if (!window.latestSummary) return;
+      const s = window.latestSummary;
+      document.getElementById('val-features').textContent = s.feature_count;
+      document.getElementById('val-measured').textContent = s.measured_count;
+      document.getElementById('val-area').innerHTML = formatArea(s.total_area_sq_m);
+      document.getElementById('val-length').innerHTML = formatLength(s.total_length_m);
+    }
+
+    // Dropzone & File Ingestion
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('file-input');
     const loadingOverlay = document.getElementById('loading-overlay');
@@ -946,23 +1266,19 @@
     function showToast(msg) {
       toast.textContent = msg;
       toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2500);
+      setTimeout(() => toast.classList.remove('show'), 2800);
     }
 
-    // File Validation & Upload
     function handleFileSelection(file) {
       const lower = file.name.toLowerCase();
-      if (!lower.endsWith('.kml') && !lower.endsWith('.zip')) {
-        alert('Unsupported file format! Only .kml and .zip (Shapefile) files are allowed.');
+      if (!lower.endsWith('.kml') && !lower.endsWith('.kmz') && !lower.endsWith('.zip')) {
+        alert('Unsupported format. Please supply a valid .kml, .kmz, or Shapefile .zip.');
         return;
       }
-
-      // Check upload size limit in frontend
       if (file.size > systemLimits.max_upload_bytes) {
-        alert(`File is too large! Maximum permitted size is ${systemLimits.max_upload_mb} MB (file size: ${(file.size / (1024*1024)).toFixed(2)} MB).`);
+        alert(`File exceeds size limit of ${systemLimits.max_upload_mb} MB.`);
         return;
       }
-
       uploadFile(file);
     }
 
@@ -971,23 +1287,22 @@
       formData.append('file', file);
 
       loadingOverlay.style.display = 'flex';
-      document.getElementById('loading-msg').textContent = `Uploading ${file.name} ...`;
+      document.getElementById('loading-msg').textContent = `Ingesting ${file.name}...`;
 
       try {
         const res = await fetch('/api/files/', { method: 'POST', body: formData });
         const data = await res.json();
-
         if (!res.ok) {
-          alert('Ingestion failed: ' + (data.detail || 'Unknown server error'));
+          alert('Ingestion error: ' + (data.detail || 'Internal error'));
           return;
         }
 
         currentFileId = data.id;
         currentFileMeta = data;
         await loadAndRenderFile(data.id, data);
-        showToast(`Successfully processed ${file.name}`);
+        showToast(`Ingested ${file.name}`);
       } catch (err) {
-        alert('Connection error: ' + err.message);
+        alert('Upload failed: ' + err.message);
       } finally {
         loadingOverlay.style.display = 'none';
       }
@@ -1004,26 +1319,19 @@
 
       currentMeasurements = measurementsData.measurements || [];
       currentFeatures = featuresData.features || [];
+      window.latestSummary = measurementsData.summary;
 
-      // Update Metadata Card
       document.getElementById('file-meta-panel').style.display = 'block';
       document.getElementById('meta-filename').textContent = meta.filename;
-      document.getElementById('meta-id').textContent = meta.id;
-      document.getElementById('meta-crs').textContent = meta.crs || 'Unknown';
+      document.getElementById('meta-crs').textContent = meta.crs || 'EPSG:4326';
       document.getElementById('meta-status').textContent = meta.status;
-      document.getElementById('meta-created').textContent = new Date(meta.created_at).toLocaleString();
 
-      // Animate Stats
-      animateCount('val-features', measurementsData.summary.feature_count);
-      animateCount('val-measured', measurementsData.summary.measured_count);
-      document.getElementById('val-area').innerHTML = `${measurementsData.summary.total_area_sq_m.toLocaleString(undefined, {minimumFractionDigits: 2})} <span class="metric-unit">m²</span>`;
-      document.getElementById('val-length').innerHTML = `${measurementsData.summary.total_length_m.toLocaleString(undefined, {minimumFractionDigits: 2})} <span class="metric-unit">m</span>`;
+      updateStatsDisplay();
 
-      // Update Leaflet Map
+      // Render Leaflet Layer
       layerMap = {};
       geoJsonLayer.clearLayers();
-
-      const featureCollection = {
+      const collection = {
         type: "FeatureCollection",
         features: currentFeatures.map(f => ({
           type: "Feature",
@@ -1031,8 +1339,7 @@
           properties: { ...f.properties, _feature_index: f.feature_index }
         }))
       };
-
-      geoJsonLayer.addData(featureCollection);
+      geoJsonLayer.addData(collection);
       if (geoJsonLayer.getLayers().length > 0) {
         map.fitBounds(geoJsonLayer.getBounds(), { padding: [35, 35] });
       }
@@ -1040,39 +1347,26 @@
       renderTable();
     }
 
-    function animateCount(id, target) {
-      const el = document.getElementById(id);
-      let start = 0;
-      const duration = 600;
-      const stepTime = 20;
-      const steps = duration / stepTime;
-      const increment = target / steps;
-
-      const timer = setInterval(() => {
-        start += increment;
-        if (start >= target) {
-          el.textContent = target;
-          clearInterval(timer);
-        } else {
-          el.textContent = Math.floor(start);
-        }
-      }, stepTime);
-    }
-
     function renderTable() {
       const tbody = document.getElementById('measurement-rows');
       tbody.innerHTML = '';
 
       const filtered = currentMeasurements.filter(m => {
-        if (activeFilter === 'ALL') return true;
-        if (activeFilter === 'Polygon') return m.geometry_type.includes('Polygon');
-        if (activeFilter === 'LineString') return m.geometry_type.includes('LineString');
-        if (activeFilter === 'Point') return m.geometry_type.includes('Point');
+        if (activeFilter === 'Polygon' && !m.geometry_type.includes('Polygon')) return false;
+        if (activeFilter === 'LineString' && !m.geometry_type.includes('LineString')) return false;
+        if (activeFilter === 'Point' && !m.geometry_type.includes('Point')) return false;
+        if (searchQuery) {
+          const q = searchQuery.toLowerCase();
+          const matchIndex = String(m.feature_index).includes(q);
+          const matchType = m.geometry_type.toLowerCase().includes(q);
+          const matchStatus = m.status.toLowerCase().includes(q);
+          if (!matchIndex && !matchType && !matchStatus) return false;
+        }
         return true;
       });
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">No features matched filter '${activeFilter}'.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">No features matched criteria.</td></tr>`;
         return;
       }
 
@@ -1082,15 +1376,18 @@
                            m.status === 'UNSUPPORTED' ? 'badge-unsupported' : 'badge-error';
         const tr = document.createElement('tr');
         tr.id = `row-feat-${m.feature_index}`;
-        tr.onclick = () => highlightFeature(m.feature_index);
+        tr.onclick = () => {
+          highlightFeature(m.feature_index);
+          openFeatureInspector(m.feature_index);
+        };
         tr.innerHTML = `
           <td><strong>#${m.feature_index}</strong></td>
           <td><strong>${m.geometry_type}</strong></td>
           <td><span class="badge ${badgeClass}">${m.status}</span></td>
-          <td>${m.area_sq_m !== null ? m.area_sq_m.toLocaleString(undefined, {minimumFractionDigits: 2}) : '—'}</td>
-          <td>${m.length_m !== null ? m.length_m.toLocaleString(undefined, {minimumFractionDigits: 2}) : '—'}</td>
+          <td>${formatArea(m.area_sq_m)}</td>
+          <td>${formatLength(m.length_m)}</td>
           <td><code>${m.measurement_crs || '—'}</code></td>
-          <td style="color: #cbd5e1; font-size: 0.75rem;">${m.message || '—'}</td>
+          <td style="color: #cbd5e1; font-size: 0.74rem;">${m.message || 'Pass'}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -1111,37 +1408,352 @@
         } else if (layer.getLatLng) {
           map.setView(layer.getLatLng(), 16);
         }
-
-        const meas = currentMeasurements.find(m => m.feature_index === index);
-        const feat = currentFeatures.find(f => f.feature_index === index);
-
-        let content = `<div style="font-family: var(--font-sans); min-width: 180px;">
-          <strong style="color: #3b82f6;">Feature #${index} (${meas ? meas.geometry_type : ''})</strong><br>
-          <div style="margin-top: 4px; font-size: 12px;">
-            ${meas && meas.area_sq_m !== null ? `Area: <strong>${meas.area_sq_m.toLocaleString()} m²</strong><br>` : ''}
-            ${meas && meas.length_m !== null ? `Length: <strong>${meas.length_m.toLocaleString()} m</strong><br>` : ''}
-            Projection: <code>${meas && meas.measurement_crs ? meas.measurement_crs : '—'}</code>
-          </div>
-        </div>`;
-        layer.bindPopup(content).openPopup();
       }
     }
 
-    function filterGeometry(type) {
+    function filterGeometry(type, el) {
       activeFilter = type;
       document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-      event.target.classList.add('active');
+      el.classList.add('active');
       renderTable();
     }
 
-    function copyFileJson() {
-      if (!currentFileMeta) return;
-      navigator.clipboard.writeText(JSON.stringify(currentFileMeta, null, 2));
-      showToast('Metadata copied to clipboard!');
+    function handleSearch() {
+      searchQuery = document.getElementById('search-input').value.trim();
+      renderTable();
     }
 
+    // Modal Inspector
+    async function openFeatureInspector(featureIndex) {
+      const meas = currentMeasurements.find(m => m.feature_index === featureIndex);
+      const feat = currentFeatures.find(f => f.feature_index === featureIndex);
+      if (!meas || !feat) return;
+
+      const modal = document.getElementById('inspector-modal');
+      const title = document.getElementById('modal-title');
+      const content = document.getElementById('modal-content');
+
+      title.innerHTML = `Feature #${featureIndex} Telemetry &bull; ${meas.geometry_type}`;
+
+      // Calculate centroid and coordinates
+      let centroid = [0, 0];
+      if (feat.geometry.type === 'Point') {
+        centroid = feat.geometry.coordinates;
+      } else if (feat.geometry.type === 'Polygon') {
+        centroid = feat.geometry.coordinates[0][0];
+      } else if (feat.geometry.type === 'LineString') {
+        centroid = feat.geometry.coordinates[0];
+      }
+
+      content.innerHTML = `
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-panel); border-radius: 12px; padding: 1rem;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">Metric Measurements</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div>
+              <div style="color: var(--text-muted); font-size: 0.75rem;">Planar Area:</div>
+              <div style="font-size: 1.1rem; font-family: var(--font-mono); font-weight: 700; color: #34d399;">${formatArea(meas.area_sq_m)}</div>
+            </div>
+            <div>
+              <div style="color: var(--text-muted); font-size: 0.75rem;">Length / Perimeter:</div>
+              <div style="font-size: 1.1rem; font-family: var(--font-mono); font-weight: 700; color: #38bdf8;">${formatLength(meas.length_m)}</div>
+            </div>
+            <div>
+              <div style="color: var(--text-muted); font-size: 0.75rem;">Projected Metric CRS:</div>
+              <div style="font-family: var(--font-mono); color: #fbbf24;">${meas.measurement_crs || '—'}</div>
+            </div>
+            <div>
+              <div style="color: var(--text-muted); font-size: 0.75rem;">Status:</div>
+              <div><span class="badge badge-measured">${meas.status}</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-panel); border-radius: 12px; padding: 1rem;" id="modal-geo-loc">
+          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">Territorial Location Query</div>
+          <div style="color: #94a3b8; font-size: 0.8rem;">Querying OpenStreetMap reverse-geocoding...</div>
+        </div>
+      `;
+
+      modal.style.display = 'flex';
+
+      // Perform real-time reverse-geocoding call
+      try {
+        const res = await fetch('/api/measure/reverse-geocode/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ latitude: centroid[1], longitude: centroid[0] })
+        });
+        if (res.ok) {
+          const loc = await res.json();
+          document.getElementById('modal-geo-loc').innerHTML = `
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">Territorial Location Context</div>
+            <div style="font-weight: 600; color: #f1f5f9; margin-bottom: 0.25rem;">${loc.display_name}</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">Country: ${loc.country || '—'} &bull; State: ${loc.state || '—'} &bull; City: ${loc.city || '—'}</div>
+          `;
+        }
+      } catch (e) {
+        console.debug('Reverse geocode error:', e);
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('inspector-modal').style.display = 'none';
+    }
+
+    // Interactive Drawing Tool Engine
+    function activateDrawTool(tool) {
+      if (currentDrawTool === tool) {
+        deactivateDrawTool();
+        return;
+      }
+
+      currentDrawTool = tool;
+      drawnVertices = [];
+      clearTempMarkers();
+
+      document.querySelectorAll('.btn-tool').forEach(b => b.classList.remove('active'));
+      document.getElementById(`tool-${tool}`).classList.add('active');
+
+      const banner = document.getElementById('drawing-banner');
+      const hint = document.getElementById('tool-hint');
+      banner.style.display = 'block';
+      hint.style.display = 'block';
+
+      if (tool === 'polygon') {
+        banner.textContent = 'DRAWING POLYGON: CLICK TO ADD VERTICES';
+        hint.innerHTML = '<strong>Polygon Mode:</strong> Click map to place vertices. Click starting point or double-click to close polygon and run geodetic metrics.';
+      } else if (tool === 'line') {
+        banner.textContent = 'MEASURING PATH: CLICK TO ADD VERTICES';
+        hint.innerHTML = '<strong>Path Mode:</strong> Click map along trajectory. Double-click to complete distance calculation.';
+      } else if (tool === 'pin') {
+        banner.textContent = 'INSPECT POINT: CLICK ANYWHERE ON MAP';
+        hint.innerHTML = '<strong>Point Mode:</strong> Click any map location to query UTM projection, elevation, and address.';
+      }
+    }
+
+    function deactivateDrawTool() {
+      currentDrawTool = null;
+      document.querySelectorAll('.btn-tool').forEach(b => b.classList.remove('active'));
+      document.getElementById('drawing-banner').style.display = 'none';
+      document.getElementById('tool-hint').style.display = 'none';
+      clearTempMarkers();
+    }
+
+    function clearTempMarkers() {
+      tempMarkers.forEach(m => map.removeLayer(m));
+      tempMarkers = [];
+      if (tempPolyline) {
+        map.removeLayer(tempPolyline);
+        tempPolyline = null;
+      }
+    }
+
+    function clearLiveDrawings() {
+      deactivateDrawTool();
+      liveDrawingsLayerGroup.clearLayers();
+      showToast('Cleared interactive drawings');
+    }
+
+    // Map Click Handler for Drawing
+    map.on('click', async (e) => {
+      if (!currentDrawTool) return;
+      const lat = e.latlng.lat;
+      const lon = e.latlng.lng;
+
+      if (currentDrawTool === 'pin') {
+        deactivateDrawTool();
+        const marker = L.marker([lat, lon]).addTo(liveDrawingsLayerGroup);
+        marker.bindPopup(`<strong>Coordinate Pin</strong><br>Lat: ${lat.toFixed(5)}°<br>Lon: ${lon.toFixed(5)}°`).openPopup();
+        await inspectPointLive(lat, lon);
+        return;
+      }
+
+      // Check if closing polygon on first vertex
+      if (currentDrawTool === 'polygon' && drawnVertices.length >= 3) {
+        const first = drawnVertices[0];
+        const distToFirst = map.distance([lat, lon], first);
+        if (distToFirst < 25) { // within 25 meters
+          await finishDrawing();
+          return;
+        }
+      }
+
+      drawnVertices.push([lat, lon]);
+
+      // Marker for vertex
+      const marker = L.circleMarker([lat, lon], {
+        radius: 5, color: '#3b82f6', fillColor: '#fff', fillOpacity: 1, weight: 2
+      }).addTo(map);
+      tempMarkers.push(marker);
+
+      // Line connecting vertices
+      if (!tempPolyline) {
+        tempPolyline = L.polyline(drawnVertices, { color: '#38bdf8', weight: 2.5, dashArray: '5, 5' }).addTo(map);
+      } else {
+        tempPolyline.setLatLngs(drawnVertices);
+      }
+    });
+
+    map.on('dblclick', async (e) => {
+      if (!currentDrawTool) return;
+      L.DomEvent.stopPropagation(e);
+      await finishDrawing();
+    });
+
+    async function finishDrawing() {
+      if (!currentDrawTool || drawnVertices.length < 2) return;
+      const tool = currentDrawTool;
+      const vertices = [...drawnVertices];
+      deactivateDrawTool();
+
+      loadingOverlay.style.display = 'flex';
+      document.getElementById('loading-msg').textContent = 'Calculating Survey-Grade Geodetic Metrics...';
+
+      let geoJsonGeom = null;
+      if (tool === 'polygon') {
+        if (vertices.length < 3) return;
+        const closed = [...vertices.map(v => [v[1], v[0]])];
+        closed.push(closed[0]); // close ring
+        geoJsonGeom = { type: 'Polygon', coordinates: [closed] };
+      } else if (tool === 'line') {
+        geoJsonGeom = { type: 'LineString', coordinates: vertices.map(v => [v[1], v[0]]) };
+      }
+
+      try {
+        const res = await fetch('/api/measure/geometry/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ geometry: geoJsonGeom, source_crs: 'EPSG:4326' })
+        });
+        const meas = await res.json();
+
+        // Render on map
+        let renderLayer;
+        if (tool === 'polygon') {
+          renderLayer = L.polygon(vertices, { color: '#10b981', weight: 3, fillColor: '#10b981', fillOpacity: 0.25 }).addTo(liveDrawingsLayerGroup);
+        } else {
+          renderLayer = L.polyline(vertices, { color: '#06b6d4', weight: 3 }).addTo(liveDrawingsLayerGroup);
+        }
+
+        // Add to session feature list
+        const newIndex = currentMeasurements.length;
+        currentMeasurements.push({
+          feature_index: newIndex,
+          geometry_type: meas.geometry_type,
+          status: meas.status,
+          area_sq_m: meas.planar_area_sq_m,
+          length_m: meas.planar_length_m,
+          measurement_crs: meas.measurement_crs,
+          message: meas.message || 'Interactive Measurement'
+        });
+        currentFeatures.push({
+          feature_index: newIndex,
+          geometry: geoJsonGeom,
+          properties: { source: 'Interactive Studio' }
+        });
+        layerMap[newIndex] = renderLayer;
+
+        renderLayer.on('click', () => {
+          highlightFeature(newIndex);
+          openFeatureInspector(newIndex);
+        });
+
+        renderTable();
+        showLiveMeasurementModal(meas, vertices);
+      } catch (err) {
+        alert('Calculation error: ' + err.message);
+      } finally {
+        loadingOverlay.style.display = 'none';
+      }
+    }
+
+    async function inspectPointLive(lat, lon) {
+      try {
+        const [geoRes, elevRes] = await Promise.all([
+          fetch('/api/measure/reverse-geocode/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ latitude: lat, longitude: lon })
+          }),
+          fetch('/api/measure/elevation/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ latitude: lat, longitude: lon })
+          })
+        ]);
+        const loc = await geoRes.json();
+        const elev = await elevRes.json();
+
+        const modal = document.getElementById('inspector-modal');
+        document.getElementById('modal-title').innerHTML = `Coordinate Point Telemetry`;
+        document.getElementById('modal-content').innerHTML = `
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-panel); border-radius: 12px; padding: 1rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+              <div>
+                <div style="color: var(--text-muted); font-size: 0.75rem;">Latitude:</div>
+                <div style="font-family: var(--font-mono); font-weight: 700; color: #fff;">${lat.toFixed(6)}°</div>
+              </div>
+              <div>
+                <div style="color: var(--text-muted); font-size: 0.75rem;">Longitude:</div>
+                <div style="font-family: var(--font-mono); font-weight: 700; color: #fff;">${lon.toFixed(6)}°</div>
+              </div>
+              <div>
+                <div style="color: var(--text-muted); font-size: 0.75rem;">Terrain Elevation:</div>
+                <div style="font-family: var(--font-mono); font-weight: 700; color: #10b981;">${elev.elevation_m} m (${elev.elevation_ft} ft)</div>
+              </div>
+              <div>
+                <div style="color: var(--text-muted); font-size: 0.75rem;">UTM Zone:</div>
+                <div style="font-family: var(--font-mono); color: #38bdf8;">Zone ${Math.floor((lon + 180) / 6) + 1}${lat >= 0 ? 'N' : 'S'}</div>
+              </div>
+            </div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-panel); border-radius: 12px; padding: 1rem;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem;">Territorial Address</div>
+            <div style="font-weight: 600; color: #f1f5f9; margin-bottom: 0.25rem;">${loc.display_name}</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Country: ${loc.country || '—'} &bull; State: ${loc.state || '—'}</div>
+          </div>
+        `;
+        modal.style.display = 'flex';
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function showLiveMeasurementModal(meas, vertices) {
+      const modal = document.getElementById('inspector-modal');
+      document.getElementById('modal-title').innerHTML = `Live Measurement Computed &bull; ${meas.geometry_type}`;
+      document.getElementById('modal-content').innerHTML = `
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-panel); border-radius: 12px; padding: 1rem;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 0.65rem;">Calculated Metrics</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div>
+              <div style="color: var(--text-muted); font-size: 0.75rem;">UTM Planar Area:</div>
+              <div style="font-size: 1.15rem; font-family: var(--font-mono); font-weight: 800; color: #34d399;">${formatArea(meas.planar_area_sq_m)}</div>
+            </div>
+            <div>
+              <div style="color: var(--text-muted); font-size: 0.75rem;">WGS 84 Geodesic Area:</div>
+              <div style="font-size: 1.15rem; font-family: var(--font-mono); font-weight: 800; color: #38bdf8;">${formatArea(meas.geodesic_area_sq_m)}</div>
+            </div>
+            <div>
+              <div style="color: var(--text-muted); font-size: 0.75rem;">Planar Perimeter / Length:</div>
+              <div style="font-size: 1.05rem; font-family: var(--font-mono); font-weight: 700;">${formatLength(meas.planar_length_m)}</div>
+            </div>
+            <div>
+              <div style="color: var(--text-muted); font-size: 0.75rem;">Projected Metric CRS:</div>
+              <div style="font-family: var(--font-mono); color: #fbbf24;">${meas.measurement_crs}</div>
+            </div>
+          </div>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">
+          Centroid: [${meas.centroid[0].toFixed(5)}, ${meas.centroid[1].toFixed(5)}] &bull; Vertices: ${meas.vertex_count}
+        </div>
+      `;
+      modal.style.display = 'flex';
+    }
+
+    // Export Handlers
     function exportGeoJSON() {
-      if (!currentFeatures.length) { alert('No features to export!'); return; }
+      if (!currentFeatures.length) { alert('No features to export.'); return; }
       const collection = {
         type: "FeatureCollection",
         features: currentFeatures.map(f => ({
@@ -1150,18 +1762,18 @@
           properties: f.properties
         }))
       };
-      const blob = new Blob([JSON.stringify(collection, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify(collection, null, 2)], { type: 'application/geo+json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${currentFileMeta.filename || 'export'}.geojson`;
+      a.download = `survey_export_${Date.now()}.geojson`;
       a.click();
       URL.revokeObjectURL(url);
     }
 
     function exportCSV() {
-      if (!currentMeasurements.length) { alert('No measurements to export!'); return; }
-      let csv = "feature_index,geometry_type,status,area_sq_m,length_m,measurement_crs,message\n";
+      if (!currentMeasurements.length) { alert('No measurements to export.'); return; }
+      let csv = "feature_index,geometry_type,status,area_sq_m,length_m,measurement_crs,diagnostics\n";
       currentMeasurements.forEach(m => {
         csv += `${m.feature_index},"${m.geometry_type}",${m.status},${m.area_sq_m || ''},${m.length_m || ''},"${m.measurement_crs || ''}","${(m.message || '').replace(/"/g, '""')}"\n`;
       });
@@ -1169,38 +1781,27 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${currentFileMeta.filename || 'measurements'}_report.csv`;
+      a.download = `measurements_export_${Date.now()}.csv`;
       a.click();
       URL.revokeObjectURL(url);
     }
 
-    // Sample Loaders
-    async function loadSampleKML() {
-      loadingOverlay.style.display = 'flex';
-      document.getElementById('loading-msg').textContent = 'Loading Bengaluru Drone Survey (.kml)...';
-      try {
-        const res = await fetch('/sample/survey.kml');
-        const blob = await res.blob();
-        await uploadFile(new File([blob], 'survey.kml', { type: 'application/vnd.google-earth.kml+xml' }));
-      } catch (e) {
-        alert('Failed loading sample: ' + e.message);
-      } finally {
-        loadingOverlay.style.display = 'none';
-      }
+    // Mapbox Key Modal
+    function openKeyModal() {
+      document.getElementById('mapbox-token-input').value = customMapboxToken;
+      document.getElementById('key-modal').style.display = 'flex';
     }
 
-    async function loadSampleShapefile() {
-      loadingOverlay.style.display = 'flex';
-      document.getElementById('loading-msg').textContent = 'Loading Agricultural Parcels (.zip)...';
-      try {
-        const res = await fetch('/sample/survey_shapefile.zip');
-        const blob = await res.blob();
-        await uploadFile(new File([blob], 'survey_shapefile.zip', { type: 'application/zip' }));
-      } catch (e) {
-        alert('Failed loading sample: ' + e.message);
-      } finally {
-        loadingOverlay.style.display = 'none';
-      }
+    function closeKeyModal() {
+      document.getElementById('key-modal').style.display = 'none';
+    }
+
+    function saveMapboxToken() {
+      const val = document.getElementById('mapbox-token-input').value.trim();
+      customMapboxToken = val;
+      localStorage.setItem('mapbox_token', val);
+      closeKeyModal();
+      showToast('Mapbox Token saved!');
     }
   </script>
 </body>

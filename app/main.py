@@ -10,7 +10,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 
-from app.api.routes import router
+from app.api.routes import measure_router, router
 from app.api.schemas import FileInfo
 from app.config import Settings
 from app.domain import FileRecord
@@ -129,6 +129,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     # Include routes
     app.include_router(router)
+    app.include_router(measure_router)
 
     return app
 

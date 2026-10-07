@@ -23,6 +23,7 @@ from app.errors import (
     UnsupportedMediaTypeError,
 )
 from app.parsers.kml import parse_kml
+from app.parsers.kmz import parse_kmz
 from app.parsers.shapefile_zip import parse_shapefile_zip
 from app.services.measurement import MeasurementService, crs_label, resolve_crs
 from app.storage.repository import Repository
@@ -72,10 +73,11 @@ class IngestService:
 
         # Validate file extension
         is_kml = lower_name.endswith(".kml")
+        is_kmz = lower_name.endswith(".kmz")
         is_zip = lower_name.endswith(".zip")
-        if not (is_kml or is_zip):
+        if not (is_kml or is_kmz or is_zip):
             raise UnsupportedMediaTypeError(
-                "Unsupported file type. Only '.kml' and '.zip' (Shapefile archive) files are accepted."
+                "Unsupported file type. Only '.kml', '.kmz', and '.zip' (Shapefile archive) files are accepted."
             )
 
         # Stream chunks and enforce byte limit
@@ -116,6 +118,13 @@ class IngestService:
             if is_kml:
                 parsed_file = parse_kml(
                     content, max_warnings=self.settings.max_warnings
+                )
+            elif is_kmz:
+                parsed_file = parse_kmz(
+                    content,
+                    max_uncompressed_bytes=self.settings.max_uncompressed_bytes,
+                    max_zip_members=self.settings.max_zip_members,
+                    max_warnings=self.settings.max_warnings,
                 )
             else:
                 parsed_file = parse_shapefile_zip(

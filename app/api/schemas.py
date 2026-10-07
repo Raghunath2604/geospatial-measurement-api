@@ -141,7 +141,68 @@ class SystemConfigResponse(BaseModel):
     )
     max_features: int = Field(..., description="Max features allowed per file")
     allowed_extensions: list[str] = Field(
-        default_factory=lambda: [".kml", ".zip"],
+        default_factory=lambda: [".kml", ".kmz", ".zip"],
         description="Supported geospatial file extensions",
     )
     version: str = Field(default="1.0.0", description="API version")
+
+
+class GeometryMeasurementRequest(BaseModel):
+    """Payload for real-time arbitrary GeoJSON geometry measurement."""
+
+    geometry: dict[str, Any] = Field(..., description="GeoJSON geometry object")
+    source_crs: str = Field(
+        default="EPSG:4326",
+        description="Source Coordinate Reference System (defaults to EPSG:4326)",
+    )
+
+
+class GeometryMeasurementResponse(BaseModel):
+    """Real-time geometric calculation response with dual planar and geodesic metrics."""
+
+    geometry_type: str = Field(..., description="Evaluated geometry type")
+    status: str = Field(..., description="Measurement status (MEASURED, NOT_APPLICABLE, etc.)")
+    planar_area_sq_m: float | None = Field(None, description="Planar area in square metres (UTM/UPS)")
+    planar_length_m: float | None = Field(None, description="Planar length or perimeter in metres")
+    geodesic_area_sq_m: float | None = Field(None, description="Geodesic ellipsoidal area (WGS 84)")
+    geodesic_length_m: float | None = Field(None, description="Geodesic ellipsoidal perimeter/length (WGS 84)")
+    measurement_crs: str = Field(..., description="Dynamically resolved UTM or UPS projection")
+    centroid: list[float] = Field(..., description="Centroid [longitude, latitude]")
+    bbox: list[float] = Field(..., description="Bounding box [min_x, min_y, max_x, max_y]")
+    vertex_count: int = Field(..., description="Total coordinate vertices")
+    units: dict[str, float] = Field(..., description="Multi-unit planar measurement conversions")
+    message: str | None = Field(None, description="Topological validity notices or warnings")
+
+
+class ReverseGeocodeRequest(BaseModel):
+    """Payload for real-time reverse geocoding."""
+
+    latitude: float = Field(..., ge=-90.0, le=90.0, description="Latitude [-90..90]")
+    longitude: float = Field(..., ge=-180.0, le=180.0, description="Longitude [-180..180]")
+
+
+class ReverseGeocodeResponse(BaseModel):
+    """Administrative address and territorial location response."""
+
+    display_name: str
+    country: str | None = None
+    state: str | None = None
+    city: str | None = None
+    postcode: str | None = None
+    osm_id: int | None = None
+
+
+class ElevationRequest(BaseModel):
+    """Payload for real-time terrain elevation lookup."""
+
+    latitude: float = Field(..., ge=-90.0, le=90.0, description="Latitude [-90..90]")
+    longitude: float = Field(..., ge=-180.0, le=180.0, description="Longitude [-180..180]")
+
+
+class ElevationResponse(BaseModel):
+    """Terrain elevation response in metres and feet."""
+
+    elevation_m: float
+    elevation_ft: float
+    source: str
+
