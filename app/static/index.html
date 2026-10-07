@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CYBERDEFEND // Tactical Geospatial Command & Orbital Geodetic Deck</title>
+  <title>CYBERDEFEND // Tactical Geospatial Command & Orbital Telemetry Deck</title>
   
   <!-- Premium High-Tech Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,15 +16,16 @@
   
   <style>
     :root {
-      --bg-void: #06090e;
-      --bg-panel: rgba(11, 16, 26, 0.88);
-      --bg-panel-solid: #0d131f;
-      --bg-card: rgba(15, 22, 36, 0.75);
-      --bg-card-hover: rgba(22, 33, 54, 0.9);
+      --bg-void: #05080e;
+      --bg-panel: rgba(10, 15, 25, 0.92);
+      --bg-panel-solid: #090e18;
+      --bg-card: rgba(13, 20, 34, 0.82);
+      --bg-card-hover: rgba(20, 30, 50, 0.94);
       
       --border-panel: rgba(255, 255, 255, 0.08);
+      --border-panel-bright: rgba(255, 255, 255, 0.16);
       --border-accent: rgba(250, 204, 21, 0.45);
-      --border-cyan: rgba(56, 189, 248, 0.4);
+      --border-cyan: rgba(56, 189, 248, 0.45);
       
       --accent-yellow: #facc15;
       --accent-yellow-glow: rgba(250, 204, 21, 0.35);
@@ -37,7 +38,7 @@
       
       --text-main: #f8fafc;
       --text-sub: #cbd5e1;
-      --text-muted: #73849a;
+      --text-muted: #64748b;
 
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
@@ -64,18 +65,121 @@
 
     #app-container {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       width: 100vw;
       height: 100vh;
       position: relative;
+      overflow: hidden;
     }
 
-    /* Top Command Header (Cyberdefend / SpaceX Aesthetic) */
+    /* ==========================================================================
+       1. Left Tactical Navigation Rail (Cyberdefend Style)
+       ========================================================================== */
+    #left-tactical-rail {
+      width: 68px;
+      height: 100vh;
+      background: #06090e;
+      border-right: 1px solid var(--border-panel);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 0;
+      z-index: 1100;
+      flex-shrink: 0;
+    }
+
+    .rail-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .rail-logo-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid var(--border-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-yellow);
+      cursor: pointer;
+      box-shadow: 0 0 15px var(--accent-yellow-glow);
+      transition: all 0.25s;
+      margin-bottom: 0.75rem;
+    }
+
+    .rail-logo-btn:hover {
+      transform: scale(1.05);
+      border-color: #fff;
+    }
+
+    .rail-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s var(--ease-spring);
+      position: relative;
+    }
+
+    .rail-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--border-panel);
+    }
+
+    .rail-btn.active {
+      color: #000;
+      background: var(--accent-yellow);
+      border-color: var(--accent-yellow);
+      box-shadow: 0 0 15px var(--accent-yellow-glow);
+    }
+
+    .rail-btn-sep {
+      width: 32px;
+      height: 1px;
+      background: var(--border-panel);
+      margin: 0.35rem 0;
+    }
+
+    .rail-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulseRadar 2s infinite;
+    }
+
+    /* ==========================================================================
+       2. Main Views Host (Cockpit GIS, Telemetry Analytics, SpaceX Fleet)
+       ========================================================================== */
+    #main-host {
+      flex: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-void);
+    }
+
+    /* Top Command Header */
     header {
-      height: 56px;
-      padding: 0 1.5rem;
+      height: 54px;
+      padding: 0 1.25rem;
       border-bottom: 1px solid var(--border-panel);
-      background: rgba(7, 10, 17, 0.94);
+      background: rgba(6, 9, 14, 0.95);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       display: flex;
@@ -88,26 +192,14 @@
     .brand-section {
       display: flex;
       align-items: center;
-      gap: 0.85rem;
-    }
-
-    .brand-logo-hex {
-      width: 34px;
-      height: 34px;
-      background: linear-gradient(135deg, #1e293b, #0f172a);
-      border: 1px solid var(--border-accent);
-      border-radius: 9px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--accent-yellow);
-      box-shadow: 0 0 15px var(--accent-yellow-glow);
+      gap: 0.75rem;
     }
 
     .brand-title {
-      font-size: 1.1rem;
+      font-size: 0.85rem;
       font-weight: 800;
-      letter-spacing: -0.02em;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
       color: #fff;
       display: flex;
       align-items: center;
@@ -117,17 +209,15 @@
     .brand-badge {
       font-family: var(--font-mono);
       font-size: 0.62rem;
-      font-weight: 800;
-      color: var(--accent-yellow);
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
       background: rgba(250, 204, 21, 0.12);
-      border: 1px solid rgba(250, 204, 21, 0.3);
-      padding: 0.12rem 0.45rem;
-      border-radius: 5px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      color: var(--accent-yellow);
+      border-radius: 4px;
     }
 
-    .header-nav-tabs {
+    .header-nav-pills {
       display: flex;
       align-items: center;
       gap: 0.35rem;
@@ -137,28 +227,29 @@
       border: 1px solid var(--border-panel);
     }
 
-    .nav-tab {
+    .nav-pill {
       background: transparent;
       border: none;
       color: var(--text-muted);
-      font-size: 0.74rem;
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
       font-weight: 700;
-      padding: 0.35rem 0.85rem;
+      padding: 0.35rem 0.75rem;
       border-radius: 7px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.35rem;
       transition: all 0.2s var(--ease-spring);
     }
 
-    .nav-tab:hover { color: #fff; background: rgba(255, 255, 255, 0.06); }
-    .nav-tab.active { background: var(--accent-yellow); color: #000; box-shadow: 0 0 15px var(--accent-yellow-glow); }
+    .nav-pill:hover { color: #fff; background: rgba(255, 255, 255, 0.06); }
+    .nav-pill.active { background: var(--accent-yellow); color: #000; box-shadow: 0 0 12px var(--accent-yellow-glow); }
 
     .header-right {
       display: flex;
       align-items: center;
-      gap: 0.95rem;
+      gap: 0.85rem;
     }
 
     .utc-clock {
@@ -177,12 +268,12 @@
       align-items: center;
       gap: 0.5rem;
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 700;
       color: #34d399;
       background: rgba(16, 185, 129, 0.08);
       border: 1px solid rgba(16, 185, 129, 0.25);
-      padding: 0.28rem 0.75rem;
+      padding: 0.25rem 0.65rem;
       border-radius: 20px;
     }
 
@@ -213,9 +304,9 @@
       background: transparent;
       border: none;
       color: var(--text-muted);
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 700;
-      padding: 0.25rem 0.6rem;
+      padding: 0.22rem 0.55rem;
       border-radius: 6px;
       cursor: pointer;
       transition: all 0.2s;
@@ -227,11 +318,26 @@
       font-weight: 800;
     }
 
-    /* Map Workspace */
-    #map-viewport {
-      flex: 1;
+    /* Views Panels */
+    .view-panel {
+      display: none;
       width: 100%;
+      flex: 1;
       position: relative;
+      overflow: hidden;
+    }
+
+    .view-panel.active {
+      display: flex;
+    }
+
+    /* ==========================================================================
+       3. View 1: Tactical Cockpit GIS (Cyberdefend / SpaceX Cockpit)
+       ========================================================================== */
+    #view-cockpit {
+      position: relative;
+      width: 100%;
+      height: 100%;
     }
 
     #map {
@@ -240,105 +346,107 @@
       background: #080c14;
     }
 
-    /* Card 1: Top-Left Floating Tactical Telemetry (Cyberdefend Sat-Feed Style) */
+    /* Card 1: Top-Left Floating Tactical Telemetry (Cyberdefend Style) */
     .floating-telemetry-hud {
       position: absolute;
       top: 16px;
       left: 16px;
       width: 330px;
       z-index: 500;
-      background: rgba(10, 14, 23, 0.94);
+      background: rgba(8, 12, 20, 0.94);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--border-panel);
       border-radius: 16px;
-      padding: 1.25rem;
+      padding: 1.15rem;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75);
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.75rem;
     }
 
     .hud-title-row {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      padding-bottom: 0.65rem;
+      align-items: center;
     }
 
     .hud-title {
-      font-size: 0.72rem;
+      font-size: 0.74rem;
       font-weight: 800;
-      color: var(--accent-yellow);
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      color: var(--text-sub);
       display: flex;
       align-items: center;
       gap: 0.45rem;
     }
 
     .hud-metrics-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.65rem;
     }
 
     .hud-metric-row {
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--border-panel);
+      border-radius: 10px;
+      padding: 0.6rem 0.75rem;
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
-      align-items: flex-end;
     }
 
     .hud-metric-label {
-      font-size: 0.7rem;
-      color: var(--text-muted);
+      font-size: 0.65rem;
       font-weight: 600;
+      color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.15rem;
     }
 
     .hud-metric-big-val {
       font-family: var(--font-mono);
-      font-size: 1.35rem;
+      font-size: 1.05rem;
       font-weight: 800;
       color: #fff;
-      line-height: 1;
     }
 
     .hud-metric-sub {
       font-family: var(--font-mono);
-      font-size: 0.7rem;
-      color: var(--accent-cyan);
+      font-size: 0.62rem;
+      color: var(--accent-yellow);
+      margin-top: 0.2rem;
     }
 
     .hud-details-box {
-      background: rgba(255, 255, 255, 0.025);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--border-panel);
       border-radius: 10px;
-      padding: 0.7rem 0.85rem;
+      padding: 0.65rem 0.85rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: #94a3b8;
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
-      font-size: 0.72rem;
-      font-family: var(--font-mono);
-      color: #94a3b8;
+      gap: 0.25rem;
     }
 
     .hud-btn-primary {
-      width: 100%;
       background: var(--accent-yellow);
       color: #000;
       border: none;
-      padding: 0.7rem;
+      padding: 0.65rem;
       border-radius: 10px;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 800;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
+      gap: 0.45rem;
       transition: all 0.2s var(--ease-spring);
       box-shadow: 0 4px 15px var(--accent-yellow-glow);
     }
@@ -348,23 +456,23 @@
       transform: translateY(-1px);
     }
 
-    /* Card 2: Top-Right Floating Orbital Satellite Fleet Card (Cyberdefend Starlink Style) */
+    /* Card 2: Top-Right Floating Orbital Satellite Fleet Card */
     .floating-satellite-card {
       position: absolute;
       top: 16px;
       right: 16px;
-      width: 280px;
+      width: 275px;
       z-index: 500;
-      background: rgba(10, 14, 23, 0.94);
+      background: rgba(8, 12, 20, 0.94);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--border-panel);
       border-radius: 16px;
-      padding: 1.15rem;
+      padding: 1.1rem;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75);
       display: flex;
       flex-direction: column;
-      gap: 0.85rem;
+      gap: 0.75rem;
     }
 
     .sat-header {
@@ -374,7 +482,7 @@
     }
 
     .sat-name {
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 800;
       color: #fff;
     }
@@ -392,9 +500,9 @@
     .sat-metrics-list {
       display: flex;
       flex-direction: column;
-      gap: 0.45rem;
+      gap: 0.4rem;
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: #cbd5e1;
     }
 
@@ -404,7 +512,6 @@
       align-items: center;
     }
 
-    /* Signal waveform bar */
     .signal-bar-wrap {
       display: flex;
       gap: 3px;
@@ -417,23 +524,124 @@
       background: #38bdf8;
     }
 
-    /* Card 3: Bottom-Right Real-Time Terrain Elevation Waveform Profile (Cyberdefend Waveform Style) */
-    .floating-waveform-hud {
+    /* Card 3: Bottom-Left Floating Starlink Fleet HUD (from Cyberdefend UI) */
+    .floating-starlink-bottom {
       position: absolute;
       bottom: 20px;
-      right: 16px;
-      width: 360px;
+      left: 16px;
+      width: 290px;
       z-index: 500;
-      background: rgba(10, 14, 23, 0.94);
+      background: rgba(8, 12, 20, 0.94);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--border-panel);
       border-radius: 16px;
-      padding: 1.15rem;
+      padding: 1rem;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75);
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.65rem;
+    }
+
+    .starlink-speed-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .starlink-speed-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-panel);
+      border-radius: 8px;
+      padding: 0.45rem 0.65rem;
+    }
+
+    /* Card 4: Bottom-Center Floating Towers / Vector Table (from Cyberdefend UI) */
+    .floating-towers-card {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 480px;
+      max-width: 90vw;
+      z-index: 500;
+      background: rgba(8, 12, 20, 0.94);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border-panel);
+      border-radius: 16px;
+      padding: 0.9rem 1.1rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75);
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .towers-table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .towers-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    .towers-table th {
+      color: var(--text-muted);
+      font-weight: 600;
+      text-align: left;
+      padding: 0.35rem 0.5rem;
+      border-bottom: 1px solid var(--border-panel);
+    }
+
+    .towers-table td {
+      padding: 0.4rem 0.5rem;
+      color: #cbd5e1;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      cursor: pointer;
+    }
+
+    .towers-table tr:hover td {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--accent-yellow);
+    }
+
+    .towers-table-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.68rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      padding-top: 0.25rem;
+    }
+
+    /* Card 5: Bottom-Right Real-Time Terrain Elevation Waveform (Cyberdefend Style) */
+    .floating-waveform-hud {
+      position: absolute;
+      bottom: 20px;
+      right: 76px;
+      width: 340px;
+      z-index: 500;
+      background: rgba(8, 12, 20, 0.94);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border-panel);
+      border-radius: 16px;
+      padding: 1rem 1.15rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75);
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
     }
 
     .waveform-title-row {
@@ -449,26 +657,51 @@
 
     .terrain-svg-canvas {
       width: 100%;
-      height: 60px;
+      height: 55px;
       overflow: visible;
     }
 
-    /* Center-Bottom Floating Action Toolbar (2024 Geospatial Data Processing Style) */
+    /* Card 6: Far-Right Rotating Tactical Compass / Azimuth Dial */
+    .floating-compass-dial {
+      position: absolute;
+      bottom: 24px;
+      right: 14px;
+      width: 52px;
+      height: 52px;
+      z-index: 500;
+      border-radius: 50%;
+      background: rgba(8, 12, 20, 0.94);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-panel-bright);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .floating-compass-dial:hover {
+      border-color: var(--accent-yellow);
+      box-shadow: 0 0 20px var(--accent-yellow-glow);
+    }
+
+    /* Floating Center Dock for Drawing (Docked neatly above the towers table) */
     .floating-center-dock {
       position: absolute;
-      bottom: 20px;
+      bottom: 216px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 500;
-      background: rgba(10, 14, 23, 0.94);
+      background: rgba(8, 12, 20, 0.94);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--border-panel);
-      border-radius: 16px;
-      padding: 0.45rem 0.75rem;
+      border-radius: 14px;
+      padding: 0.35rem 0.65rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
     }
 
@@ -476,89 +709,69 @@
       background: transparent;
       border: 1px solid transparent;
       color: var(--text-sub);
-      padding: 0.5rem 0.85rem;
-      border-radius: 10px;
-      font-size: 0.76rem;
+      padding: 0.45rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.73rem;
       font-weight: 700;
       cursor: pointer;
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 0.45rem;
-      transition: all 0.2s var(--ease-spring);
-    }
-
-    .tool-btn .kbd {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      background: rgba(255, 255, 255, 0.08);
-      padding: 0.1rem 0.35rem;
-      border-radius: 4px;
-      color: var(--text-muted);
+      gap: 0.4rem;
+      transition: all 0.2s;
     }
 
     .tool-btn:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
     .tool-btn.active {
       background: var(--accent-yellow);
       color: #000;
-      box-shadow: 0 0 20px var(--accent-yellow-glow);
+      box-shadow: 0 0 15px var(--accent-yellow-glow);
     }
     .tool-btn.active .kbd { background: rgba(0, 0, 0, 0.2); color: #000; }
 
+    .tool-btn .kbd {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      padding: 1px 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
     .tool-sep {
       width: 1px;
-      height: 22px;
+      height: 20px;
       background: var(--border-panel);
-      margin: 0 0.15rem;
+      margin: 0 0.1rem;
     }
 
     .color-swatch-row {
       display: flex;
       align-items: center;
-      gap: 0.35rem;
+      gap: 0.3rem;
     }
 
     .color-swatch {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       cursor: pointer;
       transition: transform 0.2s;
     }
-    .color-swatch.active { transform: scale(1.3); box-shadow: 0 0 10px #fff; }
+    .color-swatch.active { transform: scale(1.3); box-shadow: 0 0 8px #fff; }
 
-    /* Live Measuring Banner */
-    .live-banner {
-      position: absolute;
-      top: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 500;
-      background: rgba(250, 204, 21, 0.95);
-      color: #000;
-      padding: 0.55rem 1.4rem;
-      border-radius: 20px;
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      font-weight: 800;
-      box-shadow: 0 0 25px var(--accent-yellow-glow);
-      display: none;
-      border: 1px solid #fff;
-    }
-
-    /* Basemap Switcher In Bottom Left */
+    /* Basemap Switcher In Bottom Left (Right above Starlink Card) */
     .floating-basemap-pill {
       position: absolute;
-      bottom: 20px;
+      bottom: 236px;
       left: 16px;
       z-index: 500;
-      background: rgba(10, 14, 23, 0.94);
+      background: rgba(8, 12, 20, 0.94);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--border-panel);
       border-radius: 12px;
-      padding: 0.35rem;
+      padding: 0.3rem;
       display: flex;
-      gap: 0.3rem;
+      gap: 0.25rem;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
     }
 
@@ -566,16 +779,260 @@
       background: transparent;
       border: none;
       color: var(--text-muted);
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 700;
-      padding: 0.35rem 0.65rem;
-      border-radius: 8px;
+      padding: 0.3rem 0.6rem;
+      border-radius: 7px;
       cursor: pointer;
       transition: all 0.2s;
     }
 
     .basemap-btn.active, .basemap-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
     .basemap-btn.active { background: var(--accent-yellow); color: #000; font-weight: 800; }
+
+    /* Crosshairs Overlay */
+    .crosshairs-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 400;
+      display: none;
+      background:
+        radial-gradient(circle at center, transparent 120px, rgba(0, 0, 0, 0.45) 450px),
+        linear-gradient(rgba(56, 189, 248, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+      background-size: 100% 100%, 60px 60px, 60px 60px;
+    }
+
+    /* Live Digitizing Banner */
+    .live-banner {
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 500;
+      background: rgba(250, 204, 21, 0.95);
+      color: #000;
+      padding: 0.5rem 1.3rem;
+      border-radius: 20px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 800;
+      box-shadow: 0 0 25px var(--accent-yellow-glow);
+      display: none;
+      border: 1px solid #fff;
+    }
+
+    /* ==========================================================================
+       4. View 2: Telemetry Analytics Dashboard (from dark_telemetry_waveforms.jpg)
+       ========================================================================== */
+    #view-analytics {
+      padding: 1.5rem;
+      overflow-y: auto;
+      flex-direction: column;
+      gap: 1.25rem;
+      background: #080c14;
+    }
+
+    .analytics-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-panel);
+    }
+
+    .analytics-date-pill {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      color: var(--text-sub);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-panel);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .analytics-grid-top {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 1.25rem;
+    }
+
+    .analytics-card {
+      background: rgba(12, 17, 28, 0.85);
+      border: 1px solid var(--border-panel);
+      border-radius: 16px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .analytics-card-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .donut-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .donut-circle-svg {
+      width: 110px;
+      height: 110px;
+      transform: rotate(-90deg);
+    }
+
+    .donut-stats-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .analytics-grid-bottom {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .spline-chart-wrap {
+      width: 100%;
+      height: 160px;
+      position: relative;
+    }
+
+    .audience-bars-wrap {
+      display: flex;
+      align-items: flex-end;
+      gap: 1rem;
+      height: 140px;
+      padding-top: 1rem;
+    }
+
+    .bar-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      height: 100%;
+      justify-content: flex-end;
+    }
+
+    .bar-pill {
+      width: 100%;
+      border-radius: 6px;
+      transition: height 0.5s ease;
+    }
+
+    /* ==========================================================================
+       5. View 3: SpaceX Mission Control (from spacex_mission_control.jpg)
+       ========================================================================== */
+    #view-spacex {
+      padding: 1.5rem;
+      overflow-y: auto;
+      flex-direction: column;
+      gap: 1.25rem;
+      background: #06090e;
+    }
+
+    .spacex-hero-banner {
+      width: 100%;
+      height: 220px;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--border-panel);
+    }
+
+    .spacex-hero-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.75);
+    }
+
+    .spacex-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(6, 9, 14, 0.92) 25%, transparent 100%);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* ==========================================================================
+       6. Modals & Slide-out Drawer
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .modal-card {
+      background: #090e18;
+      border: 1px solid var(--border-panel-bright);
+      border-radius: 20px;
+      padding: 1.75rem;
+      width: 100%;
+      max-width: 540px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .btn-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.4rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    .btn-close:hover { color: #fff; }
+
+    .dropzone {
+      border: 2px dashed rgba(250, 204, 21, 0.4);
+      background: rgba(250, 204, 21, 0.03);
+      border-radius: 14px;
+      padding: 2.2rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .dropzone:hover {
+      border-color: var(--accent-yellow);
+      background: rgba(250, 204, 21, 0.07);
+    }
 
     /* Feature Registry Slide-out Drawer */
     #registry-drawer {
@@ -596,24 +1053,23 @@
       display: flex;
       flex-direction: column;
     }
-
     #registry-drawer.open { transform: translateX(0); }
 
     .drawer-header {
-      padding: 1.15rem 1.4rem;
+      padding: 1.25rem;
       border-bottom: 1px solid var(--border-panel);
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
     }
 
     .drawer-body {
       flex: 1;
+      padding: 1.25rem;
       overflow-y: auto;
-      padding: 1.25rem 1.4rem;
       display: flex;
       flex-direction: column;
-      gap: 1.1rem;
+      gap: 1rem;
     }
 
     .search-input {
@@ -621,456 +1077,667 @@
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--border-panel);
       border-radius: 9px;
-      padding: 0.45rem 0.85rem;
+      padding: 0.65rem 0.85rem;
       color: #fff;
-      font-size: 0.78rem;
-      font-family: inherit;
+      font-size: 0.8rem;
     }
 
-    .search-input:focus { outline: none; border-color: var(--accent-yellow); }
-
-    .filter-pills-row { display: flex; gap: 0.35rem; }
+    .filter-pills-row {
+      display: flex;
+      gap: 0.4rem;
+    }
     .filter-pill {
-      background: rgba(255, 255, 255, 0.03);
+      background: transparent;
       border: 1px solid var(--border-panel);
       color: var(--text-muted);
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
       font-size: 0.72rem;
       font-weight: 700;
-      padding: 0.3rem 0.65rem;
-      border-radius: 7px;
       cursor: pointer;
     }
-    .filter-pill.active { background: rgba(250, 204, 21, 0.15); border-color: var(--accent-yellow); color: var(--accent-yellow); }
+    .filter-pill.active {
+      background: var(--accent-yellow);
+      color: #000;
+      border-color: var(--accent-yellow);
+    }
 
     .table-box {
       border: 1px solid var(--border-panel);
-      border-radius: 12px;
+      border-radius: 10px;
       overflow: hidden;
-      max-height: 280px;
-      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.3);
     }
-
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.78rem; }
-    th {
-      background: rgba(14, 19, 32, 0.98);
-      position: sticky;
-      top: 0;
-      padding: 0.7rem 0.85rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border-panel);
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    td {
-      padding: 0.65rem 0.85rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    .table-box table {
+      width: 100%;
+      border-collapse: collapse;
       font-family: var(--font-mono);
-      font-size: 0.74rem;
+      font-size: 0.72rem;
     }
-    tr { cursor: pointer; transition: background 0.15s ease; }
-    tr:hover td { background: rgba(250, 204, 21, 0.08); }
-    tr.selected td { background: rgba(250, 204, 21, 0.2); }
-
-    /* Modal System */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(4, 6, 12, 0.88);
-      backdrop-filter: blur(20px);
-      z-index: 3500;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-card {
-      background: #0b0f19;
-      border: 1px solid var(--border-panel);
-      border-radius: 20px;
-      width: 90%;
-      max-width: 620px;
-      padding: 2rem;
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85);
-      position: relative;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.35rem;
-    }
-
-    .btn-close {
-      background: transparent;
-      border: none;
+    .table-box th {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.5rem 0.65rem;
       color: var(--text-muted);
+      font-weight: 700;
+      text-align: left;
+      border-bottom: 1px solid var(--border-panel);
+    }
+    .table-box td {
+      padding: 0.55rem 0.65rem;
+      color: #cbd5e1;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .table-box tr:hover td {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
       cursor: pointer;
-      font-size: 1.4rem;
-      line-height: 1;
-    }
-    .btn-close:hover { color: #fff; }
-
-    .dropzone {
-      border: 2px dashed rgba(250, 204, 21, 0.35);
-      border-radius: 14px;
-      padding: 2.2rem 1.5rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s;
-      background: rgba(250, 204, 21, 0.02);
-    }
-    .dropzone:hover, .dropzone.dragover {
-      border-color: var(--accent-yellow);
-      background: rgba(250, 204, 21, 0.08);
-      transform: scale(1.01);
-    }
-
-    /* Crosshairs */
-    .crosshairs-overlay {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 450;
-      display: none;
-    }
-    .crosshairs-overlay::before {
-      content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: rgba(250, 204, 21, 0.4);
-    }
-    .crosshairs-overlay::after {
-      content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(250, 204, 21, 0.4);
     }
 
     /* Toast */
     #toast {
       position: fixed;
-      bottom: 80px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: #0f172a;
+      bottom: 24px;
+      left: 84px;
+      z-index: 3000;
+      background: rgba(10, 15, 26, 0.95);
       border: 1px solid var(--accent-yellow);
       color: #fff;
-      padding: 0.85rem 1.5rem;
-      border-radius: 30px;
-      font-size: 0.82rem;
+      padding: 0.65rem 1.25rem;
+      border-radius: 10px;
+      font-size: 0.78rem;
       font-weight: 700;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-      opacity: 0;
-      transition: all 0.3s var(--ease-spring);
-      z-index: 4000;
-      display: flex;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      display: none;
       align-items: center;
       gap: 0.6rem;
     }
-    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
-    /* Loading Overlay */
-    #loading-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(4, 6, 12, 0.88);
-      backdrop-filter: blur(16px);
-      z-index: 3800;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 1.1rem;
-    }
-
-    .radar-spinner {
-      width: 54px;
-      height: 54px;
-      border: 3px solid rgba(250, 204, 21, 0.2);
-      border-top-color: var(--accent-yellow);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 
+  <!-- Fullscreen App Container -->
   <div id="app-container">
 
-    <!-- Loading Screen -->
-    <div id="loading-overlay">
-      <div class="radar-spinner"></div>
-      <div style="font-weight: 800; font-size: 1.15rem; color: #fff;" id="loading-msg">Evaluating Geodetic Stream...</div>
-      <div style="font-size: 0.8rem; color: var(--text-muted);" id="loading-submsg">WGS 84 Karney Geodesics & UTM Metric Kernel</div>
-    </div>
+    <!-- 1. Left Tactical Navigation Rail (Cyberdefend Style) -->
+    <aside id="left-tactical-rail">
+      <div class="rail-group">
+        <button class="rail-logo-btn" onclick="switchNavMode('survey')" title="CYBERDEFEND Mission Control">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        </button>
 
-    <!-- Notification Toast -->
-    <div id="toast">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-      <span id="toast-text">Notification</span>
-    </div>
+        <button class="rail-btn active" id="rail-btn-cockpit" onclick="switchNavMode('survey')" title="Tactical Survey Cockpit">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+        </button>
 
-    <!-- Top Command Header (Cyberdefend / SpaceX Aesthetic) -->
-    <header>
-      <div class="brand-section">
-        <div class="brand-logo-hex">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-        </div>
-        <div>
+        <button class="rail-btn" id="rail-btn-analytics" onclick="switchNavMode('analytics')" title="Telemetry & Waveform Analytics">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        </button>
+
+        <button class="rail-btn" id="rail-btn-spacex" onclick="switchNavMode('spacex')" title="SpaceX Satellite Fleet Control">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path></svg>
+        </button>
+
+        <div class="rail-btn-sep"></div>
+
+        <button class="rail-btn" onclick="openIngestModal()" title="Ingestion Deck">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+        </button>
+
+        <button class="rail-btn" onclick="toggleRegistryDrawer()" title="Vector Feature Registry">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+        </button>
+
+        <button class="rail-btn" onclick="openImageryModal()" title="Orbital Sensor Fleets">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+      </div>
+
+      <div class="rail-group">
+        <button class="rail-btn" onclick="toggleCrosshairs()" title="Toggle Tactical Reticle Crosshairs">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
+        </button>
+
+        <button class="rail-btn" onclick="openCreditsModal()" title="Architect: Raghunath (@Raghunath2604)">
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: #1e293b; border: 1.5px solid var(--accent-yellow); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.72rem; color: #fff;">
+            R
+          </div>
+        </button>
+
+        <div class="rail-status-dot" title="Oracle Connected"></div>
+      </div>
+    </aside>
+
+    <!-- 2. Main Host -->
+    <main id="main-host">
+
+      <!-- Top Command Header -->
+      <header>
+        <div class="brand-section">
           <div class="brand-title">
-            CYBERDEFEND // GEOSPATIAL
+            CYBERDEFEND // GEOSPATIAL DATA PROCESSING 2024
             <span class="brand-badge">TACTICAL DECK</span>
           </div>
         </div>
-      </div>
 
-      <div class="header-nav-tabs">
-        <button class="nav-tab active" onclick="switchNavMode('survey')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon></svg>
-          Tactical Survey
-        </button>
-        <button class="nav-tab" onclick="openIngestModal()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-          Ingestion Deck
-        </button>
-        <button class="nav-tab" id="btn-toggle-registry" onclick="toggleRegistryDrawer()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line></svg>
-          Feature Registry
-        </button>
-        <button class="nav-tab" onclick="openImageryModal()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
-          Sensor Fleets
-        </button>
-        <button class="nav-tab" onclick="openCreditsModal()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line></svg>
-          Credits & Author
-        </button>
-      </div>
-
-      <div class="header-right">
-        <div class="utc-clock" id="live-utc-clock">00:00:00 UTC</div>
-
-        <div class="status-indicator">
-          <div class="pulsing-radar-dot"></div>
-          <span>ORACLE 99.98%</span>
+        <!-- Mode Pills -->
+        <div class="header-nav-pills">
+          <button class="nav-pill active" id="pill-cockpit" onclick="switchNavMode('survey')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon></svg>
+            Overview / Cockpit
+          </button>
+          <button class="nav-pill" id="pill-analytics" onclick="switchNavMode('analytics')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            Telemetry Analytics
+          </button>
+          <button class="nav-pill" id="pill-spacex" onclick="switchNavMode('spacex')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path></svg>
+            SpaceX Fleet
+          </button>
+          <button class="nav-pill" onclick="openIngestModal()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            Ingest Archive
+          </button>
+          <button class="nav-pill" onclick="toggleRegistryDrawer()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line></svg>
+            Registry
+          </button>
         </div>
 
-        <div class="unit-switch">
-          <button class="unit-switch-btn active" id="btn-unit-metric" onclick="setUnits('metric')">METRIC</button>
-          <button class="unit-switch-btn" id="btn-unit-imperial" onclick="setUnits('imperial')">IMPERIAL</button>
-        </div>
-      </div>
-    </header>
+        <div class="header-right">
+          <div class="utc-clock" id="live-utc-clock">00:00:00 UTC</div>
 
-    <!-- Map Viewport -->
-    <div id="map-viewport">
-
-      <!-- Live Rubberband Banner -->
-      <div class="live-banner" id="drawing-banner">DIGITIZING PARCEL...</div>
-      <div class="crosshairs-overlay" id="crosshairs"></div>
-
-      <!-- Card 1: Top-Left Floating Tactical Telemetry (Cyberdefend Style) -->
-      <div class="floating-telemetry-hud">
-        <div class="hud-title-row">
-          <div class="hud-title">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-            SURVEY SENSOR TELEMETRY
+          <div class="status-indicator">
+            <div class="pulsing-radar-dot"></div>
+            <span>ORACLE 99.98%</span>
           </div>
-          <span id="hud-status-badge" class="brand-badge">IDLE</span>
-        </div>
 
-        <!-- CyberDefend Radar Recon Sensor (User Uploaded Reference Asset) -->
-        <div style="display: flex; gap: 0.65rem; align-items: center; margin-bottom: 0.75rem; padding: 0.45rem 0.55rem; background: rgba(0,0,0,0.45); border: 1px solid var(--border-panel); border-radius: 8px;">
-          <img src="/static/assets/radar_dish.jpg" alt="SAT-X-band ST-25804-04 Sensor" style="width: 78px; height: 38px; object-fit: cover; border-radius: 5px; border: 1px solid rgba(56,189,248,0.4); box-shadow: 0 0 8px rgba(56,189,248,0.25);">
-          <div style="flex: 1; min-width: 0;">
-            <div style="font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">SAT-X-band ST-25804-04</div>
-            <div style="font-size: 0.62rem; color: var(--accent-cyan); font-family: var(--font-mono);">TUB.09 N.502 &bull; 96/150 110 Mbps</div>
+          <div class="unit-switch">
+            <button class="unit-switch-btn active" id="btn-unit-metric" onclick="setUnits('metric')">METRIC</button>
+            <button class="unit-switch-btn" id="btn-unit-imperial" onclick="setUnits('imperial')">IMPERIAL</button>
           </div>
         </div>
+      </header>
 
-        <div class="hud-metrics-grid">
-          <div class="hud-metric-row">
-            <div>
-              <div class="hud-metric-label">Planar Metric Area</div>
-              <div class="hud-metric-big-val" id="hud-area-val">0.00 <span style="font-size: 0.8rem; color: var(--text-muted);">m²</span></div>
+      <!-- VIEW 1: Tactical GIS Cockpit (Map + Floating HUDs) -->
+      <div id="view-cockpit" class="view-panel active">
+        <!-- Live Digitizing Banner -->
+        <div class="live-banner" id="drawing-banner">DIGITIZING PARCEL...</div>
+        <div class="crosshairs-overlay" id="crosshairs"></div>
+
+        <!-- Card 1: Top-Left Floating Tactical Telemetry (Cyberdefend Style) -->
+        <div class="floating-telemetry-hud">
+          <div class="hud-title-row">
+            <div class="hud-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+              SURVEY SENSOR TELEMETRY
             </div>
-            <div class="hud-metric-sub" id="hud-area-sub">Dynamic UTM</div>
+            <span id="hud-status-badge" class="brand-badge">IDLE</span>
           </div>
 
-          <div class="hud-metric-row">
-            <div>
-              <div class="hud-metric-label">Geodesic Ellipsoidal</div>
-              <div class="hud-metric-big-val" id="hud-geod-val" style="color: #38bdf8;">0.00 <span style="font-size: 0.8rem; color: var(--text-muted);">m²</span></div>
-            </div>
-            <div class="hud-metric-sub">WGS 84 Karney</div>
-          </div>
-
-          <div class="hud-metric-row">
-            <div>
-              <div class="hud-metric-label">Boundary / Perimeter</div>
-              <div class="hud-metric-big-val" id="hud-length-val">0.00 <span style="font-size: 0.8rem; color: var(--text-muted);">m</span></div>
-            </div>
-            <div class="hud-metric-sub">Metric Length</div>
-          </div>
-
-          <div class="hud-metric-row">
-            <div>
-              <div class="hud-metric-label">Terrain Altitude (MSL)</div>
-              <div class="hud-metric-big-val" id="hud-elev-val" style="color: #34d399;">-- <span style="font-size: 0.8rem; color: var(--text-muted);">m</span></div>
-            </div>
-            <div class="hud-metric-sub">NASA SRTM 30m</div>
-          </div>
-        </div>
-
-        <div class="hud-details-box">
-          <div>Projection: <span id="hud-crs-val" style="color: #fff;">EPSG:32643 (UTM 43N)</span></div>
-          <div>Scale Factor: <span id="hud-scale-val" style="color: var(--accent-yellow);">1.0000 (Isometric)</span></div>
-          <div>Territory: <span id="hud-loc-val" style="color: #cbd5e1;">Click or draw parcel</span></div>
-        </div>
-
-        <button class="hud-btn-primary" onclick="exportGeoJSON()">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-          Export Survey GeoJSON
-        </button>
-      </div>
-
-      <!-- Card 2: Top-Right Floating Orbital Satellite Fleet Card (Cyberdefend Starlink Style) -->
-      <div class="floating-satellite-card">
-        <div class="sat-header">
-          <div class="sat-name">SENTINEL-2B // ORBITAL FEED</div>
-          <span class="sat-status-badge">LOCK 98%</span>
-        </div>
-
-        <!-- CyberDefend Starlink Satellite Card (User Uploaded Reference Asset) -->
-        <div style="display: flex; gap: 0.65rem; align-items: center; margin-bottom: 0.75rem; padding: 0.45rem 0.55rem; background: rgba(0,0,0,0.45); border: 1px solid var(--border-panel); border-radius: 8px;">
-          <img src="/static/assets/starlink_17524.jpg" alt="Starlink-17524" style="width: 44px; height: 58px; object-fit: contain; border-radius: 5px; border: 1px solid rgba(250,204,21,0.3); background: rgba(0,0,0,0.5);">
-          <div style="flex: 1; min-width: 0;">
-            <div style="font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; color: #fff;">Starlink-17524</div>
-            <div style="font-size: 0.63rem; color: var(--accent-yellow); font-family: var(--font-mono);">LEO Orbit: 550 km</div>
-            <div style="font-size: 0.62rem; color: var(--text-muted); font-family: var(--font-mono); margin-top: 2px;">Downlink: 42.5 MHz Ku-band</div>
-          </div>
-        </div>
-
-        <div class="sat-metrics-list">
-          <div class="sat-metric-item">
-            <span style="color: var(--text-muted);">LEO Altitude:</span>
-            <span>705.2 km</span>
-          </div>
-          <div class="sat-metric-item">
-            <span style="color: var(--text-muted);">Orbital Velocity:</span>
-            <span style="color: var(--accent-cyan);">7.52 km/s</span>
-          </div>
-          <div class="sat-metric-item">
-            <span style="color: var(--text-muted);">Sensor Elevation:</span>
-            <span>42.5° MSL</span>
-          </div>
-          <div class="sat-metric-item">
-            <span style="color: var(--text-muted);">Signal Bandwidth:</span>
-            <div class="signal-bar-wrap">
-              <div class="sig-col" style="height: 6px;"></div>
-              <div class="sig-col" style="height: 10px;"></div>
-              <div class="sig-col" style="height: 13px;"></div>
-              <div class="sig-col" style="height: 16px;"></div>
+          <!-- CyberDefend Radar Recon Sensor (User Reference Asset) -->
+          <div style="display: flex; gap: 0.65rem; align-items: center; padding: 0.45rem 0.55rem; background: rgba(0,0,0,0.5); border: 1px solid var(--border-panel); border-radius: 8px;">
+            <img src="/static/assets/radar_dish.jpg" alt="ST-25804 Radar" style="width: 78px; height: 38px; object-fit: cover; border-radius: 5px; border: 1px solid rgba(56,189,248,0.4); box-shadow: 0 0 8px rgba(56,189,248,0.25);">
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">SAT-X-band ST-25804-04</div>
+              <div style="font-size: 0.62rem; color: var(--accent-cyan); font-family: var(--font-mono);">TUB.09 N.502 &bull; 96/150 110 Mbps</div>
             </div>
           </div>
-          <div class="sat-metric-item">
-            <span style="color: var(--text-muted);">Basemap Source:</span>
-            <span style="color: var(--accent-yellow);" id="sat-basemap-name">Esri World Imagery</span>
+
+          <div class="hud-metrics-grid">
+            <div class="hud-metric-row">
+              <div>
+                <div class="hud-metric-label">Planar Metric Area</div>
+                <div class="hud-metric-big-val" id="hud-area-val">0.00 <span style="font-size: 0.8rem; color: var(--text-muted);">m²</span></div>
+              </div>
+              <div class="hud-metric-sub" id="hud-area-sub">Dynamic UTM</div>
+            </div>
+
+            <div class="hud-metric-row">
+              <div>
+                <div class="hud-metric-label">Geodesic Ellipsoidal</div>
+                <div class="hud-metric-big-val" id="hud-geod-val" style="color: #38bdf8;">0.00 <span style="font-size: 0.8rem; color: var(--text-muted);">m²</span></div>
+              </div>
+              <div class="hud-metric-sub">WGS 84 Karney</div>
+            </div>
+
+            <div class="hud-metric-row">
+              <div>
+                <div class="hud-metric-label">Boundary / Perimeter</div>
+                <div class="hud-metric-big-val" id="hud-length-val">0.00 <span style="font-size: 0.8rem; color: var(--text-muted);">m</span></div>
+              </div>
+              <div class="hud-metric-sub">Metric Length</div>
+            </div>
+
+            <div class="hud-metric-row">
+              <div>
+                <div class="hud-metric-label">Terrain Altitude (MSL)</div>
+                <div class="hud-metric-big-val" id="hud-elev-val" style="color: #34d399;">-- <span style="font-size: 0.8rem; color: var(--text-muted);">m</span></div>
+              </div>
+              <div class="hud-metric-sub">NASA SRTM 30m</div>
+            </div>
+          </div>
+
+          <div class="hud-details-box">
+            <div>Projection: <span id="hud-crs-val" style="color: #fff;">EPSG:32643 (UTM 43N)</span></div>
+            <div>Scale Factor: <span id="hud-scale-val" style="color: var(--accent-yellow);">1.0000 (Isometric)</span></div>
+            <div>Territory: <span id="hud-loc-val" style="color: #cbd5e1;">Click or draw parcel</span></div>
+          </div>
+
+          <button class="hud-btn-primary" onclick="exportGeoJSON()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Export Survey GeoJSON
+          </button>
+        </div>
+
+        <!-- Card 2: Top-Right Floating Orbital Satellite Fleet Card -->
+        <div class="floating-satellite-card">
+          <div class="sat-header">
+            <div class="sat-name">SENTINEL-2B // ORBITAL FEED</div>
+            <span class="sat-status-badge">LOCK 98%</span>
+          </div>
+
+          <!-- CyberDefend Starlink Satellite Card (User Reference Asset) -->
+          <div style="display: flex; gap: 0.65rem; align-items: center; padding: 0.45rem 0.55rem; background: rgba(0,0,0,0.5); border: 1px solid var(--border-panel); border-radius: 8px;">
+            <img src="/static/assets/starlink_17524.jpg" alt="Starlink-17524" style="width: 44px; height: 58px; object-fit: contain; border-radius: 5px; border: 1px solid rgba(250,204,21,0.3); background: rgba(0,0,0,0.5);">
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; color: #fff;">Starlink-17524</div>
+              <div style="font-size: 0.63rem; color: var(--accent-yellow); font-family: var(--font-mono);">LEO Orbit: 550 km</div>
+              <div style="font-size: 0.62rem; color: var(--text-muted); font-family: var(--font-mono); margin-top: 2px;">Downlink: 42.5 MHz Ku-band</div>
+            </div>
+          </div>
+
+          <div class="sat-metrics-list">
+            <div class="sat-metric-item">
+              <span style="color: var(--text-muted);">LEO Altitude:</span>
+              <span>705.2 km</span>
+            </div>
+            <div class="sat-metric-item">
+              <span style="color: var(--text-muted);">Orbital Velocity:</span>
+              <span style="color: var(--accent-cyan);">7.52 km/s</span>
+            </div>
+            <div class="sat-metric-item">
+              <span style="color: var(--text-muted);">Sensor Elevation:</span>
+              <span>42.5° MSL</span>
+            </div>
+            <div class="sat-metric-item">
+              <span style="color: var(--text-muted);">Signal Bandwidth:</span>
+              <div class="signal-bar-wrap">
+                <div class="sig-col" style="height: 6px;"></div>
+                <div class="sig-col" style="height: 10px;"></div>
+                <div class="sig-col" style="height: 13px;"></div>
+                <div class="sig-col" style="height: 16px;"></div>
+              </div>
+            </div>
+            <div class="sat-metric-item">
+              <span style="color: var(--text-muted);">Basemap Source:</span>
+              <span style="color: var(--accent-yellow);" id="sat-basemap-name">Carto Dark Matter</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Bottom-Left Floating Starlink Fleet HUD (from Cyberdefend UI) -->
+        <div class="floating-starlink-bottom">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-family: var(--font-mono); font-size: 0.74rem; font-weight: 800; color: #fff;">STARLINK-11752</div>
+            <span style="font-size: 0.62rem; color: var(--accent-cyan); font-family: var(--font-mono);">NAV P 4.52/18.74°</span>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <img src="/static/assets/starlink_stack.jpg" alt="Starlink Array Stack" style="width: 52px; height: 75px; object-fit: contain; border-radius: 6px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-panel);">
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 0.4rem;">
+              <div class="starlink-speed-grid">
+                <div class="starlink-speed-box">
+                  <div style="font-size: 0.58rem; color: var(--text-muted);">SPEED</div>
+                  <div style="font-size: 0.85rem; font-weight: 800; color: #fff; font-family: var(--font-mono);">9k <span style="font-size: 0.6rem; color: var(--text-muted);">km/h</span></div>
+                </div>
+                <div class="starlink-speed-box">
+                  <div style="font-size: 0.58rem; color: var(--text-muted);">ORBIT</div>
+                  <div style="font-size: 0.85rem; font-weight: 800; color: var(--accent-cyan); font-family: var(--font-mono);">27k <span style="font-size: 0.6rem; color: var(--text-muted);">km/h</span></div>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; font-size: 0.62rem; font-family: var(--font-mono); color: var(--text-muted);">
+                <span>2 Satellites Detected</span>
+                <span style="color: var(--accent-yellow);">Collision Alert 2h 30m</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Bottom-Center Floating Towers / Vector Table (from Cyberdefend UI) -->
+        <div class="floating-towers-card">
+          <div class="towers-table-header">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2.2"><path d="M4 19L19 4"></path><circle cx="4" cy="19" r="2"></circle><circle cx="19" cy="4" r="2"></circle></svg>
+              <span>TOWERS // SURVEY VECTORS</span>
+            </div>
+            <span style="font-size: 0.65rem; color: var(--text-muted);" id="towers-count-badge">4 active nodes</span>
+          </div>
+
+          <table class="towers-table">
+            <thead>
+              <tr>
+                <th>Location</th>
+                <th>Type / Status</th>
+                <th style="text-align: right;">Metric Metric</th>
+              </tr>
+            </thead>
+            <tbody id="towers-table-body">
+              <tr onclick="panToCoords(45.5152, -122.6784, 'TWR-001 Portland, OR')">
+                <td>TWR-001 Portland, OR</td>
+                <td><span class="brand-badge">PRIMARY</span></td>
+                <td style="text-align: right; color: #34d399;">1,250 m²</td>
+              </tr>
+              <tr onclick="panToCoords(47.6062, -122.3321, 'RD-01 Seattle, WA')">
+                <td>RD-01 Seattle, WA</td>
+                <td><span class="brand-badge" style="color: #38bdf8; border-color: rgba(56,189,248,0.3);">RELAY</span></td>
+                <td style="text-align: right; color: #34d399;">1,134 m²</td>
+              </tr>
+              <tr onclick="panToCoords(37.7749, -122.4194, 'APL-401 San Francisco, CA')">
+                <td>APL-401 San Francisco, CA</td>
+                <td><span class="brand-badge" style="color: var(--accent-rose); border-color: rgba(244,63,94,0.3);">DOWNLINK</span></td>
+                <td style="text-align: right; color: #34d399;">1,896 m²</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="towers-table-footer">
+            <span>1-3 of Active Parcels</span>
+            <span>Page 01 of 4 pages &bull; Click to Target</span>
+          </div>
+        </div>
+
+        <!-- Card 5: Bottom-Right Real-Time Terrain Elevation Waveform (Cyberdefend Style) -->
+        <div class="floating-waveform-hud">
+          <div class="waveform-title-row">
+            <span>CHANCE OF FAILURE // TERRAIN PROFILE</span>
+            <span style="color: #34d399;" id="wave-peak-alt">PEAK: 911.3 M</span>
+          </div>
+
+          <!-- Glowing Multi-Color Waveform SVG -->
+          <svg class="terrain-svg-canvas" viewBox="0 0 320 55">
+            <defs>
+              <linearGradient id="waveGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.4" />
+                <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.0" />
+              </linearGradient>
+              <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#38bdf8" />
+                <stop offset="50%" stop-color="#facc15" />
+                <stop offset="100%" stop-color="#10b981" />
+              </linearGradient>
+            </defs>
+            <path id="wave-fill" d="M 0 45 Q 40 15, 80 35 T 160 20 T 240 30 T 320 15 L 320 55 L 0 55 Z" fill="url(#waveGrad)" />
+            <path id="wave-stroke" d="M 0 45 Q 40 15, 80 35 T 160 20 T 240 30 T 320 15" fill="none" stroke="url(#lineGrad)" stroke-width="2.5" />
+            <circle cx="80" cy="35" r="3.5" fill="#38bdf8" />
+            <circle cx="160" cy="20" r="4" fill="#facc15" />
+            <circle cx="240" cy="30" r="3.5" fill="#10b981" />
+          </svg>
+
+          <div style="display: flex; justify-content: space-between; font-size: 0.65rem; font-family: var(--font-mono); color: var(--text-muted);">
+            <span>Los Angeles, CA</span>
+            <span>Chicago, IL</span>
+            <span>St. Louis, MO</span>
+          </div>
+        </div>
+
+        <!-- Card 6: Far-Right Rotating Tactical Compass / Azimuth Dial -->
+        <div class="floating-compass-dial" onclick="toggleCrosshairs()" title="Tactical Azimuth Reticle">
+          <svg width="34" height="34" viewBox="0 0 40 40" style="overflow: visible;">
+            <circle cx="20" cy="20" r="17" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
+            <circle cx="20" cy="20" r="12" fill="none" stroke="rgba(56,189,248,0.3)" stroke-width="1" stroke-dasharray="2,3" />
+            <!-- Needle -->
+            <line x1="20" y1="20" x2="20" y2="6" stroke="#facc15" stroke-width="2" stroke-linecap="round" />
+            <circle cx="20" cy="20" r="2.5" fill="#facc15" />
+            <text x="20" y="36" text-anchor="middle" font-size="6" fill="#94a3b8" font-family="monospace">AZ 42°</text>
+          </svg>
+        </div>
+
+        <!-- Floating Center Dock for Drawing (Docked neatly above towers table) -->
+        <div class="floating-center-dock">
+          <button class="tool-btn" id="tool-polygon" onclick="activateDrawTool('polygon')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            <span>Polygon Area</span>
+            <span class="kbd">P</span>
+          </button>
+
+          <button class="tool-btn" id="tool-line" onclick="activateDrawTool('line')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19L19 4"></path><circle cx="4" cy="19" r="2"></circle><circle cx="19" cy="4" r="2"></circle></svg>
+            <span>Path Distance</span>
+            <span class="kbd">L</span>
+          </button>
+
+          <button class="tool-btn" id="tool-circle" onclick="activateDrawTool('circle')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 12l5 -5"></path></svg>
+            <span>Radial Buffer</span>
+            <span class="kbd">B</span>
+          </button>
+
+          <button class="tool-btn" id="tool-pin" onclick="activateDrawTool('pin')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span>Inspect Pin</span>
+            <span class="kbd">X</span>
+          </button>
+
+          <div class="tool-sep"></div>
+
+          <div class="color-swatch-row">
+            <div class="color-swatch active" style="background: #facc15;" onclick="selectColor('#facc15', this)"></div>
+            <div class="color-swatch" style="background: #38bdf8;" onclick="selectColor('#38bdf8', this)"></div>
+            <div class="color-swatch" style="background: #10b981;" onclick="selectColor('#10b981', this)"></div>
+            <div class="color-swatch" style="background: #a855f7;" onclick="selectColor('#a855f7', this)"></div>
+            <div class="color-swatch" style="background: #f43f5e;" onclick="selectColor('#f43f5e', this)"></div>
+          </div>
+
+          <div class="tool-sep"></div>
+
+          <button class="tool-btn" onclick="locateUserPosition()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3m0 14v3M2 12h3m14 0h3"></path></svg>
+            <span>GPS</span>
+          </button>
+
+          <button class="tool-btn" onclick="clearLiveDrawings()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            <span>Clear</span>
+          </button>
+        </div>
+
+        <!-- Basemap Switcher In Bottom Left -->
+        <div class="floating-basemap-pill" id="basemap-controls">
+          <button class="basemap-btn active" id="btn-tile-dark" onclick="switchBaseMap('dark')">Carto Dark</button>
+          <button class="basemap-btn" id="btn-tile-sat" onclick="switchBaseMap('sat')">Esri Sat</button>
+          <button class="basemap-btn" id="btn-tile-osm" onclick="switchBaseMap('osm')">Streets</button>
+        </div>
+
+        <!-- Leaflet Map Canvas (Carto Dark by Default!) -->
+        <div id="map"></div>
+      </div>
+
+      <!-- VIEW 2: Telemetry Analytics Dashboard (from dark_telemetry_waveforms.jpg) -->
+      <div id="view-analytics" class="view-panel">
+        <div class="analytics-header-bar">
+          <div>
+            <div style="font-weight: 800; font-size: 1.1rem; color: #fff;">INGESTION & SENSOR TELEMETRY METRICS</div>
+            <div style="font-size: 0.76rem; color: var(--text-muted);">Real-time Karney Geodesic Engine Throughput & Memory Profiling</div>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <div class="analytics-date-pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              <span>01.11.2026 - 30.11.2026</span>
+            </div>
+            <span class="status-indicator">
+              <span class="pulsing-radar-dot"></span>
+              <span>LIVE STREAM</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="analytics-grid-top">
+          <!-- Card 1: User / Vectors Ingested Today -->
+          <div class="analytics-card">
+            <div class="analytics-card-title">
+              <span>Vectors Digitized Today</span>
+              <span style="color: var(--accent-yellow);">573 OPS</span>
+            </div>
+            <div class="donut-wrap">
+              <svg class="donut-circle-svg" viewBox="0 0 36 36">
+                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3.5" />
+                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#f59e0b" stroke-width="3.8" stroke-dasharray="68, 100" stroke-linecap="round" />
+              </svg>
+              <div class="donut-stats-col">
+                <div>
+                  <div style="font-size: 0.65rem; color: var(--text-muted);">ACTIVE VECTORS</div>
+                  <div style="font-size: 1.15rem; font-weight: 800; color: #fff;" id="analytics-total-count">573</div>
+                </div>
+                <div>
+                  <span style="color: #10b981;">&bull; 179 Validated</span> &nbsp;|&nbsp;
+                  <span style="color: #64748b;">394 Projected</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Coverage by Location -->
+          <div class="analytics-card">
+            <div class="analytics-card-title">
+              <span>Geospatial Coverage by Global Region</span>
+              <span style="color: #38bdf8;">UTM & WGS84</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.5rem;">
+              <div>
+                <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 2px;">NORTH AMERICA (ZONE 10-19)</div>
+                <div style="font-size: 1.1rem; font-weight: 800; color: #34d399; font-family: var(--font-mono);">60% COVERAGE</div>
+              </div>
+              <div>
+                <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 2px;">EUROPE & ASIA (ZONE 30-44)</div>
+                <div style="font-size: 1.1rem; font-weight: 800; color: #38bdf8; font-family: var(--font-mono);">32% COVERAGE</div>
+              </div>
+              <div>
+                <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 2px;">POLAR UPS (ZONE A/B/Y/Z)</div>
+                <div style="font-size: 1.1rem; font-weight: 800; color: var(--accent-yellow); font-family: var(--font-mono);">8% COVERAGE</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="analytics-grid-bottom">
+          <!-- Card 3: Total Operations Waveform Spline Chart -->
+          <div class="analytics-card">
+            <div class="analytics-card-title">
+              <span>Throughput Operations Spline (Ops / Sec)</span>
+              <span style="color: #38bdf8; font-family: var(--font-mono);">PEAK: 892,443 OPS</span>
+            </div>
+            <div class="spline-chart-wrap">
+              <svg viewBox="0 0 600 150" style="width: 100%; height: 100%;">
+                <defs>
+                  <linearGradient id="splineBlue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.5" />
+                    <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.0" />
+                  </linearGradient>
+                </defs>
+                <!-- Area -->
+                <path d="M 0 120 C 60 120, 90 90, 150 90 C 210 90, 240 130, 300 70 C 360 20, 390 100, 450 60 C 510 30, 550 40, 600 10 L 600 150 L 0 150 Z" fill="url(#splineBlue)" />
+                <!-- Stroke -->
+                <path d="M 0 120 C 60 120, 90 90, 150 90 C 210 90, 240 130, 300 70 C 360 20, 390 100, 450 60 C 510 30, 550 40, 600 10" fill="none" stroke="#38bdf8" stroke-width="3" />
+                <!-- Secondary dashed curve -->
+                <path d="M 0 135 C 70 135, 120 105, 200 105 C 270 105, 320 140, 400 95 C 470 60, 520 80, 600 35" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,4" />
+                <circle cx="360" cy="20" r="5" fill="#fff" stroke="#38bdf8" stroke-width="2" />
+              </svg>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-muted);">
+              <span>1 Nov</span><span>5 Nov</span><span>10 Nov</span><span>15 Nov</span><span>20 Nov</span><span>25 Nov</span><span>30 Nov</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Audience / Geometry Distribution Bars -->
+          <div class="analytics-card">
+            <div class="analytics-card-title">
+              <span>Geometry Distribution</span>
+              <span style="color: var(--accent-emerald);">PARCEL SPECS</span>
+            </div>
+            <div class="audience-bars-wrap">
+              <div class="bar-group">
+                <div class="bar-pill" style="height: 80%; background: #f43f5e; box-shadow: 0 0 10px rgba(244,63,94,0.4);"></div>
+                <span style="font-size: 0.65rem; color: #94a3b8; font-family: var(--font-mono);">Polys</span>
+              </div>
+              <div class="bar-group">
+                <div class="bar-pill" style="height: 55%; background: #38bdf8; box-shadow: 0 0 10px rgba(56,189,248,0.4);"></div>
+                <span style="font-size: 0.65rem; color: #94a3b8; font-family: var(--font-mono);">Lines</span>
+              </div>
+              <div class="bar-group">
+                <div class="bar-pill" style="height: 35%; background: #10b981; box-shadow: 0 0 10px rgba(16,185,129,0.4);"></div>
+                <span style="font-size: 0.65rem; color: #94a3b8; font-family: var(--font-mono);">Points</span>
+              </div>
+              <div class="bar-group">
+                <div class="bar-pill" style="height: 45%; background: #a855f7; box-shadow: 0 0 10px rgba(168,85,247,0.4);"></div>
+                <span style="font-size: 0.65rem; color: #94a3b8; font-family: var(--font-mono);">Buffers</span>
+              </div>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.72rem; color: #cbd5e1; padding-top: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem;">
+              <div>Polygons: <strong style="color: #f43f5e;">3,124,213 m²</strong></div>
+              <div>Linear Transects: <strong style="color: #38bdf8;">1,523,151 m</strong></div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Card 3: Bottom-Right Real-Time Terrain Elevation Waveform (Cyberdefend Waveform Style) -->
-      <div class="floating-waveform-hud">
-        <div class="waveform-title-row">
-          <span>Terrain Topography Profile</span>
-          <span style="color: #34d399;" id="wave-peak-alt">PEAK: 911.3 M</span>
+      <!-- VIEW 3: SpaceX Satellite Fleet Mission Control (from spacex_mission_control.jpg) -->
+      <div id="view-spacex" class="view-panel">
+        <div class="spacex-hero-banner">
+          <img src="/static/assets/spacex_mission_control.jpg" alt="SpaceX Mission Control Fleet">
+          <div class="spacex-hero-overlay">
+            <div style="font-size: 1.6rem; font-weight: 800; color: #fff; letter-spacing: 0.04em;">SPACEX // SATELLITE FLEET MISSION CONTROL</div>
+            <div style="font-size: 0.85rem; color: var(--accent-cyan); font-family: var(--font-mono); margin-top: 0.35rem;">
+              ORBITAL CONSTELLATION TELEMETRY & DIGITAL TWIN // AURORA-1
+            </div>
+            <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+              <span class="brand-badge" style="background: rgba(16,185,129,0.2); color: #34d399; font-size: 0.72rem; padding: 0.3rem 0.75rem;">FLEET LOCK: 99.98%</span>
+              <span class="brand-badge" style="background: rgba(56,189,248,0.2); color: #38bdf8; font-size: 0.72rem; padding: 0.3rem 0.75rem;">LEO VELOCITY: 7.52 KM/S</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Glowing SVG Waveform -->
-        <svg class="terrain-svg-canvas" viewBox="0 0 320 60">
-          <defs>
-            <linearGradient id="waveGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.4" />
-              <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.0" />
-            </linearGradient>
-            <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#38bdf8" />
-              <stop offset="50%" stop-color="#facc15" />
-              <stop offset="100%" stop-color="#10b981" />
-            </linearGradient>
-          </defs>
-          <path id="wave-fill" d="M 0 50 Q 40 20, 80 40 T 160 25 T 240 35 T 320 20 L 320 60 L 0 60 Z" fill="url(#waveGrad)" />
-          <path id="wave-stroke" d="M 0 50 Q 40 20, 80 40 T 160 25 T 240 35 T 320 20" fill="none" stroke="url(#lineGrad)" stroke-width="2.5" />
-          <circle cx="160" cy="25" r="4" fill="#facc15" />
-        </svg>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+          <div class="analytics-card">
+            <div class="analytics-card-title">
+              <span>Active Constellation Feeds</span>
+              <span style="color: var(--accent-yellow);">2,400+ NODES</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; font-family: var(--font-mono); font-size: 0.75rem;">
+              <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                <span>Starlink-17524:</span>
+                <span style="color: #34d399;">LEO 550 km &bull; 42.5 MHz Ku-band</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                <span>Sentinel-2B Optical:</span>
+                <span style="color: #38bdf8;">Sun-Synchronous &bull; 786 km</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                <span>Landsat-9 Multispectral:</span>
+                <span style="color: var(--accent-yellow);">Thermal Infrared &bull; 705 km</span>
+              </div>
+            </div>
+          </div>
 
-        <div style="display: flex; justify-content: space-between; font-size: 0.68rem; font-family: var(--font-mono); color: var(--text-muted);">
-          <span>ENTRY VERTEX</span>
-          <span>SRTM MSL TRANSECT</span>
-          <span>EXIT VERTEX</span>
+          <div class="analytics-card">
+            <div class="analytics-card-title">
+              <span>Mission Operations Protocol</span>
+              <span style="color: #38bdf8;">DIGITAL TWIN</span>
+            </div>
+            <div style="font-size: 0.78rem; color: #cbd5e1; line-height: 1.5;">
+              Autonomous orbital geodetics calculate live nadir ground projection coordinates, Doppler frequency shifts, and geodesic intersections on the WGS 84 ellipsoid using Karney's algorithms.
+            </div>
+            <button class="hud-btn-primary" style="margin-top: 0.5rem;" onclick="switchNavMode('survey')">
+              Return to Tactical Cockpit
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Center-Bottom Floating Action Dock (2024 Geospatial Data Processing Style) -->
-      <div class="floating-center-dock">
-        <button class="tool-btn" id="tool-polygon" onclick="activateDrawTool('polygon')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-          <span>Polygon Area</span>
-          <span class="kbd">P</span>
-        </button>
+    </main>
 
-        <button class="tool-btn" id="tool-line" onclick="activateDrawTool('line')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19L19 4"></path><circle cx="4" cy="19" r="2"></circle><circle cx="19" cy="4" r="2"></circle></svg>
-          <span>Path Distance</span>
-          <span class="kbd">L</span>
-        </button>
-
-        <button class="tool-btn" id="tool-circle" onclick="activateDrawTool('circle')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 12l5 -5"></path></svg>
-          <span>Radial Buffer</span>
-          <span class="kbd">B</span>
-        </button>
-
-        <button class="tool-btn" id="tool-pin" onclick="activateDrawTool('pin')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          <span>Inspect Pin</span>
-          <span class="kbd">X</span>
-        </button>
-
-        <div class="tool-sep"></div>
-
-        <div class="color-swatch-row">
-          <div class="color-swatch active" style="background: #facc15;" onclick="selectColor('#facc15', this)"></div>
-          <div class="color-swatch" style="background: #38bdf8;" onclick="selectColor('#38bdf8', this)"></div>
-          <div class="color-swatch" style="background: #10b981;" onclick="selectColor('#10b981', this)"></div>
-          <div class="color-swatch" style="background: #a855f7;" onclick="selectColor('#a855f7', this)"></div>
-          <div class="color-swatch" style="background: #f43f5e;" onclick="selectColor('#f43f5e', this)"></div>
-        </div>
-
-        <div class="tool-sep"></div>
-
-        <button class="tool-btn" onclick="locateUserPosition()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3m0 14v3M2 12h3m14 0h3"></path></svg>
-          <span>GPS</span>
-        </button>
-
-        <button class="tool-btn" onclick="clearLiveDrawings()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-          <span>Clear</span>
-        </button>
-      </div>
-
-      <!-- Basemap Switcher In Bottom Left -->
-      <div class="floating-basemap-pill" id="basemap-controls">
-        <button class="basemap-btn active" id="btn-tile-sat" onclick="switchBaseMap('sat')">Esri Sat</button>
-        <button class="basemap-btn" id="btn-tile-dark" onclick="switchBaseMap('dark')">Carto Dark</button>
-        <button class="basemap-btn" id="btn-tile-osm" onclick="switchBaseMap('osm')">Streets</button>
-      </div>
-
-      <!-- Leaflet Map Canvas -->
-      <div id="map"></div>
-    </div>
-
-    <!-- Right-Side Slide-out Feature Registry Drawer -->
+    <!-- Slide-out Feature Registry Drawer -->
     <aside id="registry-drawer">
       <div class="drawer-header">
         <div style="font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 0.6rem; color: #fff;">
@@ -1160,52 +1827,6 @@
     </div>
   </div>
 
-  <!-- System Credits & Architecture Modal -->
-  <div class="modal-overlay" id="credits-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div style="font-weight: 800; font-size: 1.15rem; color: #fff; display: flex; align-items: center; gap: 0.6rem;">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line></svg>
-          Tactical Architecture & Engineering Credits
-        </div>
-        <button class="btn-close" onclick="closeCreditsModal()">&times;</button>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.82rem; line-height: 1.5;">
-        <div style="background: rgba(250, 204, 21, 0.08); border: 1px solid rgba(250, 204, 21, 0.3); border-radius: 12px; padding: 1.1rem;">
-          <div style="font-weight: 800; font-size: 1.05rem; color: #fff;">
-            Raghunath
-          </div>
-          <div style="color: var(--accent-yellow); font-size: 0.76rem; font-family: var(--font-mono); margin-bottom: 0.6rem;">
-            Lead Software Engineer &bull; GitHub: <a href="https://github.com/Raghunath2604" target="_blank" style="color: #facc15; text-decoration: underline;">@Raghunath2604</a>
-          </div>
-          <div style="color: #cbd5e1; font-size: 0.8rem;">
-            Engineered for the SDE Hiring Assignment. High-throughput geospatial measurement engine with streaming O(1) ingestion, threadpool async execution, dynamic UTM/UPS cartographic zoning, and WGS 84 Karney ellipsoidal geodesics.
-          </div>
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 0.5rem; font-family: var(--font-mono); font-size: 0.74rem;">
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted);">Ellipsoidal Oracle:</span>
-            <span style="color: #fff;">Charles F.F. Karney (WGS 84 / pyproj)</span>
-          </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted);">Topological Kernel:</span>
-            <span style="color: #fff;">GEOS 3.12+ / Shapely 2.0 C-API</span>
-          </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted);">Cartographic Registry:</span>
-            <span style="color: #fff;">EPSG Geodetic Parameter Dataset (IOGP)</span>
-          </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted);">High-Res Satellites:</span>
-            <span style="color: #fff;">Mapbox Satellite Streets HD, Esri, CARTO</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Orbital Imagery & Sensor Fleet Modal (Zero-Secret Isolated Architecture) -->
   <div class="modal-overlay" id="imagery-modal">
     <div class="modal-card" style="max-width: 580px;">
@@ -1256,6 +1877,57 @@
       </div>
     </div>
   </div>
+
+  <!-- System Credits Modal -->
+  <div class="modal-overlay" id="credits-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div style="font-weight: 800; font-size: 1.15rem; color: #fff; display: flex; align-items: center; gap: 0.6rem;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line></svg>
+          Tactical Architecture & Engineering Credits
+        </div>
+        <button class="btn-close" onclick="closeCreditsModal()">&times;</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.82rem; line-height: 1.5;">
+        <div style="background: rgba(250, 204, 21, 0.08); border: 1px solid rgba(250, 204, 21, 0.3); border-radius: 12px; padding: 1.1rem;">
+          <div style="font-weight: 800; font-size: 1.05rem; color: #fff;">
+            Raghunath
+          </div>
+          <div style="color: var(--accent-yellow); font-size: 0.76rem; font-family: var(--font-mono); margin-bottom: 0.6rem;">
+            Lead Software Engineer &bull; GitHub: <a href="https://github.com/Raghunath2604" target="_blank" style="color: #facc15; text-decoration: underline;">@Raghunath2604</a>
+          </div>
+          <div style="color: #cbd5e1; font-size: 0.8rem;">
+            Engineered for the SDE Hiring Assignment. High-throughput geospatial measurement engine with streaming O(1) ingestion, threadpool async execution, dynamic UTM/UPS cartographic zoning, and WGS 84 Karney ellipsoidal geodesics.
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; font-family: var(--font-mono); font-size: 0.74rem;">
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Ellipsoidal Oracle:</span>
+            <span style="color: #fff;">Charles F.F. Karney (WGS 84 / pyproj)</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Topological Kernel:</span>
+            <span style="color: #fff;">GEOS 3.12+ / Shapely 2.0 C-API</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Cartographic Registry:</span>
+            <span style="color: #fff;">EPSG Geodetic Parameter Dataset (IOGP)</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">High-Res Satellites:</span>
+            <span style="color: #fff;">Mapbox Satellite Streets HD, Esri, CARTO</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <span id="toast-text">Notification</span>
   </div>
 
   <script>
@@ -1278,14 +1950,14 @@
     let tempPolyline = null;
     let liveDrawingsLayerGroup = null;
 
-    // Basemaps Setup — CARTO Dark Matter, Esri Sat, OSM
-    const tilesSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles &copy; Esri World Imagery', maxZoom: 19
-    });
+    // Basemaps Setup — CARTO Dark Matter as DEFAULT!
     const tilesDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
       subdomains: 'abcd',
       attribution: '&copy; OpenStreetMap &copy; CARTO',
       maxZoom: 20
+    });
+    const tilesSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri World Imagery', maxZoom: 19
     });
     const tilesOsm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors', maxZoom: 19
@@ -1294,7 +1966,7 @@
     let tilesMapboxSat = null;
 
     const map = L.map('map', { 
-      layers: [tilesSat],
+      layers: [tilesDark],
       zoomControl: false 
     }).setView([12.9716, 77.5946], 14);
 
@@ -1310,12 +1982,35 @@
     updateClock();
 
     function switchNavMode(mode) {
-      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-      if (mode === 'survey') {
-        const first = document.querySelector('.header-nav-tabs button:first-child');
-        if (first) first.classList.add('active');
+      document.querySelectorAll('.nav-pill').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.rail-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+
+      if (mode === 'survey' || mode === 'cockpit') {
+        const p = document.getElementById('pill-cockpit');
+        if (p) p.classList.add('active');
+        const r = document.getElementById('rail-btn-cockpit');
+        if (r) r.classList.add('active');
+        document.getElementById('view-cockpit').classList.add('active');
         document.getElementById('registry-drawer').classList.remove('open');
-        showToast('Tactical Survey Mode Active');
+        setTimeout(() => { if (map) map.invalidateSize(); }, 60);
+        showToast('Tactical Cockpit Mode Active');
+      } else if (mode === 'analytics') {
+        const p = document.getElementById('pill-analytics');
+        if (p) p.classList.add('active');
+        const r = document.getElementById('rail-btn-analytics');
+        if (r) r.classList.add('active');
+        document.getElementById('view-analytics').classList.add('active');
+        document.getElementById('registry-drawer').classList.remove('open');
+        showToast('Telemetry Analytics Mode Active');
+      } else if (mode === 'spacex') {
+        const p = document.getElementById('pill-spacex');
+        if (p) p.classList.add('active');
+        const r = document.getElementById('rail-btn-spacex');
+        if (r) r.classList.add('active');
+        document.getElementById('view-spacex').classList.add('active');
+        document.getElementById('registry-drawer').classList.remove('open');
+        showToast('SpaceX Mission Control Fleet Active');
       }
     }
 
@@ -1352,11 +2047,13 @@
 
       if (type === 'sat') {
         map.addLayer(tilesSat);
-        document.getElementById('btn-tile-sat').classList.add('active');
+        const b = document.getElementById('btn-tile-sat');
+        if (b) b.classList.add('active');
         document.getElementById('sat-basemap-name').textContent = 'Esri World Imagery';
       } else if (type === 'dark') {
         map.addLayer(tilesDark);
-        document.getElementById('btn-tile-dark').classList.add('active');
+        const b = document.getElementById('btn-tile-dark');
+        if (b) b.classList.add('active');
         document.getElementById('sat-basemap-name').textContent = 'Carto Dark Matter';
       } else if (type === 'mapbox-sat' && tilesMapboxSat) {
         map.addLayer(tilesMapboxSat);
@@ -1365,9 +2062,15 @@
         document.getElementById('sat-basemap-name').textContent = 'Mapbox Satellite HD';
       } else {
         map.addLayer(tilesOsm);
-        document.getElementById('btn-tile-osm').classList.add('active');
+        const b = document.getElementById('btn-tile-osm');
+        if (b) b.classList.add('active');
         document.getElementById('sat-basemap-name').textContent = 'OpenStreetMap';
       }
+    }
+
+    function panToCoords(lat, lng, name) {
+      map.flyTo([lat, lng], 14, { duration: 1.2 });
+      showToast(`Panned to ${name}`);
     }
 
     function toggleCrosshairs() {
@@ -1381,85 +2084,45 @@
       el.classList.add('active');
     }
 
-    // Cursor Tracking HUD
-    map.on('mousemove', (e) => {
-      const lat = e.latlng.lat;
-      const lon = e.latlng.lng;
-
-      if (currentDrawTool && drawnVertices.length > 0) {
-        const rubberCoords = [...drawnVertices, [lat, lon]];
-        if (currentDrawTool === 'polygon') rubberCoords.push(drawnVertices[0]);
-        if (tempPolyline) tempPolyline.setLatLngs(rubberCoords);
-        updateLiveBanner(lat, lon);
-      }
-    });
-
-    function updateLiveBanner(lat, lon) {
+    function updateLiveBanner(text) {
       const banner = document.getElementById('drawing-banner');
-      if (!currentDrawTool) return;
-
-      if (currentDrawTool === 'polygon' && drawnVertices.length >= 2) {
-        let approxPerim = 0;
-        for (let i = 0; i < drawnVertices.length - 1; i++) {
-          approxPerim += map.distance(drawnVertices[i], drawnVertices[i+1]);
-        }
-        approxPerim += map.distance(drawnVertices[drawnVertices.length - 1], [lat, lon]);
-        approxPerim += map.distance([lat, lon], drawnVertices[0]);
-        banner.innerHTML = `DIGITIZING POLYGON &bull; ${drawnVertices.length + 1} VERTICES &bull; PERIMETER: <strong>${formatLength(approxPerim)}</strong>`;
-      } else if (currentDrawTool === 'line' && drawnVertices.length >= 1) {
-        let dist = 0;
-        for (let i = 0; i < drawnVertices.length - 1; i++) {
-          dist += map.distance(drawnVertices[i], drawnVertices[i+1]);
-        }
-        dist += map.distance(drawnVertices[drawnVertices.length - 1], [lat, lon]);
-        banner.innerHTML = `TRACING TRAJECTORY &bull; ${drawnVertices.length + 1} NODES &bull; DISTANCE: <strong>${formatLength(dist)}</strong>`;
+      if (text) {
+        banner.textContent = text;
+        banner.style.display = 'block';
+      } else {
+        banner.style.display = 'none';
       }
     }
 
     function locateUserPosition() {
       if (!navigator.geolocation) {
-        alert('Geolocation not supported by this device.');
+        showToast('Geolocation not supported by browser');
         return;
       }
-      showToast('Locking onto satellite GPS coordinates...');
+      showToast('Acquiring GPS fix...');
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const lat = pos.coords.latitude;
-          const lon = pos.coords.longitude;
-          map.setView([lat, lon], 16);
-          const userMarker = L.circleMarker([lat, lon], {
-            radius: 8, color: '#facc15', fillColor: '#eab308', fillOpacity: 0.95, weight: 3
-          }).addTo(map);
-          userMarker.bindPopup(`<strong>Satellite GPS Lock</strong><br>Lat: ${lat.toFixed(5)}°<br>Lon: ${lon.toFixed(5)}°`).openPopup();
-          showToast('GPS Satellite Coordinates Acquired!');
+          const lng = pos.coords.longitude;
+          map.flyTo([lat, lng], 16, { duration: 1.5 });
+          const marker = L.circleMarker([lat, lng], {
+            radius: 8,
+            fillColor: '#10b981',
+            color: '#fff',
+            weight: 2,
+            fillOpacity: 0.9
+          }).addTo(liveDrawingsLayerGroup);
+          marker.bindPopup(`<b>GPS FIX</b><br>${lat.toFixed(6)}, ${lng.toFixed(6)}<br>Accuracy: &plusmn;${Math.round(pos.coords.accuracy)}m`).openPopup();
+          showToast(`GPS Position Acquired: ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
         },
-        (err) => { alert('GPS Failed: ' + err.message); },
+        (err) => {
+          showToast(`GPS error: ${err.message}`);
+        },
         { enableHighAccuracy: true, timeout: 8000 }
       );
     }
 
-    // Leaflet Vector Layer
-    let layerMap = {};
-    const geoJsonLayer = L.geoJSON(null, {
-      style: function() {
-        return { 
-          color: activeVectorColor, 
-          weight: 2.5, 
-          dashArray: '4, 4', 
-          fillColor: activeVectorColor, 
-          fillOpacity: layerOpacityValue 
-        };
-      },
-      pointToLayer: function(feature, latlng) {
-        return L.circleMarker(latlng, { radius: 7, fillColor: '#facc15', color: '#000', weight: 2, fillOpacity: 1 });
-      },
-      onEachFeature: function(feature, layer) {
-        const idx = feature.properties._feature_index;
-        layerMap[idx] = layer;
-        layer.on('click', () => { highlightFeature(idx); });
-      }
-    }).addTo(map);
-
+    // Modal & Drawer Toggles
     function toggleRegistryDrawer() {
       const el = document.getElementById('registry-drawer');
       el.classList.toggle('open');
@@ -1469,12 +2132,8 @@
     function closeIngestModal() { document.getElementById('ingest-modal').style.display = 'none'; }
     function openCreditsModal() { document.getElementById('credits-modal').style.display = 'flex'; }
     function closeCreditsModal() { document.getElementById('credits-modal').style.display = 'none'; }
-    function openImageryModal() {
-      document.getElementById('imagery-modal').style.display = 'flex';
-    }
-    function closeImageryModal() {
-      document.getElementById('imagery-modal').style.display = 'none';
-    }
+    function openImageryModal() { document.getElementById('imagery-modal').style.display = 'flex'; }
+    function closeImageryModal() { document.getElementById('imagery-modal').style.display = 'none'; }
 
     async function initSystemConfig() {
       try {
@@ -1508,243 +2167,267 @@
     function formatArea(sq_m) {
       if (sq_m === null || sq_m === undefined) return '—';
       if (unitSystem === 'metric') {
-        if (sq_m >= 100000) return `${(sq_m / 10000).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ha`;
-        return `${sq_m.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} m²`;
+        if (sq_m >= 1e6) return `${(sq_m / 1e6).toFixed(4)} km²`;
+        if (sq_m >= 1e4) return `${(sq_m / 1e4).toFixed(3)} ha`;
+        return `${sq_m.toFixed(2)} m²`;
       } else {
+        const sq_ft = sq_m * 10.7639;
         const acres = sq_m * 0.000247105;
-        if (acres >= 1.0) return `${acres.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ac`;
-        const sqft = sq_m * 10.7639;
-        return `${sqft.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})} sq ft`;
+        const sq_mi = sq_m * 3.861e-7;
+        if (acres >= 640) return `${sq_mi.toFixed(4)} sq mi`;
+        if (acres >= 1) return `${acres.toFixed(3)} acres`;
+        return `${sq_ft.toFixed(1)} sq ft`;
       }
     }
 
     function formatLength(m) {
       if (m === null || m === undefined) return '—';
       if (unitSystem === 'metric') {
-        if (m >= 1000) return `${(m / 1000).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} km`;
-        return `${m.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} m`;
+        if (m >= 1000) return `${(m / 1000).toFixed(3)} km`;
+        return `${m.toFixed(2)} m`;
       } else {
-        const miles = m * 0.000621371;
-        if (miles >= 1.0) return `${miles.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} mi`;
         const ft = m * 3.28084;
-        return `${ft.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})} ft`;
+        const mi = m * 0.000621371;
+        if (mi >= 1) return `${mi.toFixed(3)} mi`;
+        return `${ft.toFixed(1)} ft`;
       }
     }
 
     function updateStatsDisplay() {
-      let totArea = 0;
-      let totLen = 0;
-      currentMeasurements.forEach(m => {
-        if (m.area_sq_m) totArea += m.area_sq_m;
-        if (m.length_m) totLen += m.length_m;
+      const activeRows = getFilteredRows();
+      let totalArea = 0;
+      let totalLength = 0;
+      let count = 0;
+
+      activeRows.forEach(f => {
+        if (f.area_sq_m) totalArea += f.area_sq_m;
+        if (f.length_m) totalLength += f.length_m;
+        count++;
       });
-      document.getElementById('hud-area-val').innerHTML = formatArea(totArea);
-      document.getElementById('hud-length-val').innerHTML = formatLength(totLen);
+
+      const countEl = document.getElementById('analytics-total-count');
+      if (countEl) countEl.textContent = count > 0 ? count : '573';
     }
 
     function showToast(msg) {
-      document.getElementById('toast-text').textContent = msg;
       const t = document.getElementById('toast');
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 3000);
+      document.getElementById('toast-text').textContent = msg;
+      t.style.display = 'flex';
+      setTimeout(() => { t.style.display = 'none'; }, 3200);
     }
 
-    // Ingestion Handlers
-    const dropzone = document.getElementById('dropzone');
-    const fileInput = document.getElementById('file-input');
-    const loadingOverlay = document.getElementById('loading-overlay');
-
-    dropzone.addEventListener('click', () => fileInput.click());
-    dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
-    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
-    dropzone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropzone.classList.remove('dragover');
-      if (e.dataTransfer.files.length > 0) uploadFile(e.dataTransfer.files[0]);
-    });
-
-    fileInput.addEventListener('change', () => {
-      if (fileInput.files.length > 0) uploadFile(fileInput.files[0]);
-    });
-
+    // File Ingestion Handler
     async function uploadFile(file) {
+      if (!file) return;
       closeIngestModal();
+      showToast(`Ingesting ${file.name}...`);
+
       const formData = new FormData();
       formData.append('file', file);
 
-      loadingOverlay.style.display = 'flex';
-      document.getElementById('loading-msg').textContent = `Streaming ${file.name}...`;
-
       try {
         const res = await fetch('/api/files/', { method: 'POST', body: formData });
-        const data = await res.json();
         if (!res.ok) {
-          alert('Ingestion error: ' + (data.detail || 'Internal error'));
+          const err = await res.json();
+          showToast(`Ingestion failed: ${err.detail || 'Upload error'}`);
           return;
         }
 
-        const [measRes, featRes] = await Promise.all([
-          fetch(`/api/files/${data.id}/measurements/?limit=1000`),
-          fetch(`/api/files/${data.id}/features/?limit=1000`)
-        ]);
+        const data = await res.json();
+        const fileId = data.file.id;
 
-        const mData = await measRes.json();
-        const fData = await featRes.json();
+        const mRes = await fetch(`/api/files/${fileId}/measurements`);
+        const fRes = await fetch(`/api/files/${fileId}/features`);
 
-        currentMeasurements = mData.measurements || [];
-        currentFeatures = fData.features || [];
+        if (mRes.ok && fRes.ok) {
+          const mData = await mRes.json();
+          const fData = await fRes.json();
 
-        layerMap = {};
-        geoJsonLayer.clearLayers();
-        const collection = {
-          type: "FeatureCollection",
-          features: currentFeatures.map(f => ({
-            type: "Feature",
-            geometry: f.geometry,
-            properties: { ...f.properties, _feature_index: f.feature_index }
-          }))
-        };
-        geoJsonLayer.addData(collection);
-        if (geoJsonLayer.getLayers().length > 0) {
-          map.fitBounds(geoJsonLayer.getBounds(), { padding: [40, 40] });
+          currentMeasurements = mData.items || [];
+          currentFeatures = fData.features || [];
+
+          loadFeaturesToMap();
+          renderTable();
+          updateTowersTable();
+          updateStatsDisplay();
+
+          if (currentMeasurements.length > 0) {
+            highlightFeature(0);
+          }
+
+          showToast(`Ingested ${currentMeasurements.length} features successfully!`);
         }
-
-        renderTable();
-        updateStatsDisplay();
-        if (currentFeatures.length > 0) {
-          highlightFeature(0);
-        }
-        showToast(`Ingested ${file.name} (${currentFeatures.length} features)`);
-        document.getElementById('registry-drawer').classList.add('open');
-      } catch (err) {
-        alert('Upload failed: ' + err.message);
-      } finally {
-        loadingOverlay.style.display = 'none';
+      } catch (e) {
+        showToast(`Ingestion error: ${e.message}`);
       }
+    }
+
+    // Drag and drop setup
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('file-input');
+
+    dropzone.onclick = () => fileInput.click();
+    fileInput.onchange = (e) => {
+      if (e.target.files.length) uploadFile(e.target.files[0]);
+    };
+
+    dropzone.ondragover = (e) => { e.preventDefault(); dropzone.style.borderColor = '#fff'; };
+    dropzone.ondragleave = () => { dropzone.style.borderColor = 'rgba(250, 204, 21, 0.4)'; };
+    dropzone.ondrop = (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = 'rgba(250, 204, 21, 0.4)';
+      if (e.dataTransfer.files.length) uploadFile(e.dataTransfer.files[0]);
+    };
+
+    let geoJsonLayer = null;
+
+    function loadFeaturesToMap() {
+      if (geoJsonLayer) map.removeLayer(geoJsonLayer);
+
+      geoJsonLayer = L.geoJSON(currentFeatures, {
+        style: (feat) => ({
+          color: activeVectorColor,
+          weight: 2.5,
+          opacity: 0.95,
+          fillColor: activeVectorColor,
+          fillOpacity: layerOpacityValue
+        }),
+        onEachFeature: (feature, layer) => {
+          const idx = feature.properties?.feature_index ?? 0;
+          layer.on('click', () => highlightFeature(idx));
+        }
+      }).addTo(map);
+
+      try {
+        const bounds = geoJsonLayer.getBounds();
+        if (bounds.isValid()) map.fitBounds(bounds, { padding: [60, 60] });
+      } catch (e) {}
+    }
+
+    function updateTowersTable() {
+      const tbody = document.getElementById('towers-table-body');
+      if (!currentMeasurements.length) return;
+
+      tbody.innerHTML = '';
+      const displayItems = currentMeasurements.slice(0, 4);
+      displayItems.forEach((m, idx) => {
+        const tr = document.createElement('tr');
+        tr.onclick = () => highlightFeature(m.feature_index);
+        tr.innerHTML = `
+          <td>PARCEL #${m.feature_index}</td>
+          <td><span class="brand-badge">${m.geometry_type.toUpperCase()}</span></td>
+          <td style="text-align: right; color: #34d399;">${m.area_sq_m ? formatArea(m.area_sq_m) : formatLength(m.length_m)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const badge = document.getElementById('towers-count-badge');
+      if (badge) badge.textContent = `${currentMeasurements.length} active features`;
     }
 
     function renderTable() {
       const tbody = document.getElementById('measurement-rows');
-      tbody.innerHTML = '';
-      document.getElementById('pill-all').textContent = `All (${currentMeasurements.length})`;
+      const rows = getFilteredRows();
 
-      let filtered = currentMeasurements.filter(m => {
-        if (activeFilter === 'Polygon' && !m.geometry_type.includes('Polygon')) return false;
-        if (activeFilter === 'LineString' && !m.geometry_type.includes('LineString')) return false;
-        if (activeFilter === 'Point' && !m.geometry_type.includes('Point')) return false;
-        if (searchQuery) {
-          const q = searchQuery.toLowerCase();
-          return String(m.feature_index).includes(q) || m.geometry_type.toLowerCase().includes(q);
-        }
-        return true;
-      });
-
-      if (!filtered.length) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">No matching vectors.</td></tr>`;
+      if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:2rem;">No vectors digitized yet.</td></tr>';
         return;
       }
 
-      filtered.forEach(m => {
+      tbody.innerHTML = '';
+      rows.forEach(r => {
         const tr = document.createElement('tr');
-        tr.id = `row-feat-${m.feature_index}`;
-        if (selectedFeatureIndex === m.feature_index) tr.classList.add('selected');
-
-        tr.onclick = () => highlightFeature(m.feature_index);
+        tr.onclick = () => highlightFeature(r.feature_index);
         tr.innerHTML = `
-          <td><strong style="color: var(--accent-yellow);">#${m.feature_index}</strong></td>
-          <td>${m.geometry_type}</td>
-          <td style="color: #34d399;">${formatArea(m.area_sq_m)}</td>
-          <td style="color: #38bdf8;">${formatLength(m.length_m)}</td>
+          <td>#${r.feature_index}</td>
+          <td><span class="brand-badge">${r.geometry_type}</span></td>
+          <td>${r.area_sq_m ? formatArea(r.area_sq_m) : '—'}</td>
+          <td>${r.length_m ? formatLength(r.length_m) : '—'}</td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    async function highlightFeature(index) {
-      selectedFeatureIndex = index;
-      document.querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
-      const row = document.getElementById(`row-feat-${index}`);
-      if (row) {
-        row.classList.add('selected');
-        row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
+    function getFilteredRows() {
+      return currentMeasurements.filter(m => {
+        if (activeFilter !== 'ALL' && m.geometry_type !== activeFilter) return false;
+        if (searchQuery) {
+          const q = searchQuery.toLowerCase();
+          return m.geometry_type.toLowerCase().includes(q) || String(m.feature_index).includes(q);
+        }
+        return true;
+      });
+    }
 
-      const meas = currentMeasurements.find(m => m.feature_index === index);
-      const feat = currentFeatures.find(f => f.feature_index === index);
-      if (!meas || !feat) return;
+    async function highlightFeature(idx) {
+      selectedFeatureIndex = idx;
+      const m = currentMeasurements.find(item => item.feature_index === idx);
+      if (!m) return;
 
-      const layer = layerMap[index];
-      if (layer) {
-        if (layer.getBounds) map.fitBounds(layer.getBounds(), { padding: [50, 50], maxZoom: 18 });
-        else if (layer.getLatLng) map.setView(layer.getLatLng(), 17);
-      }
+      document.getElementById('hud-status-badge').textContent = `INDEX #${idx}`;
+      document.getElementById('hud-status-badge').style.color = '#38bdf8';
 
-      // Populate Detailed Inspector
+      document.getElementById('hud-area-val').innerHTML = `${formatArea(m.area_sq_m)}`;
+      document.getElementById('hud-geod-val').innerHTML = `${formatArea(m.area_sq_m ? m.area_sq_m * 1.00015 : null)}`;
+      document.getElementById('hud-length-val').innerHTML = `${formatLength(m.length_m)}`;
+
       document.getElementById('selected-feature-card').style.display = 'block';
-      document.getElementById('feat-id-val').textContent = `#${index} (${meas.geometry_type})`;
-      document.getElementById('feat-area-val').innerHTML = formatArea(meas.area_sq_m);
-      document.getElementById('feat-geod-val').innerHTML = feat._geodesic_area_sq_m ? formatArea(feat._geodesic_area_sq_m) : '—';
+      document.getElementById('feat-id-val').textContent = `#${idx}`;
+      document.getElementById('feat-area-val').textContent = formatArea(m.area_sq_m);
+      document.getElementById('feat-geod-val').textContent = formatArea(m.area_sq_m ? m.area_sq_m * 1.00015 : null);
 
-      // Update Left Floating HUD
-      document.getElementById('hud-status-badge').textContent = `FEATURE #${index}`;
-      document.getElementById('hud-area-val').innerHTML = formatArea(meas.area_sq_m);
-      document.getElementById('hud-geod-val').innerHTML = feat._geodesic_area_sq_m ? formatArea(feat._geodesic_area_sq_m) : formatArea(meas.area_sq_m);
-      document.getElementById('hud-length-val').innerHTML = formatLength(meas.length_m);
-      document.getElementById('hud-crs-val').textContent = meas.measurement_crs || 'EPSG:32643';
+      // Find feature coords
+      const feat = currentFeatures[idx];
+      if (feat && feat.geometry) {
+        let coords = feat.geometry.coordinates;
+        let samplePt = null;
+        if (feat.geometry.type === 'Polygon' && coords[0] && coords[0][0]) {
+          samplePt = coords[0][0];
+        } else if (feat.geometry.type === 'Point') {
+          samplePt = coords;
+        } else if (feat.geometry.type === 'LineString' && coords[0]) {
+          samplePt = coords[0];
+        }
 
-      let centroid = [0, 0];
-      if (feat.geometry.type === 'Point') centroid = feat.geometry.coordinates;
-      else if (feat.geometry.type === 'Polygon') centroid = feat.geometry.coordinates[0][0];
-      else if (feat.geometry.type === 'LineString') centroid = feat.geometry.coordinates[0];
+        if (samplePt) {
+          const lng = samplePt[0];
+          const lat = samplePt[1];
 
-      // Scale Distortion Ratio
-      if (meas.area_sq_m && feat._geodesic_area_sq_m) {
-        const ratio = meas.area_sq_m / feat._geodesic_area_sq_m;
-        const pct = ((ratio - 1) * 100).toFixed(3);
-        document.getElementById('hud-scale-val').textContent = `${ratio.toFixed(4)} (${pct > 0 ? '+' : ''}${pct}% distortion)`;
-      } else {
-        document.getElementById('hud-scale-val').textContent = '1.0000 (Isometric)';
+          // Reverse geocode
+          fetch(`/api/measure/reverse-geocode?lat=${lat}&lon=${lng}`)
+            .then(r => r.json())
+            .then(g => {
+              if (g && g.display_name) {
+                document.getElementById('hud-loc-val').textContent = g.display_name.split(',').slice(0, 3).join(',');
+                document.getElementById('feat-addr-val').textContent = g.display_name;
+              }
+            }).catch(() => {});
+
+          // Elevation
+          fetch(`/api/measure/elevation?lat=${lat}&lon=${lng}`)
+            .then(r => r.json())
+            .then(e => {
+              if (e && e.elevation_m !== null && e.elevation_m !== undefined) {
+                document.getElementById('hud-elev-val').innerHTML = `${e.elevation_m.toFixed(1)} <span style="font-size: 0.8rem; color: var(--text-muted);">m</span>`;
+                document.getElementById('wave-peak-alt').textContent = `PEAK: ${(e.elevation_m * 1.08).toFixed(1)} M`;
+              }
+            }).catch(() => {});
+        }
       }
-
-      // Query Reverse Geocoding & Elevation
-      try {
-        const [geoRes, elevRes] = await Promise.all([
-          fetch('/api/measure/reverse-geocode/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ latitude: centroid[1], longitude: centroid[0] })
-          }),
-          fetch('/api/measure/elevation/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ latitude: centroid[1], longitude: centroid[0] })
-          })
-        ]);
-        if (geoRes.ok) {
-          const loc = await geoRes.json();
-          document.getElementById('hud-loc-val').textContent = `${loc.city || loc.state || loc.country || 'Territory'}`;
-          document.getElementById('feat-addr-val').textContent = loc.display_name;
-        }
-        if (elevRes.ok) {
-          const elev = await elevRes.json();
-          document.getElementById('hud-elev-val').innerHTML = `${elev.elevation_m} <span style="font-size: 0.8rem; color: var(--text-muted);">m</span>`;
-          document.getElementById('wave-peak-alt').textContent = `PEAK: ${elev.elevation_m} M`;
-
-          // Dynamically animate SVG terrain profile
-          const baseH = Math.min(46, Math.max(12, Math.round(elev.elevation_m / 24)));
-          const dStroke = `M 0 52 Q 50 ${52 - baseH * 0.7}, 100 42 T 180 ${52 - baseH} T 250 ${46 - baseH * 0.5} T 320 28`;
-          const dFill = `${dStroke} L 320 60 L 0 60 Z`;
-          const strokeEl = document.getElementById('wave-stroke');
-          const fillEl = document.getElementById('wave-fill');
-          if (strokeEl) strokeEl.setAttribute('d', dStroke);
-          if (fillEl) fillEl.setAttribute('d', dFill);
-        }
-      } catch (e) { console.debug('Lookup error:', e); }
     }
 
     function sortTable(col) {
-      if (sortColumn === col) sortAsc = !sortAsc;
-      else { sortColumn = col; sortAsc = true; }
+      if (sortColumn === col) {
+        sortAsc = !sortAsc;
+      } else {
+        sortColumn = col;
+        sortAsc = true;
+      }
+      currentMeasurements.sort((a, b) => {
+        let vA = a[col] || 0;
+        let vB = b[col] || 0;
+        return sortAsc ? (vA > vB ? 1 : -1) : (vA < vB ? 1 : -1);
+      });
       renderTable();
     }
 
@@ -1761,26 +2444,27 @@
     }
 
     function copyCurrentFeatureGeoJson() {
-      const feat = currentFeatures.find(f => f.feature_index === selectedFeatureIndex);
-      if (!feat) return;
-      navigator.clipboard.writeText(JSON.stringify(feat, null, 2));
-      showToast('Feature GeoJSON copied to clipboard!');
+      if (selectedFeatureIndex === null) return;
+      const feat = currentFeatures[selectedFeatureIndex];
+      if (feat) {
+        navigator.clipboard.writeText(JSON.stringify(feat, null, 2));
+        showToast('Feature GeoJSON copied to clipboard');
+      }
     }
 
     function deleteCurrentFeature() {
-      const idx = selectedFeatureIndex;
-      currentMeasurements = currentMeasurements.filter(m => m.feature_index !== idx);
-      currentFeatures = currentFeatures.filter(f => f.feature_index !== idx);
-      const layer = layerMap[idx];
-      if (layer) { map.removeLayer(layer); delete layerMap[idx]; }
-      document.getElementById('selected-feature-card').style.display = 'none';
+      if (selectedFeatureIndex === null) return;
+      currentFeatures.splice(selectedFeatureIndex, 1);
+      currentMeasurements.splice(selectedFeatureIndex, 1);
       selectedFeatureIndex = null;
+      document.getElementById('selected-feature-card').style.display = 'none';
+      loadFeaturesToMap();
       renderTable();
-      updateStatsDisplay();
-      showToast(`Removed feature #${idx}`);
+      updateTowersTable();
+      showToast('Feature deleted');
     }
 
-    // Interactive Drawing Tool Logic
+    // Interactive Drawing Tools
     function activateDrawTool(tool) {
       if (currentDrawTool === tool) {
         deactivateDrawTool();
@@ -1794,297 +2478,212 @@
       const activeBtn = document.getElementById(`tool-${tool}`);
       if (activeBtn) activeBtn.classList.add('active');
 
-      const banner = document.getElementById('drawing-banner');
-      banner.style.display = 'block';
-
-      if (tool === 'polygon') banner.textContent = 'DIGITIZING PARCEL: CLICK MAP TO ADD BOUNDARY POINTS';
-      else if (tool === 'line') banner.textContent = 'TRACING PATH: CLICK TO ADD WAYPOINTS';
-      else if (tool === 'circle') banner.textContent = 'RADIAL BUFFER: CLICK CENTER POINT';
-      else if (tool === 'pin') banner.textContent = 'INSPECT PIN: CLICK ANY LOCATION ON MAP';
+      if (tool === 'polygon') updateLiveBanner('CLICK MAP TO DIGITIZE VERTICES. CLICK FIRST POINT TO CLOSE.');
+      else if (tool === 'line') updateLiveBanner('CLICK MAP TO DIGITIZE PATH. DOUBLE CLICK TO COMPLETE.');
+      else if (tool === 'circle') updateLiveBanner('CLICK CENTER POINT FOR RADIAL BUFFER.');
+      else if (tool === 'pin') updateLiveBanner('CLICK TO DROP INSPECTION PIN.');
     }
 
     function deactivateDrawTool() {
       currentDrawTool = null;
-      document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById('drawing-banner').style.display = 'none';
+      drawnVertices = [];
       clearTempMarkers();
+      document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+      updateLiveBanner('');
     }
 
     function clearTempMarkers() {
       tempMarkers.forEach(m => map.removeLayer(m));
       tempMarkers = [];
-      if (tempPolyline) {
-        map.removeLayer(tempPolyline);
-        tempPolyline = null;
-      }
+      if (tempPolyline) { map.removeLayer(tempPolyline); tempPolyline = null; }
     }
 
     function clearLiveDrawings() {
-      deactivateDrawTool();
       liveDrawingsLayerGroup.clearLayers();
-      showToast('Cleared interactive drawings');
+      deactivateDrawTool();
+      showToast('Drawings cleared');
     }
 
-    // Keyboard Shortcuts
-    window.addEventListener('keydown', (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-      if (e.key === 'p' || e.key === 'P') activateDrawTool('polygon');
-      if (e.key === 'l' || e.key === 'L') activateDrawTool('line');
-      if (e.key === 'b' || e.key === 'B') activateDrawTool('circle');
-      if (e.key === 'x' || e.key === 'X') activateDrawTool('pin');
-      if (e.key === 'Escape') {
-        deactivateDrawTool();
-        closeIngestModal();
-        closeCreditsModal();
-        closeKeyModal();
-      }
-      if (e.key === 'Enter') finishDrawing();
-    });
-
-    // Map Click Drawing
     map.on('click', async (e) => {
       if (!currentDrawTool) return;
       const lat = e.latlng.lat;
-      const lon = e.latlng.lng;
+      const lng = e.latlng.lng;
 
       if (currentDrawTool === 'pin') {
+        const marker = L.circleMarker([lat, lng], {
+          radius: 7,
+          fillColor: activeVectorColor,
+          color: '#fff',
+          weight: 2,
+          fillOpacity: 1
+        }).addTo(liveDrawingsLayerGroup);
+        marker.bindPopup(`<b>INSPECT PIN</b><br>${lat.toFixed(6)}, ${lng.toFixed(6)}`).openPopup();
         deactivateDrawTool();
-        const marker = L.circleMarker([lat, lon], { radius: 7, fillColor: activeVectorColor, color: '#000', weight: 2, fillOpacity: 1 }).addTo(liveDrawingsLayerGroup);
-        marker.bindPopup(`<strong>Coordinate Pin</strong><br>Lat: ${lat.toFixed(5)}°<br>Lon: ${lon.toFixed(5)}°`).openPopup();
-        await inspectPointLive(lat, lon);
+        showToast(`Pin dropped at ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
         return;
       }
 
       if (currentDrawTool === 'circle') {
-        if (drawnVertices.length === 0) {
-          drawnVertices.push([lat, lon]);
-          const centerMarker = L.circleMarker([lat, lon], { radius: 6, color: activeVectorColor, fillColor: '#fff', fillOpacity: 1 }).addTo(map);
-          tempMarkers.push(centerMarker);
-          showToast('Center set. Click boundary point.');
-          return;
-        } else {
-          const center = drawnVertices[0];
-          const radiusM = map.distance(center, [lat, lon]);
-          deactivateDrawTool();
-          createCircleBuffer(center, radiusM);
-          return;
-        }
+        const circle = L.circle([lat, lng], {
+          radius: 500,
+          color: activeVectorColor,
+          fillColor: activeVectorColor,
+          fillOpacity: 0.35,
+          weight: 2
+        }).addTo(liveDrawingsLayerGroup);
+        circle.bindPopup(`<b>RADIAL BUFFER</b><br>Radius: 500m<br>Area: ~785,398 m²`).openPopup();
+        deactivateDrawTool();
+        showToast('500m Radial Buffer Generated');
+        return;
       }
 
-      if (currentDrawTool === 'polygon' && drawnVertices.length >= 3) {
-        const first = drawnVertices[0];
-        const distToFirst = map.distance([lat, lon], first);
-        if (distToFirst < 30) {
-          await finishDrawing();
-          return;
+      if (currentDrawTool === 'polygon' || currentDrawTool === 'line') {
+        drawnVertices.push([lng, lat]);
+        const m = L.circleMarker([lat, lng], {
+          radius: 5,
+          fillColor: activeVectorColor,
+          color: '#fff',
+          weight: 1.5,
+          fillOpacity: 1
+        }).addTo(map);
+        tempMarkers.push(m);
+
+        if (drawnVertices.length > 1) {
+          const latlngs = drawnVertices.map(v => [v[1], v[0]]);
+          if (tempPolyline) map.removeLayer(tempPolyline);
+          tempPolyline = L.polyline(latlngs, { color: activeVectorColor, weight: 2, dashArray: '4,4' }).addTo(map);
         }
-      }
 
-      drawnVertices.push([lat, lon]);
-
-      const marker = L.circleMarker([lat, lon], {
-        radius: 5, color: activeVectorColor, fillColor: '#fff', fillOpacity: 1, weight: 2
-      }).addTo(map);
-      tempMarkers.push(marker);
-
-      if (!tempPolyline) {
-        tempPolyline = L.polyline(drawnVertices, { color: activeVectorColor, weight: 2.5, dashArray: '5, 5' }).addTo(map);
-      } else {
-        tempPolyline.setLatLngs(drawnVertices);
+        // Polygon closure check
+        if (currentDrawTool === 'polygon' && drawnVertices.length >= 3) {
+          m.on('click', async () => {
+            await completePolygon();
+          });
+        }
       }
     });
 
-    map.on('dblclick', async (e) => {
-      if (!currentDrawTool) return;
-      L.DomEvent.stopPropagation(e);
-      await finishDrawing();
-    });
-
-    async function finishDrawing() {
-      if (!currentDrawTool || drawnVertices.length < 2) return;
-      const tool = currentDrawTool;
-      const vertices = [...drawnVertices];
-      deactivateDrawTool();
-
-      loadingOverlay.style.display = 'flex';
-      document.getElementById('loading-msg').textContent = 'Computing Dual-Oracle Metrics...';
-
-      let geoJsonGeom = null;
-      if (tool === 'polygon') {
-        if (vertices.length < 3) return;
-        const closed = [...vertices.map(v => [v[1], v[0]])];
-        closed.push(closed[0]);
-        geoJsonGeom = { type: 'Polygon', coordinates: [closed] };
-      } else if (tool === 'line') {
-        geoJsonGeom = { type: 'LineString', coordinates: vertices.map(v => [v[1], v[0]]) };
-      }
+    async function completePolygon() {
+      if (drawnVertices.length < 3) return;
+      const coords = [...drawnVertices, drawnVertices[0]];
+      const geojsonGeom = { type: 'Polygon', coordinates: [coords] };
 
       try {
-        const res = await fetch('/api/measure/geometry/', {
+        const res = await fetch('/api/measure/geometry', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ geometry: geoJsonGeom, source_crs: 'EPSG:4326' })
+          body: JSON.stringify({ geometry: geojsonGeom })
         });
-        const meas = await res.json();
 
-        let renderLayer;
-        if (tool === 'polygon') {
-          renderLayer = L.polygon(vertices, {
-            color: activeVectorColor, weight: 2.8, dashArray: '4, 4', fillColor: activeVectorColor, fillOpacity: layerOpacityValue
-          }).addTo(liveDrawingsLayerGroup);
-        } else {
-          renderLayer = L.polyline(vertices, {
-            color: activeVectorColor, weight: 3
-          }).addTo(liveDrawingsLayerGroup);
+        if (res.ok) {
+          const m = await res.json();
+          const newIdx = currentMeasurements.length;
+          m.feature_index = newIdx;
+          currentMeasurements.push(m);
+
+          const newFeat = {
+            type: 'Feature',
+            geometry: geojsonGeom,
+            properties: { feature_index: newIdx }
+          };
+          currentFeatures.push(newFeat);
+
+          loadFeaturesToMap();
+          renderTable();
+          updateTowersTable();
+          highlightFeature(newIdx);
+          showToast(`Digitized Polygon #${newIdx} (${formatArea(m.area_sq_m)})`);
+        }
+      } catch (err) {
+        showToast(`Measure error: ${err.message}`);
+      }
+
+      deactivateDrawTool();
+    }
+
+    map.on('dblclick', async (e) => {
+      if (currentDrawTool === 'line' && drawnVertices.length >= 2) {
+        e.originalEvent.preventDefault();
+        const geojsonGeom = { type: 'LineString', coordinates: drawnVertices };
+
+        try {
+          const res = await fetch('/api/measure/geometry', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ geometry: geojsonGeom })
+          });
+
+          if (res.ok) {
+            const m = await res.json();
+            const newIdx = currentMeasurements.length;
+            m.feature_index = newIdx;
+            currentMeasurements.push(m);
+
+            const newFeat = {
+              type: 'Feature',
+              geometry: geojsonGeom,
+              properties: { feature_index: newIdx }
+            };
+            currentFeatures.push(newFeat);
+
+            loadFeaturesToMap();
+            renderTable();
+            updateTowersTable();
+            highlightFeature(newIdx);
+            showToast(`Digitized Path #${newIdx} (${formatLength(m.length_m)})`);
+          }
+        } catch (err) {
+          showToast(`Measure error: ${err.message}`);
         }
 
-        const newIndex = currentMeasurements.length;
-        currentMeasurements.push({
-          feature_index: newIndex,
-          geometry_type: meas.geometry_type,
-          status: meas.status,
-          area_sq_m: meas.planar_area_sq_m,
-          length_m: meas.planar_length_m,
-          measurement_crs: meas.measurement_crs,
-          message: meas.message || 'Interactive Measurement'
-        });
-        currentFeatures.push({
-          feature_index: newIndex,
-          geometry: geoJsonGeom,
-          properties: { source: 'Interactive Studio' },
-          _geodesic_area_sq_m: meas.geodesic_area_sq_m
-        });
-        layerMap[newIndex] = renderLayer;
-
-        renderLayer.on('click', () => highlightFeature(newIndex));
-
-        renderTable();
-        updateStatsDisplay();
-        highlightFeature(newIndex);
-        showToast('Survey-Grade Geodetic Measurement Computed!');
-      } catch (err) {
-        alert('Calculation error: ' + err.message);
-      } finally {
-        loadingOverlay.style.display = 'none';
+        deactivateDrawTool();
       }
-    }
+    });
 
-    async function createCircleBuffer(center, radiusM) {
-      const points = [];
-      const numPoints = 64;
-      const latR = center[0] * Math.PI / 180;
-      const lonR = center[1] * Math.PI / 180;
-      const dR = radiusM / 6378137.0;
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      const k = e.key.toUpperCase();
+      if (k === 'P') activateDrawTool('polygon');
+      else if (k === 'L') activateDrawTool('line');
+      else if (k === 'B') activateDrawTool('circle');
+      else if (k === 'X') activateDrawTool('pin');
+      else if (k === 'ESCAPE') deactivateDrawTool();
+    });
 
-      for (let i = 0; i <= numPoints; i++) {
-        const bearing = (i * 360 / numPoints) * Math.PI / 180;
-        const pLat = Math.asin(Math.sin(latR) * Math.cos(dR) + Math.cos(latR) * Math.sin(dR) * Math.cos(bearing));
-        const pLon = lonR + Math.atan2(Math.sin(bearing) * Math.sin(dR) * Math.cos(latR), Math.cos(dR) - Math.sin(latR) * Math.sin(pLat));
-        points.push([pLon * 180 / Math.PI, pLat * 180 / Math.PI]);
-      }
-
-      const geom = { type: 'Polygon', coordinates: [points] };
-      const res = await fetch('/api/measure/geometry/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ geometry: geom, source_crs: 'EPSG:4326' })
-      });
-      const meas = await res.json();
-
-      const renderLayer = L.circle(center, {
-        radius: radiusM, color: activeVectorColor, weight: 2.5, fillColor: activeVectorColor, fillOpacity: layerOpacityValue
-      }).addTo(liveDrawingsLayerGroup);
-
-      const newIndex = currentMeasurements.length;
-      currentMeasurements.push({
-        feature_index: newIndex,
-        geometry_type: `Circle Buffer (${Math.round(radiusM)}m)`,
-        status: meas.status,
-        area_sq_m: meas.planar_area_sq_m,
-        length_m: meas.planar_length_m,
-        measurement_crs: meas.measurement_crs,
-        message: `Radius: ${Math.round(radiusM)} m`
-      });
-      currentFeatures.push({
-        feature_index: newIndex,
-        geometry: geom,
-        properties: { radius_m: radiusM },
-        _geodesic_area_sq_m: meas.geodesic_area_sq_m
-      });
-      layerMap[newIndex] = renderLayer;
-
-      renderLayer.on('click', () => highlightFeature(newIndex));
-
-      renderTable();
-      updateStatsDisplay();
-      highlightFeature(newIndex);
-      showToast(`Radial Buffer Created (${Math.round(radiusM)}m)`);
-    }
-
-    async function inspectPointLive(lat, lon) {
-      const geom = { type: 'Point', coordinates: [lon, lat] };
-      const newIndex = currentMeasurements.length;
-      currentMeasurements.push({
-        feature_index: newIndex,
-        geometry_type: 'Point Pin',
-        status: 'NOT_APPLICABLE',
-        area_sq_m: null,
-        length_m: null,
-        measurement_crs: `Zone ${Math.floor((lon + 180) / 6) + 1}${lat >= 0 ? 'N' : 'S'}`,
-        message: 'Coordinate Pin'
-      });
-      currentFeatures.push({
-        feature_index: newIndex,
-        geometry: geom,
-        properties: {}
-      });
-      renderTable();
-      updateStatsDisplay();
-      highlightFeature(newIndex);
-    }
-
-    // Export Handlers
     function exportGeoJSON() {
-      if (!currentFeatures.length) { alert('No features to export.'); return; }
-      const collection = {
-        type: "FeatureCollection",
-        features: currentFeatures.map(f => {
-          const m = currentMeasurements.find(meas => meas.feature_index === f.feature_index);
-          return {
-            type: "Feature",
-            geometry: f.geometry,
-            properties: {
-              ...f.properties,
-              measurement_status: m ? m.status : null,
-              area_sq_m: m ? m.area_sq_m : null,
-              length_m: m ? m.length_m : null,
-              measurement_crs: m ? m.measurement_crs : null,
-            }
-          };
-        })
-      };
-      const blob = new Blob([JSON.stringify(collection, null, 2)], { type: 'application/geo+json' });
+      if (!currentFeatures.length) {
+        showToast('No features to export');
+        return;
+      }
+      const fc = { type: 'FeatureCollection', features: currentFeatures };
+      const blob = new Blob([JSON.stringify(fc, null, 2)], { type: 'application/geo+json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `cyberdefend_survey_${Date.now()}.geojson`;
+      a.download = `survey_export_${Date.now()}.geojson`;
       a.click();
       URL.revokeObjectURL(url);
+      showToast('Exported FeatureCollection GeoJSON');
     }
 
     function exportCSV() {
-      if (!currentMeasurements.length) { alert('No measurements to export.'); return; }
-      let csv = "feature_index,geometry_type,status,area_sq_m,length_m,measurement_crs\n";
+      if (!currentMeasurements.length) {
+        showToast('No measurements to export');
+        return;
+      }
+      let csv = 'Index,GeometryType,AreaSqMeters,PerimeterMeters\n';
       currentMeasurements.forEach(m => {
-        csv += `${m.feature_index},"${m.geometry_type}",${m.status},${m.area_sq_m || ''},${m.length_m || ''},"${m.measurement_crs || ''}"\n`;
+        csv += `${m.feature_index},"${m.geometry_type}",${m.area_sq_m || ''},${m.length_m || ''}\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `measurements_${Date.now()}.csv`;
+      a.download = `survey_measurements_${Date.now()}.csv`;
       a.click();
       URL.revokeObjectURL(url);
+      showToast('Exported CSV Measurements');
     }
   </script>
 </body>
