@@ -8,6 +8,7 @@ and converted to HTTP 422 responses with full file metadata.
 
 from __future__ import annotations
 
+import logging
 import os
 import re
 import uuid
@@ -25,6 +26,8 @@ from app.parsers.kml import parse_kml
 from app.parsers.shapefile_zip import parse_shapefile_zip
 from app.services.measurement import MeasurementService, crs_label, resolve_crs
 from app.storage.repository import Repository
+
+logger = logging.getLogger("geomeasure.ingest")
 
 
 def sanitize_filename(filename: str | None) -> str:
@@ -98,6 +101,12 @@ class IngestService:
         # Create record in PROCESSING status
         file_id = uuid.uuid4().hex
         self.repo.create_file(file_id=file_id, filename=filename)
+        logger.info(
+            "Initiated ingestion for file_id=%s filename='%s' (size=%d bytes)",
+            file_id,
+            filename,
+            total_bytes,
+        )
 
         parsed_file: ParsedFile | None = None
         warnings: list[str] = []
@@ -143,9 +152,16 @@ class IngestService:
                 features_and_measurements=features_and_measurements,
                 warnings=warnings,
             )
+            logger.info(
+                "Successfully ingested file_id=%s with %d features (CRS: %s)",
+                file_id,
+                len(features_and_measurements),
+                resolved_crs_label,
+            )
             return record
 
         except GeoServiceError as exc:
+            logger.warning("Ingestion failed for file_id=%s: %s", file_id, exc.detail)
             failed_record = self.repo.fail_file(
                 file_id=file_id, error=exc.detail, warnings=warnings
             )
@@ -153,6 +169,9 @@ class IngestService:
             raise
 
         except Exception as exc:
+            logger.exception(
+                "Unexpected error during ingestion for file_id=%s: %s", file_id, exc
+            )
             err_msg = f"Internal ingestion error: {exc}"
             failed_record = self.repo.fail_file(
                 file_id=file_id, error=err_msg, warnings=warnings
