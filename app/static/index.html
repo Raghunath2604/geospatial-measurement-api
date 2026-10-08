@@ -341,6 +341,11 @@
     }
 
     #map {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       width: 100%;
       height: 100%;
       background: #080c14;
@@ -939,40 +944,118 @@
     }
 
     /* ==========================================================================
-       5. View 3: SpaceX Mission Control (from spacex_mission_control.jpg)
+       5. View 3: SpaceX Mission Control & Orbital Telemetry Deck
        ========================================================================== */
     #view-spacex {
-      padding: 1.5rem;
+      padding: 1.25rem 1.5rem;
       overflow-y: auto;
       flex-direction: column;
       gap: 1.25rem;
-      background: #06090e;
+      background: radial-gradient(circle at 50% 0%, #0d1527 0%, #06090e 70%);
+      width: 100%;
+      height: 100%;
     }
 
-    .spacex-hero-banner {
+    .spacex-command-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding: 0.85rem 1.2rem;
+      background: rgba(14, 23, 42, 0.75);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 14px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .spacex-orbit-container {
       width: 100%;
-      height: 220px;
+      height: 480px;
       border-radius: 16px;
       overflow: hidden;
       position: relative;
-      border: 1px solid var(--border-panel);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), inset 0 0 30px rgba(56, 189, 248, 0.05);
+      background: #020617;
     }
 
-    .spacex-hero-banner img {
+    #spacex-orbit-map {
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      filter: brightness(0.75);
+      background: #020617;
     }
 
-    .spacex-hero-overlay {
+    .spacex-telemetry-hud-overlay {
       position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, rgba(6, 9, 14, 0.92) 25%, transparent 100%);
-      padding: 2rem;
+      top: 14px;
+      left: 14px;
+      z-index: 500;
+      background: rgba(6, 10, 18, 0.88);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      backdrop-filter: blur(16px);
+      min-width: 250px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .spacex-orbit-controls {
+      position: absolute;
+      bottom: 14px;
+      right: 14px;
+      z-index: 500;
+      display: flex;
+      gap: 0.4rem;
+      background: rgba(6, 10, 18, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 4px;
+      backdrop-filter: blur(14px);
+    }
+
+    .spacex-ctrl-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .spacex-ctrl-btn.active, .spacex-ctrl-btn:hover {
+      background: rgba(56, 189, 248, 0.18);
+      color: #38bdf8;
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    .spacex-grid-two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 1024px) {
+      .spacex-grid-two {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .spacex-card {
+      background: rgba(14, 23, 42, 0.65);
+      border: 1px solid var(--border-panel);
+      border-radius: 16px;
+      padding: 1.25rem;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      gap: 0.9rem;
     }
 
     /* ==========================================================================
@@ -1947,55 +2030,146 @@
       </div>
 
 
-      <!-- VIEW 3: SpaceX Satellite Fleet Mission Control (from spacex_mission_control.jpg) -->
+      <!-- VIEW 3: SpaceX Satellite Fleet Mission Control (Live Interactive Orbital Deck) -->
       <div id="view-spacex" class="view-panel">
-        <div class="spacex-hero-banner">
-          <img src="/static/assets/spacex_mission_control.jpg" alt="SpaceX Mission Control Fleet">
-          <div class="spacex-hero-overlay">
-            <div style="font-size: 1.6rem; font-weight: 800; color: #fff; letter-spacing: 0.04em;">SPACEX // SATELLITE FLEET MISSION CONTROL</div>
-            <div style="font-size: 0.85rem; color: var(--accent-cyan); font-family: var(--font-mono); margin-top: 0.35rem;">
-              ORBITAL CONSTELLATION TELEMETRY & DIGITAL TWIN // AURORA-1
+        <!-- Top Command Strip -->
+        <div class="spacex-command-strip">
+          <div style="display: flex; align-items: center; gap: 0.85rem;">
+            <div style="font-size: 1.3rem;">🛰️</div>
+            <div>
+              <div style="font-weight: 800; font-size: 1rem; color: #fff; letter-spacing: 0.04em;">SPACEX ORBITAL FLEET // MISSION CONTROL DECK</div>
+              <div style="font-size: 0.72rem; color: var(--accent-cyan); font-family: var(--font-mono);">CONSTELLATION TELEMETRY & DIGITAL TWIN // ACTIVE LEO SURVEILLANCE</div>
             </div>
-            <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
-              <span class="brand-badge" style="background: rgba(16,185,129,0.2); color: #34d399; font-size: 0.72rem; padding: 0.3rem 0.75rem;">FLEET LOCK: 99.98%</span>
-              <span class="brand-badge" style="background: rgba(56,189,248,0.2); color: #38bdf8; font-size: 0.72rem; padding: 0.3rem 0.75rem;">LEO VELOCITY: 7.52 KM/S</span>
-            </div>
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="brand-badge" style="background: rgba(16,185,129,0.18); color: #34d399; font-size: 0.68rem; padding: 0.28rem 0.65rem;">FLEET LOCK: 99.98%</span>
+            <span class="brand-badge" style="background: rgba(56,189,248,0.18); color: #38bdf8; font-size: 0.68rem; padding: 0.28rem 0.65rem;">LEO VELOCITY: 7.66 KM/S</span>
+            <span class="brand-badge" style="background: rgba(250,204,21,0.18); color: #facc15; font-size: 0.68rem; padding: 0.28rem 0.65rem;">NODES: 6,482 ACTIVE</span>
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
-          <div class="analytics-card">
-            <div class="analytics-card-title">
-              <span>Active Constellation Feeds</span>
-              <span style="color: var(--accent-yellow);">2,400+ NODES</span>
+        <!-- Interactive Global Orbital Tracking Map -->
+        <div class="spacex-orbit-container">
+          <div id="spacex-orbit-map"></div>
+
+          <!-- Floating Telemetry HUD Overlay -->
+          <div class="spacex-telemetry-hud-overlay">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <span id="sx-hud-target-name" style="font-weight: 800; font-size: 0.88rem; color: #38bdf8; font-family: var(--font-mono);">AURORA-1 [FLAGSHIP]</span>
+              <span id="sx-hud-target-status" class="brand-badge" style="font-size: 0.6rem; color: #34d399; border-color: rgba(16,185,129,0.3);">TRACKING</span>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 0.75rem; font-family: var(--font-mono); font-size: 0.75rem;">
-              <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                <span>Starlink-17524:</span>
-                <span style="color: #34d399;">LEO 550 km &bull; 42.5 MHz Ku-band</span>
+            <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.25rem;">
+              <div style="display: flex; justify-content: space-between;">
+                <span>Sub-Satellite Point:</span>
+                <span id="sx-hud-coords" style="color: #fff; font-weight: 700;">12.9716° N, 77.5946° E</span>
               </div>
-              <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                <span>Sentinel-2B Optical:</span>
-                <span style="color: #38bdf8;">Sun-Synchronous &bull; 786 km</span>
+              <div style="display: flex; justify-content: space-between;">
+                <span>Orbital Altitude:</span>
+                <span id="sx-hud-alt" style="color: #facc15; font-weight: 700;">550.4 km</span>
               </div>
-              <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                <span>Landsat-9 Multispectral:</span>
-                <span style="color: var(--accent-yellow);">Thermal Infrared &bull; 705 km</span>
+              <div style="display: flex; justify-content: space-between;">
+                <span>Ground Velocity:</span>
+                <span id="sx-hud-vel" style="color: #34d399; font-weight: 700;">7.66 km/s (27,576 km/h)</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span>Doppler Offset:</span>
+                <span id="sx-hud-doppler" style="color: #a855f7; font-weight: 700;">+24.8 kHz</span>
               </div>
             </div>
           </div>
 
-          <div class="analytics-card">
-            <div class="analytics-card-title">
-              <span>Mission Operations Protocol</span>
-              <span style="color: #38bdf8;">DIGITAL TWIN</span>
+          <!-- Bottom Right Simulation Controls -->
+          <div class="spacex-orbit-controls">
+            <button class="spacex-ctrl-btn active" id="btn-sx-play" onclick="toggleSpaceXOrbitSim()">⏸ Pause</button>
+            <button class="spacex-ctrl-btn" onclick="setSpaceXSimSpeed(1)">1x</button>
+            <button class="spacex-ctrl-btn" onclick="setSpaceXSimSpeed(5)">5x</button>
+            <button class="spacex-ctrl-btn" onclick="setSpaceXSimSpeed(20)">20x</button>
+            <button class="spacex-ctrl-btn" onclick="resetSpaceXMapView()">⌖ Reset View</button>
+          </div>
+        </div>
+
+        <!-- Lower Grid: Fleet Target Selector + RF Waveform & Mission Protocol -->
+        <div class="spacex-grid-two">
+          <!-- Left: Satellite Target Selector & Telemetry Waveform -->
+          <div class="spacex-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="font-weight: 800; font-size: 0.88rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path></svg>
+                Active Orbital Targets & Fleet Select
+              </div>
+              <span class="brand-badge" style="font-size: 0.65rem;">LIVE SIMULATION</span>
             </div>
-            <div style="font-size: 0.78rem; color: #cbd5e1; line-height: 1.5;">
-              Autonomous orbital geodetics calculate live nadir ground projection coordinates, Doppler frequency shifts, and geodesic intersections on the WGS 84 ellipsoid using Karney's algorithms.
+
+            <!-- Satellite Buttons -->
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="spacex-target-buttons">
+              <button class="spacex-ctrl-btn active" onclick="selectSpaceXTarget('aurora1')" id="btn-tgt-aurora1" style="flex: 1; text-align: center; border-radius: 8px; padding: 0.5rem;">🛰️ Aurora-1 (LEO)</button>
+              <button class="spacex-ctrl-btn" onclick="selectSpaceXTarget('starlink')" id="btn-tgt-starlink" style="flex: 1; text-align: center; border-radius: 8px; padding: 0.5rem;">📡 Starlink-17524</button>
+              <button class="spacex-ctrl-btn" onclick="selectSpaceXTarget('sentinel')" id="btn-tgt-sentinel" style="flex: 1; text-align: center; border-radius: 8px; padding: 0.5rem;">🌍 Sentinel-2B</button>
+              <button class="spacex-ctrl-btn" onclick="selectSpaceXTarget('iss')" id="btn-tgt-iss" style="flex: 1; text-align: center; border-radius: 8px; padding: 0.5rem;">🚀 ISS (Alpha)</button>
             </div>
-            <button class="hud-btn-primary" style="margin-top: 0.5rem;" onclick="switchNavMode('survey')">
-              Return to Tactical Cockpit
-            </button>
+
+            <!-- RF Telemetry Waveform Monitor Canvas -->
+            <div>
+              <div style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 0.4rem; display: flex; justify-content: space-between;">
+                <span>RF Ku-Band Telemetry Signal (14.25 GHz)</span>
+                <span id="sx-rf-snr" style="color: #34d399;">SNR: 28.4 dB &bull; SYNC LOCKED</span>
+              </div>
+              <div style="width: 100%; height: 90px; background: rgba(2,6,23,0.8); border: 1px solid rgba(56,189,248,0.25); border-radius: 8px; overflow: hidden; position: relative;">
+                <canvas id="spacex-waveform-canvas" width="600" height="90" style="width: 100%; height: 100%; display: block;"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Keplerian Orbital Elements & Mission Actions -->
+          <div class="spacex-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="font-weight: 800; font-size: 0.88rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2"><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path></svg>
+                Keplerian Parameters & Ground Teleport Links
+              </div>
+              <span class="brand-badge" style="font-size: 0.65rem; color: #38bdf8; border-color: rgba(56,189,248,0.3);">WGS 84 ELLIPSOID</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-family: var(--font-mono); font-size: 0.73rem;">
+              <div style="background: rgba(255,255,255,0.03); padding: 0.45rem 0.65rem; border-radius: 8px; border: 1px solid var(--border-panel);">
+                <div style="color: var(--text-muted); font-size: 0.65rem;">Semi-Major Axis (a)</div>
+                <div style="color: #fff; font-weight: 700; margin-top: 2px;">6,928.14 km</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.03); padding: 0.45rem 0.65rem; border-radius: 8px; border: 1px solid var(--border-panel);">
+                <div style="color: var(--text-muted); font-size: 0.65rem;">Eccentricity (e)</div>
+                <div style="color: #34d399; font-weight: 700; margin-top: 2px;">0.00014 (Near-Circular)</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.03); padding: 0.45rem 0.65rem; border-radius: 8px; border: 1px solid var(--border-panel);">
+                <div style="color: var(--text-muted); font-size: 0.65rem;">Inclination (i)</div>
+                <div style="color: #facc15; font-weight: 700; margin-top: 2px;">53.20°</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.03); padding: 0.45rem 0.65rem; border-radius: 8px; border: 1px solid var(--border-panel);">
+                <div style="color: var(--text-muted); font-size: 0.65rem;">Orbital Period (T)</div>
+                <div style="color: #38bdf8; font-weight: 700; margin-top: 2px;">95.6 min (15.1 rev/day)</div>
+              </div>
+            </div>
+
+            <!-- Ground Teleports -->
+            <div style="display: flex; flex-direction: column; gap: 0.35rem; font-family: var(--font-mono); font-size: 0.72rem;">
+              <div style="color: var(--text-muted); font-size: 0.65rem; text-transform: uppercase;">Active Ground Gateway Uplinks:</div>
+              <div style="display: flex; justify-content: space-between; padding: 0.35rem 0.6rem; background: rgba(255,255,255,0.02); border-radius: 6px;">
+                <span>Cape Canaveral Gateway:</span>
+                <span style="color: #34d399;">UP LINK &bull; 10.4 Gbps</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 0.35rem 0.6rem; background: rgba(255,255,255,0.02); border-radius: 6px;">
+                <span>Bangalore ISTRAC Teleport:</span>
+                <span style="color: #38bdf8;">UP LINK &bull; 8.2 Gbps</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.25rem;">
+              <button class="hud-btn-primary" style="flex: 1;" onclick="switchNavMode('survey')">
+                Return to Tactical Cockpit
+              </button>
+              <button class="tool-btn" style="padding: 0.45rem 0.85rem;" onclick="openImageryModal()">
+                Sensor Config
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -2055,18 +2229,25 @@
           </div>
         </div>
 
-        <div style="display: flex; gap: 0.5rem; margin-top: auto;">
-          <button class="tool-btn" style="flex: 1; justify-content: center; background: rgba(255,255,255,0.06);" onclick="exportGeoJSON()">Export GeoJSON</button>
-          <button class="tool-btn" style="flex: 1; justify-content: center; background: rgba(255,255,255,0.06);" onclick="exportCSV()">Export CSV</button>
+        <div style="display: flex; gap: 0.5rem; margin-top: auto; flex-direction: column;">
+          <div style="font-size: 0.68rem; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em;">Live Drawings Export</div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="tool-btn" style="flex: 1; justify-content: center; background: rgba(255,255,255,0.06);" onclick="exportGeoJSON()">GeoJSON</button>
+            <button class="tool-btn" style="flex: 1; justify-content: center; background: rgba(255,255,255,0.06);" onclick="exportCSV()">CSV</button>
+          </div>
+          <div id="ingested-file-exports" style="display: none; flex-direction: column; gap: 0.35rem;">
+            <div style="font-size: 0.68rem; color: var(--text-muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em;">Ingested Archive Export</div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="export-links-container"></div>
+          </div>
         </div>
       </div>
     </aside>
 
   </div>
 
-  <!-- Ingestion Deck Modal -->
+  <!-- Ingestion Deck Modal (Enhanced: Upload + File History) -->
   <div class="modal-overlay" id="ingest-modal">
-    <div class="modal-card">
+    <div class="modal-card" style="max-width: 620px;">
       <div class="modal-header">
         <div style="font-weight: 800; font-size: 1.15rem; color: #fff; display: flex; align-items: center; gap: 0.6rem;">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
@@ -2075,22 +2256,71 @@
         <button class="btn-close" onclick="closeIngestModal()">&times;</button>
       </div>
 
-      <div class="dropzone" id="dropzone">
-        <!-- SpaceX Mission Control Fleet Banner (User Uploaded Reference Asset) -->
-        <div style="width: 100%; height: 95px; border-radius: 8px; overflow: hidden; margin-bottom: 1rem; border: 1px solid var(--border-panel); position: relative;">
-          <img src="/static/assets/spacex_mission_control.jpg" alt="SpaceX Fleet" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.85);">
-          <div style="position: absolute; bottom: 6px; left: 8px; font-family: var(--font-mono); font-size: 0.68rem; color: #fff; background: rgba(0,0,0,0.7); padding: 2px 7px; border-radius: 4px; backdrop-filter: blur(4px);">
-            SPACEX ORBITAL FLEET // VECTOR PIPELINE
+      <!-- Tabs -->
+      <div style="display: flex; gap: 0.3rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-panel); border-radius: 10px; padding: 3px; margin-bottom: 1.1rem;">
+        <button id="ingest-tab-upload" onclick="switchIngestTab('upload')" style="flex:1; background: var(--accent-yellow); color: #000; border: none; padding: 0.4rem; border-radius: 7px; font-size: 0.76rem; font-weight: 800; cursor: pointer; font-family: var(--font-sans);">⬆ Upload Archive</button>
+        <button id="ingest-tab-history" onclick="switchIngestTab('history')" style="flex:1; background: transparent; color: var(--text-muted); border: none; padding: 0.4rem; border-radius: 7px; font-size: 0.76rem; font-weight: 700; cursor: pointer; font-family: var(--font-sans);">🗂 File History</button>
+      </div>
+
+      <!-- Upload Tab -->
+      <div id="ingest-panel-upload">
+        <div class="dropzone" id="dropzone">
+          <div style="width: 100%; height: 85px; border-radius: 8px; overflow: hidden; margin-bottom: 0.9rem; border: 1px solid var(--border-panel); position: relative;">
+            <img src="/static/assets/spacex_mission_control.jpg" alt="SpaceX Fleet" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.85);">
+            <div style="position: absolute; bottom: 6px; left: 8px; font-family: var(--font-mono); font-size: 0.68rem; color: #fff; background: rgba(0,0,0,0.7); padding: 2px 7px; border-radius: 4px; backdrop-filter: blur(4px);">
+              SPACEX ORBITAL FLEET // VECTOR PIPELINE
+            </div>
           </div>
+
+          <div style="font-size: 2rem; margin-bottom: 0.4rem;">🛰️</div>
+          <div style="font-weight: 800; font-size: 1rem; color: #fff; margin-bottom: 0.2rem;">Drop geospatial archive to stream</div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.5rem;">Supports KML, KMZ, Shapefile ZIP, GeoJSON, GeoPackage — up to 50 MB</div>
+          <div style="display: flex; gap: 0.3rem; flex-wrap: wrap; justify-content: center; margin-bottom: 0.5rem;">
+            <span class="brand-badge" style="font-size: 0.6rem;">.kml</span>
+            <span class="brand-badge" style="font-size: 0.6rem;">.kmz</span>
+            <span class="brand-badge" style="font-size: 0.6rem;">.zip</span>
+            <span class="brand-badge" style="font-size: 0.6rem; color: #38bdf8; border-color: rgba(56,189,248,0.3);">.geojson</span>
+            <span class="brand-badge" style="font-size: 0.6rem; color: #10b981; border-color: rgba(16,185,129,0.3);">.json</span>
+            <span class="brand-badge" style="font-size: 0.6rem; color: #a855f7; border-color: rgba(168,85,247,0.3);">.gpkg</span>
+          </div>
+          <input type="file" id="file-input" accept=".kml,.kmz,.zip,.geojson,.json,.gpkg" style="display: none;">
         </div>
 
-        <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">🛰️</div>
-        <div style="font-weight: 800; font-size: 1.05rem; color: #fff; margin-bottom: 0.25rem;">Drop geospatial archive to stream</div>
-        <div style="font-size: 0.8rem; color: var(--text-muted);">Supports KML (.kml), KMZ (.kmz), and Shapefiles (.zip) up to 50 MB</div>
-        <input type="file" id="file-input" accept=".kml,.kmz,.zip" style="display: none;">
+        <!-- XHR Upload Progress Bar -->
+        <div id="upload-progress-wrap" style="display: none; margin-top: 0.85rem;">
+          <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.3rem;">
+            <span id="upload-progress-label">Uploading...</span>
+            <span id="upload-progress-pct">0%</span>
+          </div>
+          <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden;">
+            <div id="upload-progress-bar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #38bdf8, #facc15); border-radius: 99px; transition: width 0.15s ease;"></div>
+          </div>
+          <div id="upload-status-msg" style="font-size: 0.68rem; color: var(--text-muted); font-family: var(--font-mono); margin-top: 0.3rem; text-align: center;"></div>
+        </div>
+
+        <!-- Async Toggle -->
+        <div style="display: flex; align-items: center; gap: 0.5rem; justify-content: center; margin-top: 0.75rem;">
+          <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: var(--text-muted); cursor: pointer;">
+            <input type="checkbox" id="async-mode-toggle" style="accent-color: var(--accent-yellow); width: 13px; height: 13px;">
+            <span>Background Queue Mode (async)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- History Tab -->
+      <div id="ingest-panel-history" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <div style="font-size: 0.78rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.05em;">Ingested Archive Registry</div>
+          <button onclick="refreshFileHistory()" style="background: transparent; border: 1px solid var(--border-panel); color: var(--text-muted); font-size: 0.68rem; padding: 0.25rem 0.6rem; border-radius: 6px; cursor: pointer; font-family: var(--font-mono); transition: all 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">↻ Refresh</button>
+        </div>
+        <div id="file-history-list" style="display: flex; flex-direction: column; gap: 0.55rem; max-height: 340px; overflow-y: auto; padding-right: 0.25rem;">
+          <div style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.8rem; font-family: var(--font-mono);">Loading archive history...</div>
+        </div>
       </div>
     </div>
   </div>
+
+
 
   <!-- Orbital Imagery & Sensor Fleet Modal (Zero-Secret Isolated Architecture) -->
   <div class="modal-overlay" id="imagery-modal">
@@ -2216,9 +2446,11 @@
     let liveDrawingsLayerGroup = null;
 
     // Basemaps Setup — CARTO Dark Matter as DEFAULT!
-    const tilesDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+    // Uses Fastly SSL CDN with maxNativeZoom: 19 to prevent adblocker blocks and overzoom 400 errors
+    const tilesDark = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
       subdomains: 'abcd',
       attribution: '&copy; OpenStreetMap &copy; CARTO',
+      maxNativeZoom: 19,
       maxZoom: 20
     });
     const tilesSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -2236,6 +2468,10 @@
     }).setView([12.9716, 77.5946], 14);
 
     liveDrawingsLayerGroup = L.layerGroup().addTo(map);
+
+    // Ensure map tiles properly render across all layout dimensions
+    setTimeout(() => { if (map) map.invalidateSize(); }, 150);
+    window.addEventListener('resize', () => { if (map) map.invalidateSize(); });
 
     // Live UTC Clock
     function updateClock() {
@@ -2276,7 +2512,275 @@
         document.getElementById('view-spacex').classList.add('active');
         document.getElementById('registry-drawer').classList.remove('open');
         showToast('SpaceX Mission Control Fleet Active');
+        initSpaceXFleetMap();
       }
+    }
+
+    // SpaceX Mission Control & Orbital Telemetry Deck Engine
+    let spacexMap = null;
+    let spacexSatMarkers = {};
+    let spacexOrbitTracks = {};
+    let spacexSimTimer = null;
+    let spacexSimActive = true;
+    let spacexSimSpeed = 1;
+    let spacexActiveTarget = 'aurora1';
+    let spacexSimT = 0;
+
+    const spacexConstellation = {
+      aurora1: {
+        name: 'AURORA-1 [FLAGSHIP]',
+        color: '#38bdf8',
+        alt: 550.4,
+        inc: 53.2,
+        periodMin: 95.6,
+        vel: '7.66 km/s',
+        freq: '14.25 GHz',
+        phase: 0.15,
+        icon: '🛰️'
+      },
+      starlink: {
+        name: 'STARLINK-17524',
+        color: '#facc15',
+        alt: 549.8,
+        inc: 53.2,
+        periodMin: 95.4,
+        vel: '7.66 km/s',
+        freq: '12.20 GHz',
+        phase: 1.45,
+        icon: '📡'
+      },
+      sentinel: {
+        name: 'SENTINEL-2B [OPTICAL]',
+        color: '#10b981',
+        alt: 786.0,
+        inc: 98.6,
+        periodMin: 100.6,
+        vel: '7.45 km/s',
+        freq: '8.25 GHz',
+        phase: 3.10,
+        icon: '🌍'
+      },
+      iss: {
+        name: 'ISS [ALPHA STATION]',
+        color: '#f43f5e',
+        alt: 418.5,
+        inc: 51.6,
+        periodMin: 92.8,
+        vel: '7.72 km/s',
+        freq: '2.40 GHz',
+        phase: 4.80,
+        icon: '🚀'
+      }
+    };
+
+    function calculateGroundTrack(incDeg, phase, tSec) {
+      const omegaE = (2 * Math.PI) / 86164;
+      const omegaSat = (2 * Math.PI) / (95.6 * 60);
+      const M = (omegaSat * tSec + phase) % (2 * Math.PI);
+      const lat = Math.asin(Math.sin((incDeg * Math.PI) / 180) * Math.sin(M)) * (180 / Math.PI);
+      const rawLng = Math.atan2(
+        Math.cos((incDeg * Math.PI) / 180) * Math.sin(M),
+        Math.cos(M)
+      ) * (180 / Math.PI);
+      const earthRotDeg = (omegaE * tSec * 180) / Math.PI;
+      let lng = (rawLng - earthRotDeg) % 360;
+      if (lng > 180) lng -= 360;
+      if (lng < -180) lng += 360;
+      return [lat, lng];
+    }
+
+    function generateOrbitPolyline(incDeg, phase) {
+      const pts = [];
+      for (let s = 0; s <= 96 * 60; s += 120) {
+        pts.push(calculateGroundTrack(incDeg, phase, s));
+      }
+      return pts;
+    }
+
+    function initSpaceXFleetMap() {
+      if (spacexMap) {
+        setTimeout(() => spacexMap.invalidateSize(), 80);
+        return;
+      }
+
+      const mapEl = document.getElementById('spacex-orbit-map');
+      if (!mapEl) return;
+
+      spacexMap = L.map('spacex-orbit-map', {
+        zoomControl: true,
+        attributionControl: false,
+        minZoom: 1,
+        maxZoom: 14
+      }).setView([15, 20], 2);
+
+      L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
+        subdomains: 'abcd',
+        maxNativeZoom: 19,
+        maxZoom: 14
+      }).addTo(spacexMap);
+
+      const groundStations = [
+        { name: 'Cape Canaveral Gateway', coords: [28.3922, -80.6077], color: '#34d399' },
+        { name: 'Hawthorne Mission Control', coords: [33.9207, -118.3278], color: '#38bdf8' },
+        { name: 'Bangalore ISTRAC Teleport', coords: [12.9716, 77.5946], color: '#facc15' },
+        { name: 'Boca Chica Starbase', coords: [25.9972, -97.1558], color: '#f43f5e' }
+      ];
+
+      groundStations.forEach(gs => {
+        const icon = L.divIcon({
+          className: 'gs-marker',
+          html: `<div style="background:${gs.color}; width:8px; height:8px; border-radius:50%; box-shadow:0 0 10px ${gs.color}; border:2px solid #fff;"></div>`,
+          iconSize: [12, 12]
+        });
+        L.marker(gs.coords, { icon }).addTo(spacexMap)
+          .bindPopup(`<b>${gs.name}</b><br>Ground Teleport Uplink Online`);
+      });
+
+      Object.keys(spacexConstellation).forEach(k => {
+        const sat = spacexConstellation[k];
+        const trackPts = generateOrbitPolyline(sat.inc, sat.phase);
+
+        spacexOrbitTracks[k] = L.polyline(trackPts, {
+          color: sat.color,
+          weight: k === spacexActiveTarget ? 2 : 1,
+          opacity: k === spacexActiveTarget ? 0.75 : 0.35,
+          dashArray: '4, 6'
+        }).addTo(spacexMap);
+
+        const satIcon = L.divIcon({
+          className: 'sat-node-marker',
+          html: `<div style="display:flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:rgba(2,6,23,0.88); border:2px solid ${sat.color}; box-shadow:0 0 14px ${sat.color}; font-size:14px; cursor:pointer;">${sat.icon}</div>`,
+          iconSize: [28, 28]
+        });
+
+        const initialPos = calculateGroundTrack(sat.inc, sat.phase, 0);
+        const marker = L.marker(initialPos, { icon: satIcon }).addTo(spacexMap);
+        marker.on('click', () => selectSpaceXTarget(k));
+        spacexSatMarkers[k] = marker;
+      });
+
+      startSpaceXOrbitLoop();
+      initSpaceXWaveform();
+      setTimeout(() => spacexMap.invalidateSize(), 120);
+    }
+
+    function startSpaceXOrbitLoop() {
+      if (spacexSimTimer) clearInterval(spacexSimTimer);
+      spacexSimTimer = setInterval(() => {
+        if (!spacexSimActive) return;
+        spacexSimT += 1 * spacexSimSpeed;
+
+        Object.keys(spacexConstellation).forEach(k => {
+          const sat = spacexConstellation[k];
+          const pos = calculateGroundTrack(sat.inc, sat.phase, spacexSimT);
+          if (spacexSatMarkers[k]) {
+            spacexSatMarkers[k].setLatLng(pos);
+          }
+
+          if (k === spacexActiveTarget) {
+            updateSpaceXTelemetryHUD(sat, pos);
+          }
+        });
+      }, 100);
+    }
+
+    function updateSpaceXTelemetryHUD(sat, pos) {
+      const latStr = `${Math.abs(pos[0]).toFixed(4)}° ${pos[0] >= 0 ? 'N' : 'S'}`;
+      const lngStr = `${Math.abs(pos[1]).toFixed(4)}° ${pos[1] >= 0 ? 'E' : 'W'}`;
+      const dopplerHz = (Math.sin(spacexSimT * 0.05) * 35).toFixed(1);
+
+      const elName = document.getElementById('sx-hud-target-name');
+      const elCoords = document.getElementById('sx-hud-coords');
+      const elAlt = document.getElementById('sx-hud-alt');
+      const elVel = document.getElementById('sx-hud-vel');
+      const elDoppler = document.getElementById('sx-hud-doppler');
+
+      if (elName) elName.textContent = sat.name;
+      if (elCoords) elCoords.textContent = `${latStr}, ${lngStr}`;
+      if (elAlt) elAlt.textContent = `${sat.alt.toFixed(1)} km`;
+      if (elVel) elVel.textContent = `${sat.vel} (${(parseFloat(sat.vel) * 3600).toFixed(0)} km/h)`;
+      if (elDoppler) elDoppler.textContent = `${dopplerHz >= 0 ? '+' : ''}${dopplerHz} kHz`;
+    }
+
+    function selectSpaceXTarget(targetKey) {
+      spacexActiveTarget = targetKey;
+      const sat = spacexConstellation[targetKey];
+      if (!sat) return;
+
+      document.querySelectorAll('#spacex-target-buttons .spacex-ctrl-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById(`btn-tgt-${targetKey}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      Object.keys(spacexOrbitTracks).forEach(k => {
+        if (spacexOrbitTracks[k]) {
+          spacexOrbitTracks[k].setStyle({
+            weight: k === targetKey ? 2.5 : 1,
+            opacity: k === targetKey ? 0.9 : 0.25
+          });
+        }
+      });
+
+      if (spacexSatMarkers[targetKey] && spacexMap) {
+        const pos = spacexSatMarkers[targetKey].getLatLng();
+        spacexMap.panTo(pos, { animate: true, duration: 0.8 });
+      }
+
+      showToast(`Target Locked: ${sat.name}`);
+    }
+
+    function toggleSpaceXOrbitSim() {
+      spacexSimActive = !spacexSimActive;
+      const btn = document.getElementById('btn-sx-play');
+      if (btn) btn.textContent = spacexSimActive ? '⏸ Pause' : '▶ Resume';
+      showToast(spacexSimActive ? 'Simulation Resumed' : 'Simulation Paused');
+    }
+
+    function setSpaceXSimSpeed(spd) {
+      spacexSimSpeed = spd;
+      showToast(`Sim Speed: ${spd}x`);
+    }
+
+    function resetSpaceXMapView() {
+      if (spacexMap) spacexMap.setView([15, 20], 2);
+    }
+
+    function initSpaceXWaveform() {
+      const canvas = document.getElementById('spacex-waveform-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let waveT = 0;
+
+      function renderWave() {
+        if (!document.getElementById('view-spacex')?.classList.contains('active')) {
+          requestAnimationFrame(renderWave);
+          return;
+        }
+
+        ctx.fillStyle = 'rgba(2, 6, 23, 0.28)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#38bdf8';
+        ctx.shadowColor = '#38bdf8';
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+
+        const midY = canvas.height / 2;
+        for (let x = 0; x < canvas.width; x++) {
+          const y = midY + 
+            Math.sin(x * 0.04 + waveT) * 20 * Math.sin(x * 0.015) + 
+            Math.cos(x * 0.09 - waveT * 1.5) * 8 + 
+            (Math.random() - 0.5) * 3;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        waveT += 0.07 * (spacexSimActive ? spacexSimSpeed : 0.5);
+        requestAnimationFrame(renderWave);
+      }
+      renderWave();
     }
 
     function setupMapboxLayers(hasServerMapbox) {
@@ -2285,7 +2789,7 @@
         tilesMapboxSat = L.tileLayer('/api/files/tiles/mapbox/{z}/{x}/{y}.png', {
           tileSize: 512,
           zoomOffset: -1,
-          attribution: '&copy; Mapbox Satellite HD &copy; OpenStreetMap',
+          attribution: '&copy; Mapbox Satellite HD &copy; Esri World Imagery',
           maxZoom: 20
         });
 
@@ -2331,6 +2835,7 @@
         if (b) b.classList.add('active');
         document.getElementById('sat-basemap-name').textContent = 'OpenStreetMap';
       }
+      setTimeout(() => { if (map) map.invalidateSize(); }, 60);
     }
 
     function panToCoords(lat, lng, name) {
@@ -2394,7 +2899,15 @@
     }
 
     function openIngestModal() { document.getElementById('ingest-modal').style.display = 'flex'; }
-    function closeIngestModal() { document.getElementById('ingest-modal').style.display = 'none'; }
+    function closeIngestModal() {
+      document.getElementById('ingest-modal').style.display = 'none';
+      const wrap = document.getElementById('upload-progress-wrap');
+      if (wrap) wrap.style.display = 'none';
+      const bar = document.getElementById('upload-progress-bar');
+      if (bar) bar.style.width = '0%';
+      const msg = document.getElementById('upload-status-msg');
+      if (msg) msg.textContent = '';
+    }
     function openCreditsModal() { document.getElementById('credits-modal').style.display = 'flex'; }
     function closeCreditsModal() { document.getElementById('credits-modal').style.display = 'none'; }
     function openImageryModal() { document.getElementById('imagery-modal').style.display = 'flex'; }
@@ -2546,6 +3059,7 @@
           renderTable();
           updateTowersTable();
           updateStatsDisplay();
+          showExportLinks(fileInfo.id, fileInfo.filename);
 
           if (currentMeasurements.length > 0) {
             highlightFeature(0);
@@ -2557,6 +3071,7 @@
       }
     }
 
+
     function showToast(msg) {
       const t = document.getElementById('toast');
       document.getElementById('toast-text').textContent = msg;
@@ -2564,56 +3079,242 @@
       setTimeout(() => { t.style.display = 'none'; }, 3200);
     }
 
-    // File Ingestion Handler
-    async function uploadFile(file) {
+    // File Ingestion Handler (Dual-Mode: Sync + Async Queue)
+    let lastIngestedFileId = null;
+
+    function showExportLinks(fileId, filename) {
+      lastIngestedFileId = fileId;
+      const panel = document.getElementById('ingested-file-exports');
+      const container = document.getElementById('export-links-container');
+      if (!panel || !container) return;
+      const stem = filename ? filename.replace(/\.[^.]+$/, '') : 'export';
+      container.innerHTML = `
+        <a href="/api/files/${fileId}/export/geojson/" download="${stem}_measured.geojson"
+           style="font-size:0.68rem; padding:0.28rem 0.6rem; border-radius:6px; background:rgba(56,189,248,0.1); color:#38bdf8; border:1px solid rgba(56,189,248,0.3); text-decoration:none; font-weight:700; font-family:var(--font-mono);">GeoJSON</a>
+        <a href="/api/files/${fileId}/export/csv/" download="${stem}_measurements.csv"
+           style="font-size:0.68rem; padding:0.28rem 0.6rem; border-radius:6px; background:rgba(16,185,129,0.1); color:#34d399; border:1px solid rgba(16,185,129,0.3); text-decoration:none; font-weight:700; font-family:var(--font-mono);">CSV</a>
+        <a href="/api/files/${fileId}/export/kml/" download="${stem}_measured.kml"
+           style="font-size:0.68rem; padding:0.28rem 0.6rem; border-radius:6px; background:rgba(250,204,21,0.1); color:#facc15; border:1px solid rgba(250,204,21,0.3); text-decoration:none; font-weight:700; font-family:var(--font-mono);">KML</a>
+      `;
+      panel.style.display = 'flex';
+    }
+
+    async function loadFileIntoWorkspace(fileId, filename) {
+      const [mRes, fRes] = await Promise.all([
+        fetch(`/api/files/${fileId}/measurements/`),
+        fetch(`/api/files/${fileId}/features/`)
+      ]);
+
+      if (mRes.ok && fRes.ok) {
+        const mData = await mRes.json();
+        const fData = await fRes.json();
+
+        currentMeasurements = mData.measurements || mData.items || [];
+        currentFeatures = (fData.features || []).map(f => ({
+          type: 'Feature',
+          geometry: f.geometry,
+          properties: { ...(f.properties || {}), feature_index: f.feature_index, geometry_type: f.geometry_type }
+        }));
+
+        loadFeaturesToMap();
+        renderTable();
+        updateTowersTable();
+        updateStatsDisplay();
+        showExportLinks(fileId, filename);
+
+        if (currentMeasurements.length > 0) {
+          highlightFeature(0);
+          if (!document.getElementById('registry-drawer').classList.contains('open')) {
+            toggleRegistryDrawer();
+          }
+        }
+      }
+    }
+
+    async function pollTaskUntilComplete(taskId, filename) {
+      const MAX_POLLS = 60;
+      let polls = 0;
+      showToast(`⏳ Queued: ${filename} — polling for completion...`);
+
+      return new Promise((resolve, reject) => {
+        const interval = setInterval(async () => {
+          polls++;
+          try {
+            const res = await fetch(`/api/tasks/${taskId}/`);
+            const task = await res.json();
+
+            if (task.status === 'COMPLETED') {
+              clearInterval(interval);
+              showToast(`✅ Async ingestion complete: ${filename}`);
+              resolve(task.file_id);
+            } else if (task.status === 'FAILED') {
+              clearInterval(interval);
+              showToast(`❌ Ingestion failed: ${task.error || 'Unknown error'}`);
+              reject(new Error(task.error));
+            } else if (polls >= MAX_POLLS) {
+              clearInterval(interval);
+              showToast('⚠️ Task timeout — check /api/tasks/ for status');
+              reject(new Error('Polling timeout'));
+            } else {
+              // Still queued or processing — update toast
+              const dot = ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏'][polls % 10];
+              showToast(`${dot} Processing ${filename} (${task.status})...`);
+            }
+          } catch (err) {
+            clearInterval(interval);
+            reject(err);
+          }
+        }, 1500);
+      });
+    }
+
+    // Ingestion Tab & History Management
+    function switchIngestTab(tab) {
+      const uploadBtn = document.getElementById('ingest-tab-upload');
+      const historyBtn = document.getElementById('ingest-tab-history');
+      const uploadPanel = document.getElementById('ingest-panel-upload');
+      const historyPanel = document.getElementById('ingest-panel-history');
+
+      if (tab === 'upload') {
+        if (uploadBtn) { uploadBtn.style.background = 'var(--accent-yellow)'; uploadBtn.style.color = '#000'; uploadBtn.style.fontWeight = '800'; }
+        if (historyBtn) { historyBtn.style.background = 'transparent'; historyBtn.style.color = 'var(--text-muted)'; historyBtn.style.fontWeight = '700'; }
+        if (uploadPanel) uploadPanel.style.display = 'block';
+        if (historyPanel) historyPanel.style.display = 'none';
+      } else {
+        if (historyBtn) { historyBtn.style.background = 'var(--accent-yellow)'; historyBtn.style.color = '#000'; historyBtn.style.fontWeight = '800'; }
+        if (uploadBtn) { uploadBtn.style.background = 'transparent'; uploadBtn.style.color = 'var(--text-muted)'; uploadBtn.style.fontWeight = '700'; }
+        if (historyPanel) historyPanel.style.display = 'block';
+        if (uploadPanel) uploadPanel.style.display = 'none';
+        refreshFileHistory();
+      }
+    }
+
+    async function refreshFileHistory() {
+      const listEl = document.getElementById('file-history-list');
+      if (!listEl) return;
+      listEl.innerHTML = '<div style="text-align:center; padding:1.5rem; color:var(--text-muted); font-size:0.75rem; font-family:var(--font-mono);">Scanning archive registry...</div>';
+
+      try {
+        const res = await fetch('/api/files/?limit=50');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const files = await res.json();
+
+        if (!files || !files.length) {
+          listEl.innerHTML = '<div style="text-align:center; padding:1.5rem; color:var(--text-muted); font-size:0.75rem; font-family:var(--font-mono);">No ingested archives found. Upload a file above.</div>';
+          return;
+        }
+
+        listEl.innerHTML = '';
+        files.forEach(f => {
+          const card = document.createElement('div');
+          card.style.cssText = 'background:rgba(255,255,255,0.03); border:1px solid var(--border-panel); border-radius:8px; padding:0.6rem 0.75rem; display:flex; flex-direction:column; gap:0.4rem;';
+
+          const fmtColor = f.format === 'geojson' ? '#38bdf8' : (f.format === 'gpkg' ? '#a855f7' : '#facc15');
+          const sizeStr = f.size_bytes ? (f.size_bytes < 1024 * 1024 ? `${(f.size_bytes / 1024).toFixed(1)} KB` : `${(f.size_bytes / (1024*1024)).toFixed(2)} MB`) : '—';
+          const statusColor = f.status === 'COMPLETED' ? '#34d399' : (f.status === 'FAILED' ? '#ef4444' : '#f59e0b');
+          const stem = f.filename ? f.filename.replace(/\.[^.]+$/, '') : 'export';
+
+          card.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div style="display:flex; align-items:center; gap:0.45rem; overflow:hidden;">
+                <span class="brand-badge" style="font-size:0.6rem; color:${fmtColor}; border-color:${fmtColor}40;">.${f.format || 'bin'}</span>
+                <span style="font-weight:700; font-size:0.8rem; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:240px;" title="${f.filename}">${f.filename}</span>
+              </div>
+              <span style="font-size:0.62rem; font-family:var(--font-mono); font-weight:700; color:${statusColor}; background:${statusColor}18; border:1px solid ${statusColor}35; padding:1px 6px; border-radius:4px;">${f.status}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.68rem; color:var(--text-muted); font-family:var(--font-mono);">
+              <span>${f.feature_count ?? 0} features &bull; ${sizeStr}</span>
+              <div style="display:flex; gap:0.35rem; align-items:center;">
+                <button onclick="loadFileIntoWorkspace('${f.id}', '${f.filename ? f.filename.replace(/'/g, "\\'") : ''}'); closeIngestModal();" style="background:var(--accent-yellow); color:#000; border:none; padding:0.2rem 0.55rem; border-radius:4px; font-weight:800; font-size:0.65rem; cursor:pointer;">Load</button>
+                <a href="/api/files/${f.id}/export/geojson/" download="${stem}.geojson" title="Export GeoJSON" style="color:#38bdf8; text-decoration:none; font-size:0.65rem; border:1px solid rgba(56,189,248,0.3); padding:0.2rem 0.4rem; border-radius:4px;">JSON</a>
+                <a href="/api/files/${f.id}/export/csv/" download="${stem}.csv" title="Export CSV" style="color:#34d399; text-decoration:none; font-size:0.65rem; border:1px solid rgba(16,185,129,0.3); padding:0.2rem 0.4rem; border-radius:4px;">CSV</a>
+                <a href="/api/files/${f.id}/export/kml/" download="${stem}.kml" title="Export KML" style="color:#facc15; text-decoration:none; font-size:0.65rem; border:1px solid rgba(250,204,21,0.3); padding:0.2rem 0.4rem; border-radius:4px;">KML</a>
+              </div>
+            </div>
+          `;
+          listEl.appendChild(card);
+        });
+      } catch (err) {
+        listEl.innerHTML = `<div style="text-align:center; padding:1.5rem; color:#ef4444; font-size:0.75rem; font-family:var(--font-mono);">Error loading history: ${err.message}</div>`;
+      }
+    }
+
+    function uploadFile(file) {
       if (!file) return;
-      closeIngestModal();
-      showToast(`Ingesting ${file.name}...`);
+
+      const asyncMode = document.getElementById('async-mode-toggle')?.checked;
+      const endpoint = asyncMode ? '/api/async/ingest/' : '/api/files/';
+
+      const progressWrap = document.getElementById('upload-progress-wrap');
+      const progressBar = document.getElementById('upload-progress-bar');
+      const progressPct = document.getElementById('upload-progress-pct');
+      const progressLabel = document.getElementById('upload-progress-label');
+      const statusMsg = document.getElementById('upload-status-msg');
+
+      if (progressWrap) progressWrap.style.display = 'block';
+      if (progressBar) progressBar.style.width = '0%';
+      if (progressPct) progressPct.textContent = '0%';
+      if (progressLabel) progressLabel.textContent = `Streaming ${file.name}...`;
+      if (statusMsg) statusMsg.textContent = 'Connecting to telemetry ingest socket...';
+
+      showToast(`${asyncMode ? '🔄 Queuing' : '📡 Streaming'} ${file.name}...`);
 
       const formData = new FormData();
       formData.append('file', file);
 
-      try {
-        const res = await fetch('/api/files/', { method: 'POST', body: formData });
-        if (!res.ok) {
-          const err = await res.json();
-          showToast(`Ingestion failed: ${err.detail || 'Upload error'}`);
-          return;
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', endpoint);
+
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const pct = Math.round((e.loaded / e.total) * 100);
+          if (progressBar) progressBar.style.width = `${pct}%`;
+          if (progressPct) progressPct.textContent = `${pct}%`;
+          if (statusMsg) statusMsg.textContent = `${(e.loaded / 1024).toFixed(0)} KB / ${(e.total / 1024).toFixed(0)} KB streamed`;
         }
+      };
 
-        const data = await res.json();
-        const fileId = data.id || (data.file && data.file.id);
-
-        const [mRes, fRes] = await Promise.all([
-          fetch(`/api/files/${fileId}/measurements/`),
-          fetch(`/api/files/${fileId}/features/`)
-        ]);
-
-        if (mRes.ok && fRes.ok) {
-          const mData = await mRes.json();
-          const fData = await fRes.json();
-
-          currentMeasurements = mData.measurements || mData.items || [];
-          currentFeatures = (fData.features || []).map(f => ({
-            type: 'Feature',
-            geometry: f.geometry,
-            properties: { ...(f.properties || {}), feature_index: f.feature_index, geometry_type: f.geometry_type }
-          }));
-
-          loadFeaturesToMap();
-          renderTable();
-          updateTowersTable();
-          updateStatsDisplay();
-
-          if (currentMeasurements.length > 0) {
-            highlightFeature(0);
+      xhr.onload = async () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            const data = JSON.parse(xhr.responseText);
+            if (asyncMode) {
+              if (progressLabel) progressLabel.textContent = 'Queued in Background Queue';
+              if (statusMsg) statusMsg.textContent = `Task ID: ${data.task_id} — processing geodesics...`;
+              const fileId = await pollTaskUntilComplete(data.task_id, file.name);
+              await loadFileIntoWorkspace(fileId, file.name);
+              showToast(`Loaded ${currentMeasurements.length} features from ${file.name}!`);
+              setTimeout(closeIngestModal, 600);
+            } else {
+              if (progressLabel) progressLabel.textContent = 'Processing Complete!';
+              if (progressBar) progressBar.style.width = '100%';
+              if (progressPct) progressPct.textContent = '100%';
+              const fileId = data.id || (data.file && data.file.id);
+              await loadFileIntoWorkspace(fileId, data.filename || file.name);
+              showToast(`Ingested ${currentMeasurements.length} features from ${data.filename || file.name}!`);
+              setTimeout(closeIngestModal, 600);
+            }
+          } catch (err) {
+            showToast(`Processing error: ${err.message}`);
+            if (statusMsg) statusMsg.textContent = `Processing error: ${err.message}`;
           }
-
-          showToast(`Ingested ${currentMeasurements.length} features from ${data.filename || 'dataset'}!`);
+        } else {
+          let errDetail = 'Upload failed';
+          try {
+            const errJson = JSON.parse(xhr.responseText);
+            errDetail = errJson.detail || errDetail;
+          } catch (_) {}
+          showToast(`Error: ${errDetail}`);
+          if (statusMsg) statusMsg.textContent = `Error: ${errDetail}`;
         }
-      } catch (e) {
-        showToast(`Ingestion error: ${e.message}`);
-      }
+      };
+
+      xhr.onerror = () => {
+        showToast('Network error during upload');
+        if (statusMsg) statusMsg.textContent = 'Network error during upload';
+      };
+
+      xhr.send(formData);
     }
 
     // Drag and drop setup
@@ -2632,6 +3333,7 @@
       dropzone.style.borderColor = 'rgba(250, 204, 21, 0.4)';
       if (e.dataTransfer.files.length) uploadFile(e.dataTransfer.files[0]);
     };
+
 
     let geoJsonLayer = null;
 

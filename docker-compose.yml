@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: geospatial-measurement-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - GEO_DB_PATH=/app/data/geomeasure.db
+      - GEO_MAX_UPLOAD_BYTES=52428800
+      - GEO_MAX_FEATURES=10000
+      - GEO_ENABLE_ASYNC_PROCESSING=true
+      - GEO_MAPBOX_ACCESS_TOKEN=${MAPBOX_ACCESS_TOKEN:-}
+      - GEO_API_KEY=${GEO_API_KEY:-}
+    volumes:
+      - geodata:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  geodata:
+    name: geomeasure_data

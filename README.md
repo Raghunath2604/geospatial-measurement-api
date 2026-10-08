@@ -1,18 +1,35 @@
 # Geospatial File Measurement API
 
-A robust, production-grade backend service built with **FastAPI**, **Shapely >= 2.0**, **pyproj**, and **pyshp** for ingesting geospatial survey files (KML and Shapefile ZIP archives), extracting geographic features, dynamically selecting optimal metric coordinate reference systems (UTMs/UPS), and computing accurate geometric measurements (polygon area in $\text{m}^2$ and linestring length in $\text{m}$).
+A robust, production-grade backend service built with **FastAPI**, **Shapely ≥ 2.0**, **pyproj**, and **pyshp** for ingesting geospatial survey files, extracting geographic features, dynamically selecting optimal metric coordinate reference systems (UTM/UPS), and computing accurate geometric measurements (polygon area in $\text{m}^2$ and linestring length in $\text{m}$).
 
 ---
 
 ## 1. Overview & Key Capabilities
 
-- **Supported Formats**: KML (`.kml`), KMZ (`.kmz` Google Earth compressed archives), and Shapefile archives (`.zip` containing `.shp` and `.dbf` with optional `.prj`, `.shx`, `.cpg`).
+- **Supported Formats**: KML (`.kml`), KMZ (`.kmz` Google Earth compressed archives), Shapefile archives (`.zip`), **GeoJSON** (`.geojson`/`.json`), and **GeoPackage** (`.gpkg`).
 - **Dynamic Metric Projection**: Features defined in geographic coordinates (`EPSG:4326` degrees) or projected systems (e.g. Web Mercator) are dynamically reprojected to local metric **UTM zones** (`EPSG:32601-32660` North, `EPSG:32701-32760` South) or **Universal Polar Stereographic** (UPS North `EPSG:32661` / UPS South `EPSG:32761`).
 - **Real-Time Geodetic Engine**: Sub-millisecond arbitrary geometry measurement (`POST /api/measure/geometry/`) returning dual planar UTM metrics and WGS 84 ellipsoidal geodesics (`pyproj.Geod`).
 - **Territorial Location & Terrain Elevation**: Real-time reverse geocoding via OpenStreetMap Nominatim and terrain altitude via Open-Elevation / SRTM.
 - **Survey-Grade Accuracy**: Never evaluates distance or area in angular degrees squared. Verified against `pyproj.Geod` ellipsoidal calculations with $< 0.5\%$ divergence.
 - **Defensive Ingestion**: Hardened against XXE/entity expansion, Zip-Slip path traversals, decompression bombs, and oversized uploads.
-- **Production GIS Workbench**: Interactive Leaflet visualizer with Esri Satellite imagery, vector drawing tools (Polygon, Path, Pin), precision HUD, and RFC 7946 GeoJSON/CSV exports.
+- **Production GIS Workbench**: Interactive Leaflet visualizer with Esri Satellite imagery, vector drawing tools (Polygon, Path, Pin), precision HUD, and RFC 7946 GeoJSON/CSV/KML exports.
+- **Async Background Queue**: `POST /api/async/ingest/` enqueues large files to background workers; `GET /api/tasks/{id}/` polls status. Dashboard supports both sync and async modes with live progress feedback.
+- **API Key Authentication**: Optional `GEO_API_KEY` environment variable gates all protected endpoints. Rate limiting via SlowAPI.
+- **Prometheus Metrics**: `GET /metrics` exposes request counters, ingestion histograms, and duration gauges in Prometheus text format.
+
+---
+
+## 📚 Complete Project Documentation Index
+
+| Document | Description | Link |
+| :--- | :--- | :--- |
+| **Product Requirements (PRD)** | User personas, functional requirements, scope & success criteria | [`docs/PRD.md`](docs/PRD.md) |
+| **Technical Requirements (TRD)** | System architecture, mathematical formulation, schemas & API specifications | [`docs/TRD.md`](docs/TRD.md) |
+| **Application Flow & Sequence** | Mermaid sequence diagrams, data transformations & async pipeline | [`docs/APP_FLOW.md`](docs/APP_FLOW.md) |
+| **UI/UX Design & Wireflow** | Cyberdefend design tokens, layout hierarchy, component specifications & state machine | [`docs/UI_UX_FLOW.md`](docs/UI_UX_FLOW.md) |
+| **User Usage Flow** | Step-by-step user onboarding, surveying, file uploads & SpaceX deck controls | [`docs/USER_USAGE_FLOW.md`](docs/USER_USAGE_FLOW.md) |
+| **Implementation Deep Dive** | Karney WGS84 geodesics, dynamic UTM/UPS projection, parsers & hardening | [`docs/IMPLEMENTATION_DETAILS.md`](docs/IMPLEMENTATION_DETAILS.md) |
+| **Interview Technical Q&A** | 25+ comprehensive architectural questions, edge cases, and design rationale | [`docs/INTERVIEW_QA.md`](docs/INTERVIEW_QA.md) |
 
 ---
 
@@ -84,16 +101,25 @@ Environment variables can override default runtime limits:
 | Method | Endpoint | Description | Status Codes |
 |---|---|---|---|
 | `GET` | `/health` | Healthcheck endpoint | 200 |
+| `GET` | `/metrics` | Prometheus metrics exposition | 200 |
 | `GET` | `/api/files/config/` | Retrieve runtime limits and allowed extensions | 200 |
-| `POST` | `/api/files/` | Stream and ingest KML, KMZ, or Shapefile ZIP | 201, 413, 415, 422 |
+| `POST` | `/api/files/` | Stream and ingest KML, KMZ, Shapefile ZIP, GeoJSON, or GeoPackage (sync) | 201, 413, 415, 422 |
+| `POST` | `/api/async/ingest/` | Enqueue file for background ingestion | 202, 413, 415 |
+| `GET` | `/api/tasks/` | List recent async ingestion tasks | 200 |
+| `GET` | `/api/tasks/{id}/` | Poll async task status | 200, 404 |
+| `GET` | `/api/files/` | List all ingested files | 200 |
+| `GET` | `/api/files/latest` | Get most recently ingested completed file | 200, 404 |
 | `GET` | `/api/files/{id}/` | Retrieve file ingestion status and metadata | 200, 404 |
 | `GET` | `/api/files/{id}/measurements/` | Paginated measurements and whole-file summary | 200, 404, 409 |
 | `GET` | `/api/files/{id}/features/` | Paginated GeoJSON features in native CRS | 200, 404, 409 |
 | `GET` | `/api/files/{id}/export/geojson/` | Download RFC 7946 GeoJSON FeatureCollection | 200, 404, 409 |
 | `GET` | `/api/files/{id}/export/csv/` | Download complete tabular measurements as CSV | 200, 404, 409 |
+| `GET` | `/api/files/{id}/export/kml/` | **Download KML 2.2 with ExtendedData measurements** | 200, 404, 409 |
 | `POST` | `/api/measure/geometry/` | Real-time arbitrary GeoJSON geometry measurement | 200, 422 |
-| `POST` | `/api/measure/reverse-geocode/` | Real-time administrative location reverse lookup | 200 |
-| `POST` | `/api/measure/elevation/` | Real-time terrain altitude query (SRTM) | 200 |
+| `GET` | `/api/measure/reverse-geocode/` | Real-time administrative location reverse lookup (GET) | 200 |
+| `POST` | `/api/measure/reverse-geocode/` | Real-time administrative location reverse lookup (POST) | 200 |
+| `GET` | `/api/measure/elevation/` | Real-time terrain altitude query (SRTM, GET) | 200 |
+| `POST` | `/api/measure/elevation/` | Real-time terrain altitude query (SRTM, POST) | 200 |
 
 ---
 
@@ -460,15 +486,17 @@ graph TD
 
 ---
 
-## 8. Future Scope & Production Roadmap
+## 8. Production Roadmap & Implementation Status
 
-1. **Asynchronous Processing Queue**:
-   Transition ingestion of large datasets (> 100 MB) to background worker queues (Celery/RQ on Redis), immediately returning `HTTP 202 Accepted` with a task status URL.
-2. **PostGIS Relational Spatial Engine**:
-   Migrate SQLite tables to PostgreSQL/PostGIS, utilizing native `GEOMETRY` types, GiST spatial indexing, and `ST_Area()` spheroid calculations.
-3. **Expanded Spatial Format Registry**:
-   Add support for zipped KMZ (`.kmz`), GeoJSON FeatureCollections, GeoPackage (`.gpkg`), and FlatGeobuf.
-4. **Cloud Object Storage**:
-   Upload raw user files to S3 / Google Cloud Storage with presigned URLs to retain immutable raw survey records.
-5. **Observability & OpenTelemetry**:
-   Integrate Prometheus metrics for tracking ingestion latency, file size distributions, and coordinate transformer caching.
+| Feature | Status |
+|---|---|
+| **Asynchronous Processing Queue** (Background workers, HTTP 202 Accepted, task polling) | ✅ Implemented |
+| **GeoJSON & GeoPackage Parsers** (`.geojson`, `.json`, `.gpkg` ingestion) | ✅ Implemented |
+| **KML Export** (`GET /api/files/{id}/export/kml/` with ExtendedData measurements) | ✅ Implemented |
+| **API Key Authentication + Rate Limiting** (SlowAPI, `X-API-Key` header) | ✅ Implemented |
+| **Prometheus Metrics** (`GET /metrics`, HTTP counters, ingestion histograms) | ✅ Implemented |
+| **Interactive GIS Dashboard** (Leaflet, 3-view, draw tools, basemap switching) | ✅ Implemented |
+| **PostGIS Relational Spatial Engine** (PostgreSQL/PostGIS migration) | 🔲 Future |
+| **Cloud Object Storage** (S3 / GCS presigned URL integration) | 🔲 Future |
+| **OpenTelemetry Tracing** (Distributed trace propagation) | 🔲 Future |
+| **FlatGeobuf / Cloud-Optimized GeoTIFF Formats** | 🔲 Future |

@@ -96,22 +96,62 @@ def get_mapbox_tile(
     y: int,
     settings: Settings = Depends(get_settings),
 ) -> Response:
-    """Securely stream Mapbox Satellite Streets tiles without exposing API credentials to clients."""
-    if not settings.mapbox_access_token:
-        return Response(status_code=404, content=b"", media_type="image/png")
+    """Stream Mapbox Satellite Streets tiles. Falls back to Esri Satellite if token is invalid or unauthorized."""
+    if settings.mapbox_access_token:
+        tile_url = (
+            f"https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/tiles/{z}/{x}/{y}@2x"
+            f"?access_token={settings.mapbox_access_token}"
+        )
+        try:
+            with httpx.Client(timeout=4.0) as client:
+                resp = client.get(tile_url)
+                if resp.status_code == 200:
+                    media_type = resp.headers.get("content-type", "image/jpeg")
+                    return Response(
+                        content=resp.content,
+                        media_type=media_type,
+                        headers={"Cache-Control": "public, max-age=86400"},
+                    )
+        except Exception:
+            pass
 
-    tile_url = (
-        f"https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/tiles/{z}/{x}/{y}@2x"
-        f"?access_token={settings.mapbox_access_token}"
-    )
+    # Seamless fallback: Esri World Imagery (high-resolution optical satellite)
+    fallback_url = f"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
     try:
         with httpx.Client(timeout=4.0) as client:
-            resp = client.get(tile_url)
+            fb_resp = client.get(fallback_url)
+            if fb_resp.status_code == 200:
+                return Response(
+                    content=fb_resp.content,
+                    media_type="image/jpeg",
+                    headers={"Cache-Control": "public, max-age=86400"},
+                )
+    except Exception:
+        pass
+
+    return Response(status_code=404, content=b"", media_type="image/png")
+
+
+@router.get(
+    "/tiles/carto/{z}/{x}/{y}.png",
+    summary="Adblocker-Immune Server-Side Carto Dark Tile Proxy",
+)
+def get_carto_tile(
+    z: int,
+    x: int,
+    y: int,
+) -> Response:
+    """Proxy Carto Dark Matter tiles through backend to prevent browser adblocker interception."""
+    subdomains = ["a", "b", "c", "d"]
+    subdomain = subdomains[(x + y) % len(subdomains)]
+    carto_url = f"https://cartodb-basemaps-{subdomain}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
+    try:
+        with httpx.Client(timeout=4.0) as client:
+            resp = client.get(carto_url)
             if resp.status_code == 200:
-                media_type = resp.headers.get("content-type", "image/jpeg")
                 return Response(
                     content=resp.content,
-                    media_type=media_type,
+                    media_type="image/png",
                     headers={"Cache-Control": "public, max-age=86400"},
                 )
     except Exception:
@@ -413,6 +453,133 @@ def export_file_csv(
         content=csv_data,
         media_type="text/csv",
         headers={"Content-Disposition": f'attachment; filename="{filename_clean}_measurements.csv"'},
+    )
+
+
+@router.get(
+    "/{file_id}/export/kml/",
+    summary="Export features with measurements as KML 2.2",
+)
+def export_file_kml(
+    file_id: str,
+    repo: Repository = Depends(get_repository),
+) -> Response:
+    """Export complete dataset as KML 2.2 with measurement attributes embedded as ExtendedData.
+
+    Output includes Placemark entries with GeoJSON-derived coordinates converted to
+    KML coordinate tuples, plus measurement results as key-value ExtendedData pairs.
+    """
+    import json
+    import xml.etree.ElementTree as ET
+
+    record = repo.get_file(file_id)
+    if not record:
+        raise NotFoundError(f"File '{file_id}' not found")
+    if record.status != FileStatus.COMPLETED:
+        raise ConflictError("Export requires COMPLETED status")
+
+    features, _ = repo.get_features(file_id=file_id, limit=10_000, offset=0)
+    _, stored_features, _ = repo.get_measurements(file_id=file_id, limit=10_000, offset=0)
+    meas_by_idx = {sf.feature_index: sf for sf in stored_features}
+
+    KML_NS = "http://www.opengis.net/kml/2.2"
+    root = ET.Element(f"{{{KML_NS}}}kml")
+    doc = ET.SubElement(root, f"{{{KML_NS}}}Document")
+    name_el = ET.SubElement(doc, f"{{{KML_NS}}}name")
+    name_el.text = record.filename
+
+    def coords_to_kml(coords: list) -> str:
+        """Convert GeoJSON [lon, lat] or [lon, lat, alt] coordinate array to KML string."""
+        parts = []
+        for c in coords:
+            if len(c) >= 3:
+                parts.append(f"{c[0]},{c[1]},{c[2]}")
+            else:
+                parts.append(f"{c[0]},{c[1]},0")
+        return " ".join(parts)
+
+    for feat in features:
+        pm = ET.SubElement(doc, f"{{{KML_NS}}}Placemark")
+
+        # Name from properties or index
+        pm_name = ET.SubElement(pm, f"{{{KML_NS}}}name")
+        props = feat.properties or {}
+        pm_name.text = str(props.get("name", f"Feature #{feat.feature_index}"))
+
+        # ExtendedData with measurement values
+        meas = meas_by_idx.get(feat.feature_index)
+        if meas:
+            ext_data = ET.SubElement(pm, f"{{{KML_NS}}}ExtendedData")
+            for key, value in [
+                ("geometry_type", feat.geometry_type),
+                ("measurement_status", meas.measurement_status.value),
+                ("area_sq_m", str(meas.area_sq_m) if meas.area_sq_m is not None else ""),
+                ("length_m", str(meas.length_m) if meas.length_m is not None else ""),
+                ("measurement_crs", meas.measurement_crs or ""),
+                ("measurement_notice", meas.measurement_message or ""),
+            ]:
+                data_el = ET.SubElement(ext_data, f"{{{KML_NS}}}Data", name=key)
+                val_el = ET.SubElement(data_el, f"{{{KML_NS}}}value")
+                val_el.text = value
+
+        # Geometry element
+        geom = feat.geometry
+        geom_type = geom.get("type", "")
+        geom_coords = geom.get("coordinates", [])
+
+        if geom_type == "Point":
+            pt = ET.SubElement(pm, f"{{{KML_NS}}}Point")
+            coords_el = ET.SubElement(pt, f"{{{KML_NS}}}coordinates")
+            c = geom_coords
+            coords_el.text = f"{c[0]},{c[1]},{c[2] if len(c) > 2 else 0}"
+
+        elif geom_type == "LineString":
+            ls = ET.SubElement(pm, f"{{{KML_NS}}}LineString")
+            coords_el = ET.SubElement(ls, f"{{{KML_NS}}}coordinates")
+            coords_el.text = coords_to_kml(geom_coords)
+
+        elif geom_type == "Polygon":
+            poly = ET.SubElement(pm, f"{{{KML_NS}}}Polygon")
+            for ring_idx, ring in enumerate(geom_coords):
+                if ring_idx == 0:
+                    ob = ET.SubElement(poly, f"{{{KML_NS}}}outerBoundaryIs")
+                    lr = ET.SubElement(ob, f"{{{KML_NS}}}LinearRing")
+                else:
+                    ib = ET.SubElement(poly, f"{{{KML_NS}}}innerBoundaryIs")
+                    lr = ET.SubElement(ib, f"{{{KML_NS}}}LinearRing")
+                coords_el = ET.SubElement(lr, f"{{{KML_NS}}}coordinates")
+                coords_el.text = coords_to_kml(ring)
+
+        elif geom_type == "MultiPolygon":
+            multi = ET.SubElement(pm, f"{{{KML_NS}}}MultiGeometry")
+            for poly_coords in geom_coords:
+                poly = ET.SubElement(multi, f"{{{KML_NS}}}Polygon")
+                for ring_idx, ring in enumerate(poly_coords):
+                    if ring_idx == 0:
+                        ob = ET.SubElement(poly, f"{{{KML_NS}}}outerBoundaryIs")
+                        lr = ET.SubElement(ob, f"{{{KML_NS}}}LinearRing")
+                    else:
+                        ib = ET.SubElement(poly, f"{{{KML_NS}}}innerBoundaryIs")
+                        lr = ET.SubElement(ib, f"{{{KML_NS}}}LinearRing")
+                    coords_el = ET.SubElement(lr, f"{{{KML_NS}}}coordinates")
+                    coords_el.text = coords_to_kml(ring)
+
+        elif geom_type == "MultiLineString":
+            multi = ET.SubElement(pm, f"{{{KML_NS}}}MultiGeometry")
+            for line_coords in geom_coords:
+                ls = ET.SubElement(multi, f"{{{KML_NS}}}LineString")
+                coords_el = ET.SubElement(ls, f"{{{KML_NS}}}coordinates")
+                coords_el.text = coords_to_kml(line_coords)
+
+    ET.indent(root, space="  ")
+    kml_bytes = ET.tostring(root, encoding="unicode", xml_declaration=False)
+    kml_output = '<?xml version="1.0" encoding="UTF-8"?>\n' + kml_bytes
+
+    filename_clean = record.filename.rsplit(".", 1)[0]
+    return Response(
+        content=kml_output,
+        media_type="application/vnd.google-earth.kml+xml",
+        headers={"Content-Disposition": f'attachment; filename="{filename_clean}_measured.kml"'},
     )
 
 

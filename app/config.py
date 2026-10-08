@@ -47,7 +47,8 @@ class Settings:
     @classmethod
     def from_env(cls) -> Settings:
         """Create Settings instance reading from environment variables."""
-        db_path = os.getenv("GEO_DB_PATH", "data/geomeasure.db")
+        default_db = "/tmp/geomeasure.db" if os.getenv("VERCEL") else "data/geomeasure.db"
+        db_path = os.getenv("GEO_DB_PATH", default_db)
         max_upload_bytes = int(os.getenv("GEO_MAX_UPLOAD_BYTES", str(50 * 1024 * 1024)))
         max_uncompressed_bytes = int(
             os.getenv("GEO_MAX_UNCOMPRESSED_BYTES", str(200 * 1024 * 1024))
