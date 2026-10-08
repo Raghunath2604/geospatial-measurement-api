@@ -187,6 +187,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
     @app.get("/", tags=["Dashboard"], include_in_schema=False)
+    @app.get("/api/index", tags=["Dashboard"], include_in_schema=False)
+    @app.get("/api/index.py", tags=["Dashboard"], include_in_schema=False)
     def index_dashboard() -> FileResponse:
         if static_html.exists():
             return FileResponse(static_html, media_type="text/html")
