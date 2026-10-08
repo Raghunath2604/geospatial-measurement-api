@@ -129,7 +129,7 @@ For extreme verification, geodesic distance and polygon area are calculated usin
    - KML files validated against XML schema using `lxml` with external entity resolution disabled (`resolve_entities=False`) to prevent XML External Entity (XXE) attacks.
 4. **Zero-Secrets Protocol**:
    - Upstream third-party API credentials (`MAPBOX_ACCESS_TOKEN`, `OPENTOPOGRAPHY_API_KEY`) reside exclusively in server `.env`.
-   - Client requests are proxied via `/api/files/tiles/mapbox/` and `/api/files/tiles/carto/`.
+   - Client requests are proxied via `/api/files/tiles/mapbox/` with automated Esri optical fallback.
 
 ---
 

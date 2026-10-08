@@ -32,7 +32,7 @@ The interface is structured into three primary full-screen operational views hos
 │ ICON    │ ACTIVE OPERATIONAL VIEW                                      │
 │ SIDEBAR │                                                              │
 │ RAIL    │  VIEW 1: Tactical GIS Cockpit                                │
-│ (58px)  │   - Fullscreen Leaflet Canvas with CARTO Dark / Esri         │
+│ (58px)  │   - Fullscreen Leaflet Canvas with Esri World Imagery (Sat)  │
 │         │   - Top-Left: Floating Radar Telemetry HUD                   │
 │ [🛰️]   │   - Top-Right: Drawing Tools Ribbon (Polygon, Line, Circle)  │
 │ [📊]   │   - Bottom-Left: Basemap Switcher Pill                       │

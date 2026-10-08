@@ -76,7 +76,7 @@ Traditional GIS and geospatial measurement workflows suffer from critical engine
 - **FR-4.1**: Interactive vector digitization: Polygon, Polyline, Circle/Buffer (radius slider 10m–5,000m), and GPS fix marker.
 - **FR-4.2**: Real-time geometry measurement endpoint: `POST /api/measure/geometry/`.
 - **FR-4.3**: Unit conversion toggle: Metric (`m²`, `ha`, `km²`, `m`, `km`) and Imperial (`sq ft`, `acres`, `sq mi`, `ft`, `miles`).
-- **FR-4.4**: Basemap switching: CARTO Dark Matter (Fastly CDN), Esri World Imagery, OpenStreetMap, and Mapbox Satellite HD with optical fallback.
+- **FR-4.4**: Basemap switching: Esri World Imagery (default sub-meter satellite), OpenStreetMap, and Mapbox Satellite HD with optical fallback.
 
 ### FR-5: SpaceX Satellite Fleet & Mission Control Deck
 - **FR-5.1**: Dedicated full-screen interactive orbital tracking map.

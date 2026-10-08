@@ -1576,7 +1576,7 @@
             </div>
             <div class="sat-metric-item">
               <span style="color: var(--text-muted);">Basemap Source:</span>
-              <span style="color: var(--accent-yellow);" id="sat-basemap-name">Carto Dark Matter</span>
+              <span style="color: var(--accent-yellow);" id="sat-basemap-name">Esri World Imagery</span>
             </div>
           </div>
         </div>
@@ -1750,12 +1750,11 @@
 
         <!-- Basemap Switcher In Bottom Left -->
         <div class="floating-basemap-pill" id="basemap-controls">
-          <button class="basemap-btn active" id="btn-tile-dark" onclick="switchBaseMap('dark')">Carto Dark</button>
-          <button class="basemap-btn" id="btn-tile-sat" onclick="switchBaseMap('sat')">Esri Sat</button>
-          <button class="basemap-btn" id="btn-tile-osm" onclick="switchBaseMap('osm')">Streets</button>
+          <button class="basemap-btn active" id="btn-tile-sat" onclick="switchBaseMap('sat')">Esri Satellite</button>
+          <button class="basemap-btn" id="btn-tile-osm" onclick="switchBaseMap('osm')">Streets (OSM)</button>
         </div>
 
-        <!-- Leaflet Map Canvas (Carto Dark by Default!) -->
+        <!-- Leaflet Map Canvas (Esri Satellite by Default!) -->
         <div id="map"></div>
       </div>
 
@@ -2342,13 +2341,6 @@
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1.15rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.85rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-panel); border-radius: 8px;">
-          <div>
-            <div style="font-weight: 700; font-size: 0.85rem; color: #fff;">CARTO Dark Matter</div>
-            <div style="font-size: 0.72rem; color: var(--text-muted);">High-contrast tactical vector/raster basemap</div>
-          </div>
-          <span class="brand-badge" style="background: rgba(16,185,129,0.15); color: #34d399; border-color: rgba(16,185,129,0.3);">ONLINE</span>
-        </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.85rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-panel); border-radius: 8px;">
           <div>
@@ -2412,7 +2404,7 @@
           </div>
           <div style="display: flex; justify-content: space-between;">
             <span style="color: var(--text-muted);">High-Res Satellites:</span>
-            <span style="color: #fff;">Mapbox Satellite Streets HD, Esri, CARTO</span>
+            <span style="color: #fff;">Mapbox Satellite HD, Esri World Imagery, OpenStreetMap</span>
           </div>
         </div>
       </div>
@@ -2445,25 +2437,21 @@
     let tempPolyline = null;
     let liveDrawingsLayerGroup = null;
 
-    // Basemaps Setup — CARTO Dark Matter as DEFAULT!
-    // Uses Fastly SSL CDN with maxNativeZoom: 19 to prevent adblocker blocks and overzoom 400 errors
-    const tilesDark = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
-      subdomains: 'abcd',
-      attribution: '&copy; OpenStreetMap &copy; CARTO',
+    // Basemaps Setup — Esri World Imagery as DEFAULT!
+    const tilesSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri World Imagery',
       maxNativeZoom: 19,
       maxZoom: 20
     });
-    const tilesSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles &copy; Esri World Imagery', maxZoom: 19
-    });
     const tilesOsm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors', maxZoom: 19
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 19
     });
 
     let tilesMapboxSat = null;
 
     const map = L.map('map', { 
-      layers: [tilesDark],
+      layers: [tilesSat],
       zoomControl: false 
     }).setView([12.9716, 77.5946], 14);
 
@@ -2613,8 +2601,8 @@
         maxZoom: 14
       }).setView([15, 20], 2);
 
-      L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
-        subdomains: 'abcd',
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '&copy; Esri World Imagery',
         maxNativeZoom: 19,
         maxZoom: 14
       }).addTo(spacexMap);
@@ -2810,7 +2798,6 @@
     function switchBaseMap(type) {
       document.querySelectorAll('#basemap-controls .basemap-btn').forEach(b => b.classList.remove('active'));
       map.removeLayer(tilesSat);
-      map.removeLayer(tilesDark);
       map.removeLayer(tilesOsm);
       if (tilesMapboxSat) map.removeLayer(tilesMapboxSat);
 
@@ -2819,11 +2806,6 @@
         const b = document.getElementById('btn-tile-sat');
         if (b) b.classList.add('active');
         document.getElementById('sat-basemap-name').textContent = 'Esri World Imagery';
-      } else if (type === 'dark') {
-        map.addLayer(tilesDark);
-        const b = document.getElementById('btn-tile-dark');
-        if (b) b.classList.add('active');
-        document.getElementById('sat-basemap-name').textContent = 'Carto Dark Matter';
       } else if (type === 'mapbox-sat' && tilesMapboxSat) {
         map.addLayer(tilesMapboxSat);
         const mb = document.getElementById('btn-tile-mb-sat');

@@ -71,9 +71,8 @@ Use the top-right tool ribbon or keyboard shortcuts:
 ## 4. Switching Basemaps & Satellite Imagery
 
 In the bottom-left corner of the Cockpit view:
-- **Carto Dark**: High-contrast tactical dark basemap (fast, adblock-immune via Fastly CDN).
-- **Esri Sat**: Multispectral optical sub-meter aerial satellite photography.
-- **Streets**: OpenStreetMap road and street network.
+- **Esri Satellite**: Multispectral optical sub-meter aerial satellite photography (default).
+- **Streets (OSM)**: OpenStreetMap road and street network.
 - **Mapbox HD**: 512px @2x retina satellite stream (with automatic Esri optical fallback).
 
 ---
