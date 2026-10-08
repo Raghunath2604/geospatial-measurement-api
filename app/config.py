@@ -29,6 +29,12 @@ class Settings:
     carto_api_key: str = ""
     opentopography_api_key: str = ""
 
+    # API security
+    api_key: str = ""  # GEO_API_KEY — when set, all non-public routes require this key
+
+    # Async processing queue
+    async_worker_concurrency: int = 4  # Number of background ingestion workers
+
     # Author & project attribution
     author_name: str = "Raghunath"
     author_github: str = "https://github.com/Raghunath2604"
@@ -54,6 +60,12 @@ class Settings:
         mapbox_access_token = os.getenv("MAPBOX_ACCESS_TOKEN", "").strip()
         carto_api_key = os.getenv("CARTO_API_KEY", "").strip()
         opentopography_api_key = os.getenv("OPENTOPOGRAPHY_API_KEY", "").strip()
+
+        # Security
+        api_key = os.getenv("GEO_API_KEY", "").strip()
+
+        # Async workers
+        async_worker_concurrency = int(os.getenv("GEO_ASYNC_WORKERS", "4"))
 
         author_name = os.getenv("GEO_AUTHOR_NAME", "Raghunath").strip()
         author_github = os.getenv(
@@ -83,10 +95,11 @@ class Settings:
             mapbox_access_token=mapbox_access_token,
             carto_api_key=carto_api_key,
             opentopography_api_key=opentopography_api_key,
+            api_key=api_key,
+            async_worker_concurrency=async_worker_concurrency,
             author_name=author_name,
             author_github=author_github,
             repository_url=repository_url,
             host=host,
             port=port,
         )
-

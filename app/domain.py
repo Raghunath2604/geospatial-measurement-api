@@ -14,9 +14,21 @@ from typing import Any
 class FileStatus(str, Enum):
     """Lifecycle status of an ingested geospatial file."""
 
+    QUEUED = "QUEUED"
     PROCESSING = "PROCESSING"
     COMPLETED = "COMPLETED"
     FAILED = "FAILED"
+
+
+class FileFormat(str, Enum):
+    """Source geospatial file format."""
+
+    KML = "KML"
+    KMZ = "KMZ"
+    SHAPEFILE = "SHAPEFILE"
+    GEOJSON = "GEOJSON"
+    GEOPACKAGE = "GEOPACKAGE"
+    UNKNOWN = "UNKNOWN"
 
 
 class MeasurementStatus(str, Enum):
@@ -26,6 +38,18 @@ class MeasurementStatus(str, Enum):
     NOT_APPLICABLE = "NOT_APPLICABLE"
     UNSUPPORTED = "UNSUPPORTED"
     ERROR = "ERROR"
+
+
+@dataclass(frozen=True)
+class AsyncTask:
+    """Represents an asynchronous ingestion task for polling status."""
+
+    task_id: str
+    file_id: str
+    status: FileStatus
+    filename: str
+    created_at: str
+    error: str | None = None
 
 
 @dataclass(frozen=True)

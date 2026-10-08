@@ -6,7 +6,13 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
-from app.domain import FileRecord, FileStatus, MeasurementStatus, StoredFeature
+from app.domain import (
+    AsyncTask,
+    FileRecord,
+    FileStatus,
+    MeasurementStatus,
+    StoredFeature,
+)
 
 
 class FileInfo(BaseModel):
@@ -131,6 +137,28 @@ class ErrorResponse(BaseModel):
     file: FileInfo | None = None
 
 
+class TaskResponse(BaseModel):
+    """Async ingestion task status response."""
+
+    task_id: str = Field(..., description="Unique task identifier")
+    file_id: str = Field(..., description="Associated file ID (available after COMPLETED)")
+    status: FileStatus = Field(..., description="Task lifecycle status")
+    filename: str = Field(..., description="Uploaded filename")
+    created_at: str = Field(..., description="ISO-8601 task creation timestamp")
+    error: str | None = Field(None, description="Error detail if status is FAILED")
+
+    @classmethod
+    def from_domain(cls, task: AsyncTask) -> TaskResponse:
+        return cls(
+            task_id=task.task_id,
+            file_id=task.file_id,
+            status=task.status,
+            filename=task.filename,
+            created_at=task.created_at,
+            error=task.error,
+        )
+
+
 class SystemConfigResponse(BaseModel):
     """Runtime limits and system configuration."""
 
@@ -141,12 +169,24 @@ class SystemConfigResponse(BaseModel):
     )
     max_features: int = Field(..., description="Max features allowed per file")
     allowed_extensions: list[str] = Field(
-        default_factory=lambda: [".kml", ".kmz", ".zip"],
+        default_factory=lambda: [".kml", ".kmz", ".zip", ".geojson", ".json", ".gpkg"],
         description="Supported geospatial file extensions",
     )
-    version: str = Field(default="1.0.0", description="API version")
+    version: str = Field(default="1.1.0", description="API version")
     has_mapbox: bool = Field(
         default=False, description="Whether server-side Mapbox Satellite proxy is active"
+    )
+    auth_required: bool = Field(
+        default=False, description="Whether API key authentication is enforced"
+    )
+    rate_limiting: bool = Field(
+        default=False, description="Whether request rate limiting is active"
+    )
+    async_processing: bool = Field(
+        default=True, description="Whether async background ingestion queue is available"
+    )
+    metrics_enabled: bool = Field(
+        default=False, description="Whether Prometheus metrics endpoint is active"
     )
     author: dict[str, str] = Field(
         default_factory=lambda: {

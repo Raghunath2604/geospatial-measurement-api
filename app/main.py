@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import logging
 import time
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, Request
@@ -11,15 +13,54 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.api.routes import measure_router, router
+from app.api.routes import (
+    async_router,
+    measure_router,
+    metrics_router,
+    router,
+    task_router,
+)
 from app.api.schemas import FileInfo
 from app.config import Settings
 from app.domain import FileRecord
 from app.errors import GeoServiceError
 from app.services.ingest import IngestService
 from app.storage.repository import Repository
+from app.workers.task_queue import task_queue
 
 logger = logging.getLogger("geomeasure")
+
+
+# ---------------------------------------------------------------------------
+# Application lifespan — startup / shutdown
+# ---------------------------------------------------------------------------
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    """Manage async task queue lifecycle across the application lifespan."""
+    settings: Settings = app.state.settings
+    ingest_service: IngestService = app.state.ingest_service
+
+    # Start async background workers
+    await task_queue.start_workers(
+        ingest_service=ingest_service,
+        n=settings.async_worker_concurrency,
+    )
+    logger.info(
+        "Async task queue started with %d workers.", settings.async_worker_concurrency
+    )
+
+    yield  # Application runs
+
+    # Graceful shutdown
+    await task_queue.stop_workers()
+    logger.info("Async task queue workers stopped.")
+
+
+# ---------------------------------------------------------------------------
+# Application factory
+# ---------------------------------------------------------------------------
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -36,12 +77,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         title="Geospatial File Measurement API",
         description=(
             "High-performance geospatial ingestion and measurement engine. "
-            "Parses KML and Shapefile ZIP archives, reprojects features to local "
-            "metric UTM/UPS coordinate reference systems, and calculates survey-grade metrics."
+            "Parses KML, KMZ, Shapefile ZIP, GeoJSON, and GeoPackage files, "
+            "reprojects features to local metric UTM/UPS coordinate reference systems, "
+            "and calculates survey-grade metrics. "
+            "Supports synchronous and async background ingestion queues."
         ),
-        version="1.0.0",
+        version="1.1.0",
         docs_url="/docs",
         redoc_url="/redoc",
+        lifespan=lifespan,
     )
 
     # Enable CORS for web GIS clients
@@ -52,6 +96,18 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # Attach optional SlowAPI rate limiter state
+    try:
+        from app.api.auth import _SLOWAPI_AVAILABLE, limiter
+        if _SLOWAPI_AVAILABLE and limiter is not None:
+            from slowapi import _rate_limit_exceeded_handler
+            from slowapi.errors import RateLimitExceeded
+            app.state.limiter = limiter
+            app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)  # type: ignore[arg-type]
+            logger.info("SlowAPI rate limiting enabled.")
+    except Exception as exc:
+        logger.debug("SlowAPI not configured: %s", exc)
 
     # State initialization
     repository = Repository(app_settings.db_path)
@@ -68,6 +124,26 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         response = await call_next(request)
         process_time = time.perf_counter() - start_time
         response.headers["X-Process-Time"] = f"{process_time:.4f}s"
+
+        # Record HTTP metrics
+        try:
+            from app.monitoring.metrics import (
+                HTTP_REQUEST_COUNTER,
+                HTTP_REQUEST_DURATION,
+                is_prometheus_available,
+            )
+            if is_prometheus_available():
+                endpoint = request.url.path
+                method = request.method
+                HTTP_REQUEST_COUNTER.labels(
+                    method=method,
+                    endpoint=endpoint,
+                    status_code=str(response.status_code),
+                ).inc()
+                HTTP_REQUEST_DURATION.labels(method=method, endpoint=endpoint).observe(process_time)
+        except Exception:
+            pass
+
         return response
 
     # Exception handler for domain GeoServiceError hierarchy
@@ -101,7 +177,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         summary="Service health check",
     )
     def health_check() -> dict[str, str]:
-        return {"status": "ok", "service": "geo-measure-api"}
+        return {"status": "ok", "service": "geo-measure-api", "version": "1.1.0"}
 
     # Interactive Web Dashboard
     static_dir = Path(__file__).parent / "static"
@@ -142,9 +218,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     except Exception as exc:
         logger.warning("Auto-seed initial survey dataset skipped: %s", exc)
 
-    # Include routes
+    # Include all routers
     app.include_router(router)
     app.include_router(measure_router)
+    app.include_router(async_router)
+    app.include_router(task_router)
+    app.include_router(metrics_router)
 
     return app
 

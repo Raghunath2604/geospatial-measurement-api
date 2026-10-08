@@ -35,10 +35,12 @@ def client() -> TestClient:
 
 
 def test_health_check(client: TestClient) -> None:
-    """Verify /health returns 200 OK with expected JSON."""
+    """Verify /health returns 200 OK with expected JSON fields."""
     response = client.get("/health")
     assert response.status_code == 200
-    assert response.json() == {"status": "ok", "service": "geo-measure-api"}
+    data = response.json()
+    assert data["status"] == "ok"
+    assert data["service"] == "geo-measure-api"
 
 
 def test_system_limits_endpoint(client: TestClient) -> None:
@@ -138,9 +140,9 @@ def test_upload_unsupported_media_type(client: TestClient) -> None:
         "/api/files/",
         files={
             "file": (
-                "data.geojson",
-                io.BytesIO(b'{"type":"FeatureCollection"}'),
-                "application/json",
+                "data.csv",
+                io.BytesIO(b"id,name,value\n1,test,100"),
+                "text/csv",
             )
         },
     )

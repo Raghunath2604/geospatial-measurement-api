@@ -2,13 +2,24 @@
 
 All CPU-bound routes are defined as standard synchronous functions (`def`),
 allowing FastAPI to execute them in its threadpool without blocking the asyncio event loop.
+Async endpoints use async def for non-blocking queue submission.
 """
 
 from __future__ import annotations
 
 import httpx
-from fastapi import APIRouter, Depends, File, Query, Response, UploadFile, status
+from fastapi import (
+    APIRouter,
+    Depends,
+    File,
+    HTTPException,
+    Query,
+    Response,
+    UploadFile,
+    status,
+)
 
+from app.api.auth import is_rate_limiting_available, require_api_key
 from app.api.deps import get_ingest_service, get_repository, get_settings
 from app.api.schemas import (
     ElevationRequest,
@@ -25,17 +36,23 @@ from app.api.schemas import (
     ReverseGeocodeRequest,
     ReverseGeocodeResponse,
     SystemConfigResponse,
+    TaskResponse,
 )
 from app.config import Settings
 from app.domain import FileStatus
 from app.errors import ConflictError, NotFoundError
+from app.monitoring.metrics import get_metrics_output, is_prometheus_available
 from app.services.geo_lookup import get_elevation, reverse_geocode
 from app.services.ingest import IngestService
 from app.services.measurement import measure_geometry_live
 from app.storage.repository import Repository
+from app.workers.task_queue import task_queue
 
 router = APIRouter(prefix="/api/files", tags=["Files & Ingestion"])
 measure_router = APIRouter(prefix="/api/measure", tags=["Real-Time Geometry Engine"])
+async_router = APIRouter(prefix="/api/async", tags=["Async Background Processing"])
+task_router = APIRouter(prefix="/api/tasks", tags=["Task Queue"])
+
 
 
 @router.get(
@@ -45,6 +62,7 @@ measure_router = APIRouter(prefix="/api/measure", tags=["Real-Time Geometry Engi
 )
 def get_system_limits(
     settings: Settings = Depends(get_settings),
+    _auth: bool = Depends(require_api_key),
 ) -> SystemConfigResponse:
     """Retrieve runtime file limits and supported extensions."""
     return SystemConfigResponse(
@@ -52,15 +70,20 @@ def get_system_limits(
         max_upload_mb=round(settings.max_upload_bytes / (1024 * 1024), 2),
         max_uncompressed_bytes=settings.max_uncompressed_bytes,
         max_features=settings.max_features,
-        allowed_extensions=[".kml", ".kmz", ".zip"],
-        version="1.0.0",
+        allowed_extensions=[".kml", ".kmz", ".zip", ".geojson", ".json", ".gpkg"],
+        version="1.1.0",
         has_mapbox=bool(settings.mapbox_access_token),
+        auth_required=bool(settings.api_key),
+        rate_limiting=is_rate_limiting_available(),
+        async_processing=True,
+        metrics_enabled=is_prometheus_available(),
         author={
             "name": settings.author_name,
             "github": settings.author_github,
             "repo": settings.repository_url,
         },
     )
+
 
 
 @router.get(
@@ -108,18 +131,21 @@ def get_mapbox_tile(
             "description": "Unprocessable geospatial content",
         },
     },
-    summary="Upload and process geospatial file",
+    summary="Upload and process geospatial file (synchronous)",
 )
 def upload_file(
-    file: UploadFile = File(..., description="Geospatial .kml or Shapefile .zip"),
+    file: UploadFile = File(..., description="Geospatial .kml, .kmz, .geojson, .gpkg, or Shapefile .zip"),
     ingest_service: IngestService = Depends(get_ingest_service),
+    _auth: bool = Depends(require_api_key),
 ) -> FileInfo:
-    """Upload and process a geospatial file (.kml or Shapefile .zip).
+    """Upload and process a geospatial file synchronously in the threadpool.
 
-    Streamed and validated synchronously in the threadpool.
+    Supported formats: KML, KMZ, Shapefile ZIP, GeoJSON, GeoPackage.
+    Returns 201 with complete measurements on success.
     """
     record = ingest_service.ingest_stream(file.file, file.filename)
     return FileInfo.from_domain(record)
+
 
 
 @router.get(
@@ -402,6 +428,7 @@ def export_file_csv(
 )
 def measure_arbitrary_geometry(
     req: GeometryMeasurementRequest,
+    _auth: bool = Depends(require_api_key),
 ) -> GeometryMeasurementResponse:
     """Calculate survey-grade planar and geodesic metrics for an arbitrary geometry in real-time."""
     result = measure_geometry_live(req.geometry, source_crs=req.source_crs)
@@ -416,6 +443,7 @@ def measure_arbitrary_geometry(
 def api_reverse_geocode_get(
     lat: float = Query(..., alias="lat", description="Latitude in decimal degrees"),
     lon: float = Query(..., alias="lon", description="Longitude in decimal degrees"),
+    _auth: bool = Depends(require_api_key),
 ) -> ReverseGeocodeResponse:
     """Query administrative location context via GET query parameters."""
     res = reverse_geocode(lat, lon)
@@ -429,6 +457,7 @@ def api_reverse_geocode_get(
 )
 def api_reverse_geocode(
     req: ReverseGeocodeRequest,
+    _auth: bool = Depends(require_api_key),
 ) -> ReverseGeocodeResponse:
     """Query administrative location context (country, city, region) for a coordinate."""
     res = reverse_geocode(req.latitude, req.longitude)
@@ -443,6 +472,7 @@ def api_reverse_geocode(
 def api_elevation_get(
     lat: float = Query(..., alias="lat", description="Latitude in decimal degrees"),
     lon: float = Query(..., alias="lon", description="Longitude in decimal degrees"),
+    _auth: bool = Depends(require_api_key),
 ) -> ElevationResponse:
     """Query terrain elevation in metres above sea level via GET query parameters."""
     res = get_elevation(lat, lon)
@@ -456,9 +486,135 @@ def api_elevation_get(
 )
 def api_elevation(
     req: ElevationRequest,
+    _auth: bool = Depends(require_api_key),
 ) -> ElevationResponse:
     """Query terrain elevation in metres above sea level for a coordinate."""
     res = get_elevation(req.latitude, req.longitude)
     return ElevationResponse(**res)
 
 
+# ---------------------------------------------------------------------------
+# Async Background Ingestion Endpoints
+# ---------------------------------------------------------------------------
+
+
+@async_router.post(
+    "/ingest/",
+    status_code=status.HTTP_202_ACCEPTED,
+    response_model=TaskResponse,
+    responses={
+        413: {"model": ErrorResponse, "description": "File too large"},
+        415: {"model": ErrorResponse, "description": "Unsupported media type"},
+    },
+    summary="Enqueue geospatial file for background ingestion (async)",
+)
+async def upload_file_async(
+    file: UploadFile = File(
+        ...,
+        description="Geospatial .kml, .kmz, .geojson, .gpkg, or Shapefile .zip"
+    ),
+    settings: Settings = Depends(get_settings),
+    _auth: bool = Depends(require_api_key),
+) -> TaskResponse:
+    """Enqueue a geospatial file for async background processing.
+
+    Returns HTTP 202 Accepted immediately with a task_id.
+    Poll GET /api/tasks/{task_id}/ to check processing status.
+    Once COMPLETED, fetch results via GET /api/files/{file_id}/measurements/.
+    """
+    # Read the entire upload first (enforcing size limit)
+    from app.services.ingest import _detect_format, sanitize_filename
+
+    filename = sanitize_filename(file.filename)
+    fmt = _detect_format(filename.lower())
+    if fmt is None:
+        raise HTTPException(
+            status_code=415,
+            detail="Unsupported file type. Accepted: .kml, .kmz, .zip, .geojson, .json, .gpkg",
+        )
+
+    content = await file.read()
+    if len(content) > settings.max_upload_bytes:
+        raise HTTPException(
+            status_code=413,
+            detail=f"File exceeds maximum upload limit of {settings.max_upload_bytes} bytes.",
+        )
+
+    if not content:
+        raise HTTPException(status_code=422, detail="Uploaded file is empty.")
+
+    task = await task_queue.enqueue(content=content, filename=filename)
+    return TaskResponse.from_domain(task)
+
+
+# ---------------------------------------------------------------------------
+# Task Polling Endpoints
+# ---------------------------------------------------------------------------
+
+
+@task_router.get(
+    "/",
+    response_model=list[TaskResponse],
+    summary="List recent async ingestion tasks",
+)
+def list_tasks(
+    limit: int = Query(50, ge=1, le=200, description="Page limit"),
+    _auth: bool = Depends(require_api_key),
+) -> list[TaskResponse]:
+    """Return recent background ingestion tasks ordered newest first."""
+    tasks = task_queue.list_tasks(limit=limit)
+    return [TaskResponse.from_domain(t) for t in tasks]
+
+
+@task_router.get(
+    "/{task_id}/",
+    response_model=TaskResponse,
+    responses={
+        404: {"model": ErrorResponse, "description": "Task not found"},
+    },
+    summary="Poll async task status",
+)
+def get_task(
+    task_id: str,
+    _auth: bool = Depends(require_api_key),
+) -> TaskResponse:
+    """Poll the current status of an async background ingestion task.
+
+    Lifecycle: QUEUED → PROCESSING → COMPLETED | FAILED
+    When COMPLETED, use the returned file_id to fetch full results.
+    """
+    task = task_queue.get_task(task_id)
+    if task is None:
+        raise NotFoundError(f"Task '{task_id}' not found.")
+    return TaskResponse.from_domain(task)
+
+
+# ---------------------------------------------------------------------------
+# Prometheus Metrics Endpoint
+# ---------------------------------------------------------------------------
+
+
+def make_metrics_router() -> APIRouter:
+    """Create the /metrics router (always public — compatible with Prometheus scrapers)."""
+    metrics_router = APIRouter(tags=["Observability"])
+
+    @metrics_router.get(
+        "/metrics",
+        include_in_schema=False,
+        summary="Prometheus metrics exposition",
+    )
+    def prometheus_metrics() -> Response:
+        """Expose current Prometheus metrics in text format for scraping."""
+        if not is_prometheus_available():
+            return Response(
+                content="# prometheus_client not installed\n",
+                media_type="text/plain",
+                status_code=200,
+            )
+        content, content_type = get_metrics_output()
+        return Response(content=content, media_type=content_type)
+
+    return metrics_router
+
+
+metrics_router = make_metrics_router()
