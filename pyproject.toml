@@ -3,7 +3,7 @@ name = "geospatial-measurement-api"
 version = "1.0.0"
 description = "High-performance geospatial measurement API with geodesic validation and orbital telemetry"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.110.0",
     "uvicorn[standard]>=0.28.0",
