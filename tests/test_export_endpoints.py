@@ -7,8 +7,6 @@ from __future__ import annotations
 
 import io
 import json
-import tempfile
-from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
@@ -102,7 +100,7 @@ class TestCSVExport:
     def test_export_csv_polygon_has_area(self, app_client, uploaded_file_id):
         resp = app_client.get(f"/api/files/{uploaded_file_id}/export/csv/")
         lines = resp.text.strip().splitlines()
-        poly_row = next((l for l in lines[1:] if "Polygon" in l), None)
+        poly_row = next((line_item for line_item in lines[1:] if "Polygon" in line_item), None)
         assert poly_row is not None
         cols = poly_row.split(",")
         area = float(cols[3])
@@ -236,6 +234,6 @@ class TestExportDataIntegrity:
         poly_feat = next(f for f in doc["features"] if f["geometry"]["type"] == "Polygon")
         geojson_area = poly_feat["properties"]["_area_sq_m"]
         csv_lines = csv_resp.text.strip().splitlines()
-        poly_csv_row = next(l for l in csv_lines[1:] if "Polygon" in l)
+        poly_csv_row = next(line_item for line_item in csv_lines[1:] if "Polygon" in line_item)
         csv_area = float(poly_csv_row.split(",")[3])
         assert abs(geojson_area - csv_area) < 0.01

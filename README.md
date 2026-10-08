@@ -53,7 +53,7 @@ pip install -r requirements-dev.txt
 # 3. Generate sample test data
 python tests/scripts/make_sample_shapefile.py
 
-# 4. Run full test suite with Pytest (46 tests)
+# 4. Run full test suite with Pytest (104 tests)
 pytest -v
 ```
 
@@ -65,20 +65,28 @@ uvicorn app.main:create_app --factory --host 0.0.0.0 --port 8000 --reload
 Interactive GIS Studio: `http://localhost:8000/`  
 Interactive API documentation: `http://localhost:8000/docs`
 
-### 2.3 Running via Docker
+### 2.3 Running via Docker / Docker Compose
 
 ```bash
-# Build the production image
-docker build -t geo-measure-api:latest .
+# Option A: Docker Compose with health checks & persistent volume (recommended)
+docker compose up --build
 
-# Run container exposing port 8000
+# Option B: Standalone Docker container
+docker build -t geo-measure-api:latest .
 docker run -d -p 8000:8000 --name geo-api geo-measure-api:latest
 
 # Check health
 curl http://localhost:8000/health
 ```
 
-### 2.4 Configuration Options
+### 2.4 Vercel Serverless Deployment
+
+This repository is pre-configured for 1-click Vercel deployment:
+1. Connect this repository on [Vercel](https://vercel.com/new).
+2. Vercel automatically detects [`vercel.json`](vercel.json) and routes traffic via [`api/index.py`](api/index.py).
+3. Click **Deploy**. The application runs with automated SQLite `/tmp` isolation.
+
+### 2.5 Configuration Options
 
 Environment variables can override default runtime limits:
 
@@ -464,10 +472,9 @@ graph TD
 ## 6. Known Limitations
 
 - **Altitude Ignored**: KML coordinates `[lon, lat, alt]` drop altitude; measurements represent 2D planar projection surfaces.
-- **Features Spanning Multiple UTM Zones**: Features spanning $> 6^\circ$ are projected to the UTM zone of their centroid. While suitable for drone surveys, continental polygons will experience scale distortion near boundaries.
+- **Features Spanning Multiple UTM Zones**: Features spanning $> 6^\circ$ are projected to the UTM zone of their centroid. Suitable for regional drone surveys; continental-scale polygons experience scale distortion near boundaries.
 - **Antimeridian Crossing**: Polygons crossing the $180^\circ$ meridian must be split prior to projection to avoid bounding box wrapping.
-- **Heterogeneous MultiGeometry**: KML files containing mixed Points and Polygons in a single `MultiGeometry` are marked `UNSUPPORTED`.
-- **KMZ Archives**: Zipped KML (`.kmz`) is not yet natively unpacked (requires unzipping `.kml` member).
+- **Heterogeneous MultiGeometry**: Mixed Points and Polygons within a single `MultiGeometry` element are marked `UNSUPPORTED`.
 
 ---
 

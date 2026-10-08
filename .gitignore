@@ -55,3 +55,6 @@ desktop.ini
 .env.local
 !.env.example
 
+# Deployment & Vercel
+.vercel/
+

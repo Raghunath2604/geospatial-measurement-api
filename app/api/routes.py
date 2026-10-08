@@ -469,7 +469,6 @@ def export_file_kml(
     Output includes Placemark entries with GeoJSON-derived coordinates converted to
     KML coordinate tuples, plus measurement results as key-value ExtendedData pairs.
     """
-    import json
     import xml.etree.ElementTree as ET
 
     record = repo.get_file(file_id)
