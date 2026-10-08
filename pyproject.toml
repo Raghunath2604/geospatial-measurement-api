@@ -19,15 +19,8 @@ dependencies = [
     "slowapi>=0.1.9",
 ]
 
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
-
 [tool.uv]
 package = false
-
-[tool.setuptools]
-packages = ["app", "api"]
 
 [tool.ruff]
 line-length = 88
